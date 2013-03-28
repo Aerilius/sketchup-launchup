@@ -9,13 +9,13 @@ This Plugin adds a quick launcher to search and execute commands.
 * Click the history/clock button to toggle a list of recently used
   commands that you don't need to search anymore (this can be used
   as a dynamic toolbar).
-* Search for "*LaunchUp – Options*" to change settings.
+* Search for *"LaunchUp – Options"* to change settings.
 
-*Recommended*:  SketchUp 8 M2 or higher (it works in a limited way in lower versions)
+**Recommended:**  SketchUp 8 M2 or higher (it works in a limited way in lower versions)
 
 ###Public methods:
 
-You can use these methods to use LaunchUp in Ruby code:
+You can use these methods to query LaunchUp in Ruby code:
 
 * **_`AE::LaunchUp.look_up(search_string=[String],length=[Fixnum])`_**  
   Queries the index for seach terms and returns an Array of hashes as results.
