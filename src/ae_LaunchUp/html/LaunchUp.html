@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>LaunchUp</title>
+<meta http-equiv="content-type" content="text/html; charset = UTF-8">
+<meta http-equiv="MSThemeCompatible" content="Yes">
+<meta http-equiv="X-UA-Compatible" content="IE=8"/>
+<link href="../css/LaunchUp.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="../js/Base.js"></script>
+<script type="text/javascript" src="../js/LaunchUp.js"></script>
+</head>
+<body scroll="no">
+<div>
+  <div id="combo_box">
+    <input type="search" id="combo_input" class="combo_input" />
+    <div id="buttons_wrapper">
+      <div id="buttons_wrapper_inner">
+        <!--<input type ="button" id="button_settings" title="settings">-->
+        <input type ="button" id="button_pin" class="on" />
+        <input type="button" id="button_history" class="off" title="History of recent commands" />
+      </div>
+    </div>
+  </div>
+
+  <div id="lists-container">
+
+    <div id="suggestions">
+      <ul id="combo_list" class="list">
+      </ul>
+    </div>
+
+    <div id="history">
+      <ul id="history_list" class="list">
+      </ul>
+    </div>
+
+  </div>
+
+  <input type="hidden" id="return_value" style="width:0; height:0"/>
+</div>
+<script type="text/javascript">AE.Bridge.callRuby('initialize')</script>
+</body>
+</html>

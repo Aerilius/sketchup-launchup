@@ -1,0 +1,207 @@
+=begin
+
+Permission to use, copy, modify, and distribute this software for
+any purpose and without fee is hereby granted, provided that the above
+copyright notice appear in all copies.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+Name:         Translate.rb
+Author:       Andreas Eisenbarth
+Description:  Class to store and retrieve options/settings.
+Usage:        Create an instance:        @options = @options.new(default={key => value})
+              Get an option:             @options[String||Symbol]
+              Get an option and provide default (if not yet set in initialization):
+                                         @options[String||Symbol, default]
+              Set an option:             @options[String||Symbol]=(value)
+              Get all options:           @options.get_all()
+              Update all options:        @options.update(new_options={key => value})
+              Get all options as json:   @options.get_json()
+              Update all options:        @options.update_json(String)
+              Save all options to disk:  @options.save
+Version:      1.0
+Date:         06.02.2013
+
+=end
+
+module AE
+
+
+
+module LaunchUp
+
+
+
+class Options
+
+
+
+@@valid_types = [String, Symbol, Fixnum, Float, Array, Hash, TrueClass, FalseClass, NilClass]
+
+# Create a new instance and fill it with saved options or a provided defaults.
+# @param [String] identifier
+# @param [Hash] default options
+def initialize(identifier, default={})
+  raise "Options.new needs a string argument to identify the option." unless identifier.is_a?(String)
+  @identifier = identifier
+  @options = normalize_keys(default)
+  @options.merge!(normalize_keys(read()))
+end
+
+
+
+# Get a value for a key.
+# @param [Symbol] key
+# @param [Object] default if key is not found
+# @returns [Object] value with a type of @@valid_types
+def get(key, default=nil)
+  # Alternative ways can be implemented here. (reading individual registry keys etc.)
+  key = key.to_sym unless key.is_a?(Symbol)
+  return (@options.include?(key)) ? @options[key] : default
+end
+alias_method(:[], :get)
+
+
+
+# Set a value for a key.
+# @param [Symbol] key
+# @param [Object] value with a type of @@valid_types
+def set(key, value)
+  raise "Not a valid type for Options.[]=" unless @@valid_types.include?(value.class)
+  @options[key.to_sym] = value
+end
+alias_method(:[]=, :set)
+
+
+
+# Returns all options as a Hash.
+def get_all
+  return @options.clone
+end
+
+
+
+# Updates all options with new ones (overwriting or adding to existing key/value pairs).
+# @param [Hash] hash of new data to be merged
+def update(hash)
+  @options.merge!(hash)
+end
+
+
+
+# Returns all options as JSON string.
+# @returns [String] JSON data
+def get_json
+  return to_json()
+end
+
+
+
+# Updates all options with new ones from a JSON string.
+# @param [String] string of JSON data
+def update_json(string)
+  hash = normalize_keys(from_json(string))
+  @options.merge!(hash)
+end
+
+
+
+# Saves the options to disk.
+# TODO: Alternatively this could be implemented to save everytime a single
+# key/value pair is changed.
+def save
+  # Alternative ways can be implemented here. (text file etc.)
+  # TODO: Handle Unicode and special characters.
+  # (If further escaping than inspect is necessary.)
+  Sketchup.write_default("Plugins_ae", @identifier, @options.inspect.gsub(/"/, "'"))
+  # Sketchup.write_default("Plugins_ae", @identifier, @options.inspect.inspect[1..-2]) # TODO!!!
+end
+
+
+
+# Reads the options from disk.
+def read
+  # Alternative ways can be implemented here. (text file etc.)
+  default = eval(Sketchup.read_default("Plugins_ae", @identifier, "{}")) rescue {}
+  return default
+rescue
+  {}
+end
+private :read
+
+
+
+# Set all keys to Symbols. Remove keys that are neither Symbol nor String.
+# Remove keys whose value is not allowed.
+# @TODO: Or maybe tolerate Fixnum?
+# @param [Hash] hash
+def normalize_keys(hash)
+  hash.each{|k, v|
+    hash.delete(k) unless @@valid_types.include?(v.class)
+    if k.is_a?(String)
+      hash.delete(k)
+      hash[k.gsub(/\-/, "_").to_sym] = v
+    elsif !k.is_a?(Symbol) # elsunless
+      hash.delete(k)
+    end
+  }
+  return hash
+end
+private :normalize_keys
+
+
+
+# Return the options as JSON string.
+# TODO: consider Infinity
+def to_json
+  obj = @options.clone
+  # Remove non-JSON objects.
+  obj.reject!{|k,v|
+    !k.is_a?(String) && !k.is_a?(Symbol) || !@@valid_types.include?(v.class)
+  }
+  # Split at every even number of unescaped quotes.
+  # If it's not a string then turn Symbols into String and replace => and nil.
+  json_string = obj.inspect.split(/(\"(?:.*?[^\\])*?\")/).
+    collect{|s|
+      (s[0..0] != '"')?                        # If we are not inside a string
+      s.gsub(/\:(\S+?(?=\=>|\s))/, "\"\\1\""). # Symbols to String
+        gsub(/=>/, ":").                       # Arrow to colon
+        gsub(/\bnil\b/, "null") :              # nil to null
+      s
+    }.join()
+  return json_string
+end
+
+
+
+# Read a JSON string and return a hash.
+# @param [String] json_string
+# TODO: undefined is not allowed to occur, but in case it happens not sure what to do?
+def from_json(json_string)
+  # Split at every even number of unescaped quotes.
+  # If it's not a string then replace : and null
+  ruby_string = json_string.split(/(\"(?:.*?[^\\])*?\")/).
+    collect{|s|
+      (s[0..0] != '"')? s.gsub(/\:/, "=>").gsub(/null/, "nil").gsub(/undefined/, "nil") : s
+    }.
+    join()
+  result = eval(ruby_string)
+  return result
+rescue Exception => e
+  {}
+end
+private :from_json
+
+
+
+end # class Options
+
+
+
+end # module LaunchUp
+
+
+
+end # module AE

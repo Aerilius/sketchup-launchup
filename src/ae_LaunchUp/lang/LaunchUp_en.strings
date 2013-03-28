@@ -1,0 +1,66 @@
+// Plugin meta data
+"LaunchUp"="LaunchUp";
+"LaunchUp – Quick Launcher"="LaunchUp – Quick Launcher";
+"A searchable quick launcher for SketchUp tools."="A searchable quick launcher for SketchUp tools.";
+"LaunchUp – Options"="LaunchUp – Options";
+"Options to customize the look and behavior of LaunchUp."="Options to customize the look and behavior of LaunchUp.";
+"options"="options";
+"settings"="settings";
+"preferences"="preferences";
+
+// Other strings
+"Show %0 toolbar"="Show “%0” toolbar";
+"Load extension %0"="Load extension “%0”";
+"Extension %0 already loaded"="Extension “%0” already loaded";
+"Extensions"="Extensions";
+"extension"="extension";
+"plugin"="plugin";
+"add-on"="add-on";
+"File"="File";
+"file"="File";
+"Edit"="Edit";
+"edit"="Edit";
+"View"="View";
+"view"="View";
+"Camera"="Camera";
+"camera"="Camera";
+"Draw"="Draw";
+"draw"="Draw";
+"Tools"="Tools";
+"tools"="Tools";
+"Plugins"="Plugins";
+"plugins"="Plugins";
+"Help"="Help";
+"help"="Help";
+
+// Strings of the LaunchUp dialog itself
+"Search…"="Type to search…";
+"Unpinned. \nLaunchUp hides always after executing \na command. Click to change."="Unpinned. \nLaunchUp hides always after executing \na command. Click to change.";
+"Pinned. \nLaunchUp stays always visible. \nClick to change."="Pinned. \nLaunchUp stays always visible. \nClick to change.";
+
+// Strings of the Options dialog
+"Appearance"="Appearance";
+"Choose the background color of the LaunchUp dialog."="Choose the background color of the LaunchUp dialog.";
+"Color"="Color";
+"background"="background";
+"text"="text";
+"Style for suggestions"="Style for suggestions";
+"Style for the history"="Style for history";
+"slim"="slim";
+"wide"="wide";
+"toolbar"="toolbar";
+"Behavior"="Behavior";
+"Maximum amount of suggesions"="Maximum amount of suggesions";
+"Keep the dialog open after executing a command."="Keep the dialog open after executing a command.";
+"Show the history of recently used commands."="Show the history of recently used commands.";
+"Maximum length"="Maximum length";
+
+// Strings of the Options dialog: extensions
+"Smart searches allow to enhance the available commands."="Smart searches allow to enhance the available commands.";
+"Native tools"="Native tools";
+"Show/Hide toolbars"="Show/Hide toolbars";
+"Load extensions"="Load extensions";
+"Load Ruby files"="Load Ruby files";
+"A dictionary of local language words and synonyms allows to find even commands that don't provide detailed or translated metadata."="A dictionary of local language words and synonyms allows to find even commands that don't provide detailed or translated metadata.";
+"Cancel"="Cancel";
+"Apply"="Apply";

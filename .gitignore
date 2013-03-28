@@ -1,0 +1,11 @@
+materials
+archive
+backup
+test/tmp
+tmp
+/TODO
+
+# YARD artifacts
+.yardoc
+_yardoc
+doc/

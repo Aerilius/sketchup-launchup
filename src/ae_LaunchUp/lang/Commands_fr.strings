@@ -1,0 +1,390 @@
+// File
+
+"File"="Fichier";
+"New"="Nouveau";
+"new"="nouveau";
+"Create a new model."="Crée un nouveau modèle.";
+"Open"="Ouvrir";
+"open"="ouvrir";
+"Open an existing model."="Ouvre un modèle existant.";
+"Save"="Enregistrer";
+"save"="enregistrer";
+"Save the active model."="Enregistre le modèle actif.";
+"Print…"="Imprimer…";
+"Print the active model."="Imprime le modèle actif.";
+"Add New Building"="Ajouter un nouveau bâtiment";
+"Add a new building model using Google Building Maker."="Ajoute un nouveau modèle de bâtiment à l’aide du Modélisateur de bâtiments 3D Google.";
+"Building Maker"="Modélisateur de bâtiments 3D";
+"Add Location"="Ajoute un emplacement";
+"Add a geo-location to the model, and gather site information nearby."="Ajoute une géoposition au modèle et recueille des informations sur le site à proximité.";
+"Geo-location"="Géoposition";
+"geo-reference"="géo-référence";
+"add"="ajouter";
+"location"="emplacement";
+"place"="lieu";
+"imagery"="imagerie";
+"satellite"="satellite";
+"earth"="terre";
+"map"="carte";
+"terrain"="terrain";
+"Clear Location"="Effacer l’emplacement";
+"Clear the model's geo-location."="Efface la géoposition du modèle.";
+"clear"="effacer";
+"remove"="enlever";
+"delete"="supprimer";
+"Show Terrain"="Afficher le relief";
+"Toggle terrain on and off."="Active et désactive l’affichage du relief";
+"Get Models"="Télécharger des modèles";
+"Get a model from 3D Warehouse."="Télécharge un modèle de la Banque d’images 3D.";
+"3D Warehouse"="Banque d’images 3D";
+"gallery"="galerie";
+"get"="prendre";
+"download"="télécharger";
+"upload"="charger";
+"share"="partager";
+"publish"="publier";
+"Share Model"="Partager le modèle";
+"Share this model to 3D Warehouse."="Partage votre modèle dans la Banque d’images 3D de Google.";
+"Share Component"="Partager le composant";
+"Share the selected component to 3D Warehouse."="Partager le composant sélectionné dans la Banque d’images 3D de Google.";
+
+
+// Edit
+
+"Edit"="Édition";
+"Undo"="Annuler";
+"Redo"="Rétablir";
+"Redo the previously undone action."="Rétablit la dernière opération annulée.";
+"Cut"="Couper";
+"clipboard"="presse-papiers";
+"Copy"="Copier";
+"copy"="copier";
+"Paste"="Coller";
+"paste"="coller";
+"insert"="insérer";
+"Erase"="Effacer";
+"erase"="effacer";
+"Hide"="Masquer";
+"Hide Selected Geometry"="Masque la géométrie sélectionnée";
+"mask"="masque";
+"Unhide"="Révéler";
+"Unhide Selected Geometry"="Révèle la géométrie sélectionnée";
+"show"="montrer";
+"Make Component"="Créer un composant";
+"Make a Component from selected entities."="Crée un composant à partir des entités sélectionnées.";
+"Make Group"="Crée groupe";
+"Make a Group from selected entities."="Crée un groupe à partier des entités sélectionnées.";
+
+
+// View
+
+"View"="Affichage";
+"Toggle Hidden"="Activer/désactiver cachés";
+"Toggle Hidden Geometry"="Activer/désactiver l’affichage de la géométrie cachée";
+"Toggle Axes"="Active ou masque les axes du dessin";
+"Hide Guides"="Masquer les guides";
+"Display Construction Geometry"="Activer l’affichage de la géométrie de construction";
+"Shadows"="Ombres";
+"Display Shadows"="Affiche les ombres";
+"Fog"="Brouillard";
+"Display Fog"="Affiche du brouillard";
+
+// View →  Edge Style
+
+"Edge Style"="Style d’arêtes";
+"Display Edges"="Arêtes";
+"Back Edges"="Arêtes arrière";
+"Display the model with back edges dashed."="Affiche le modèle avec es arêtes arrière en pointillés.";
+"Profiles"="Arêtes profilées";
+"Display Profiles"="Affiche des arêtes profilées";
+"Depth Cue"="Effet de profondeur";
+"Display Depth Cue"="Affiche des arêtes avec l’effet de profondeur";
+"Jitter Edges"="Arêtes floues";
+"End Points"="Points d’extrémités";
+"Display End Points"="Afficher les points d’extrémités";
+"Edge Color Mode"="Mode de couleur d’arête";
+"Egde Color Mode: "="Mode de couleur d’arête:";
+"Cycle Edge Color Mode"="Défile les modes de couleur d’arête";
+"Edge Color by Material"="Couleur d’arête par matière";
+"Egde Color Mode: Default"="Mode de couleur d’arête: défaut";
+"Toggle Edge Color by Material"="Active/désactive la couleur d’arête par matière";
+"Edge Color by Axis"="Couleur d’arête par axe";
+"Egde Color Mode: by Axis"="Mode de couleur d’arête: par axe";
+"Toggle Edge Color by Axis"="Activer/désactiver la couleur d’arête par axe";
+"Color By Layer"="Couleur par calque";
+"Toggle Color By Layer"="Activer/désactiver la couleur par calque";
+
+// View → Face Style
+
+"Face Style"="Style de faces";
+"X-Ray Mode"="Transparence";
+"Display the model with globally transparent faces."="Affiche le modèle avec des faces transparentes à l’échelle mondiale.";
+"Wireframe"="Filaire";
+"Display in wireframe mode."="Affiche en mode filaire.";
+"Hidden Line"="Ligne cachée";
+"Display in hidden line mode."="Affiche en mode lignes cachées.";
+"Shaded"="Ombré";
+"Display in shaded mode."="Affiche en mode ombré.";
+"Textured"="Texturé";
+"Display shaded using textures."="Affiche ombré avec textures.";
+"Monochrome"="Monochrome";
+"Display the model with only front and back face colors."="Afficher le modèle avec seulement des couleurs face frontale et dorsale.";
+
+// View → Component Editing
+
+"Component Editing"="Modification du composant";
+"Hide Rest"="Masquer le reste";
+"Hide Rest of Model"="Masquer le reste du modèle";
+"hide"="cacher";
+"fade"="estomper";
+"inactive"="inactif";
+"components"="composants";
+"Hide Similar"="Masquer similaires";
+"Hide Similar Components"="Masquer les composants similaires";
+
+
+// Camera
+
+"Camera"="Caméra";
+"Previous"="Précédent";
+"Undo the previous camera view."="Revient la vue précédente de la caméra.";
+
+// Camera → Standard Views
+
+"Standard Views"="Vues standard
+"Top"="Dessus";
+"Top View"="Vue de dessus";
+"Bottom"="Dessous";
+"Bottom View"="Vue de dessous";
+"Front"="Face";
+"Front View"="Vue de face";
+"Back"="Arrière";
+"Back View"="Vue arrière";
+"Left"="Gauche";
+"Left View"="Vue de gauche";
+"Right"="Droite";
+"Right View"="Vue droite";
+"Iso"="Iso";
+"Move the camera to the nearest isometric view of the model."="Déplacez la caméra vers la vue isométrique plus proche du modèle.";
+"Perspective"="Perspective";
+"Camera Perspective"="Caméra perspective";
+"Orbit"="Orbite";
+"Orbit the camera view about the model."="Déplace la caméra en orbite autour du modèle.";
+"Pan"="Panoramique";
+"Pan the camera view vertically or horizontally."="Effectue un panoramique vertical ou horizontal de la vue de la caméra.";
+"Hand"="Main";
+"Field of View"="Champ angulaire";
+"Change the field of view."="Modifie le champ de visuel.";
+"Zoom"="Zoom";
+"Zoom the camera view in or out."="Effectue un zoom avant ou arrière de la vue de la caméra.";
+"enlarge"="agrandir";
+"Zoom Window"="Fenêtre de zoom";
+"Zoom the camera to show everything inside the selected window."="Effectue un zoom avec la caméra pour afficher ce qui se trouve dans la fenêtre sélectionnée.";
+"Zoom Extents"="Zoom étendu";
+"Zoom to show the selection or the entire model if no selection."="Effectue un zoom avant ou arrière de la vue de la caméra pour afficher la totalité du modèle.";
+"Camera Position"="Positionner la caméra";
+"Position the camera view with a specific location, eye height and direction."="Positionner la vue de la caméra à un endroit précis, la hauteur des yeux et la direction.";
+"Walk"="Visite";
+"Walk with the camera."="Visite du modèle avec la caméra.";
+"Look"="Pivoter";
+"Pivot camera view about a stationary point."="Fait pivoter le point de vue de la caméra autour du point devisée.";
+"Image Igloo"="Dôme d’images";
+"Show all matched photos around the model."="Affiche toutes les photos adaptées autour du modèle.";
+
+
+// Draw
+
+"Draw"="Dessiner";
+"Line"="Ligne";
+"Draw edges from point to point."="Trace des arêtes d’un point à un autre.";
+"Arc"="Arc";
+"Draw arcs from point to point with bulge."="Dessine des arcs d’un point à l'autre avec un renflement.";
+"arc"="arc";
+"curve"="courbe";
+"Freehand"="Main levée";
+"Draw freehand lines by clicking and dragging."="Dessine des lignes à main levée en cliquant ou glissant la souris.";
+"polyline"="polyligne";
+"Rectangle"="Rectangle";
+"Draw rectangular faces from corner to corner."="Dessine des faces rectangulaires d’un coin à l'autre.";
+"Circle"="Cercle";
+"Draw circles from center point to radius."="Dessine des cercles du point central vers le rayon.";
+"Polygon"="Polygone";
+"Draw N-sided polygons from center point to radius."="Dessine des polygones à N côtés du point central vers le rayon.";
+
+
+// Tools
+
+"Tools"="Outils";
+"Select"="Sélectionner";
+"Select entities"="Sélectionne des entités";
+"Eraser"="Effacer";
+"Erase, soften or smooth entities in the model."="Efface, adoucit ou lisse des entités dans le modèle.";
+"Paint Bucket"="Colorier";
+"Apply color and material to entities in the model."="Applique une couleur et une matière à d'entités dans le modèle.";
+"Move"="Déplacer";
+"Move, stretch, copy and array selected entities."="Déplace, étire, copie et réalise une séries des entités sélectionnées.";
+"move"="décaler";
+"displace"="déplacer";
+"Rotate"="Faire pivoter";
+"Rotate, stretch, copy and array selected entities about an axis."="Fait pivoter, étire, copie et réalise une séries des entités sélectionnées autour d’un axe.";
+"Scale"="Mettre à l’échelle";
+"Scale and stretch selected entities."="Mets à l'échelle et étire les entités sélectionnées.";
+"scale"="mettre à l'échelle";
+"resize"="redimensionner";
+"bigger"="plus grand";
+"smaller"="plus petit";
+"Push/Pull"="Pousser/Tirer";
+"Push and pull faces."="Pousse et tire des entités face.";
+"push"="pousser";
+"pull"="tirer";
+"extrude"="extruder";
+"Follow"="Suivez-moi";
+"Follow a path with a selected face."="Suivre un chemin avec une face sélectionnée.";
+"follow"="suivre";
+"path"="chemin";
+"Offset"="Décalage";
+"Offset selected edges in a plane."="Décale des arêtes sélectionnées sur un plan.";
+"Tape"="Mètre";
+"Measure distances, create guide lines or points."="Mesure des distances, crée des lignes ou des points de guidage ou met à l'échelle la totalité du modèle.";
+"Protractor"="Rapporteur";
+"Measure angles and create guides."="Mesure des angles et crée des lignes de guidage.";
+"Axis"="Axes";
+"Move or orient the axis."="Déplace ou réoriente les axes du dessin.";
+"Dimension"="Cotations";
+"Draw Dimension"="Dessine des lignes de cotations entre deux points quelquonque ";
+"Text"="Texte";
+"Draw text labels."="Dessine des étiquettes de texte.";
+"3D Text Tool"="Outil Texte 3D";
+"Create 3D Text"="Dessine du texte 3D";
+"Section"="Plan de Section";
+"Solid Tools"="Solides";
+"solid"="solide";
+"Outer Shell"="Enveloppe externe";
+"shell"="enveloppe";
+"Combine all selected solids into a single solid and remove all interior entities."="Fusionne tous les solides sélectionnés en un seul solide et supprime toutes les entités internes.";
+"Intersect"="Intersection";
+"intersect"="intersection";
+"cut"="couper";
+"Intersect all selected solids but keep only their intersection in the model."="Réalise l'intersection de tous les solides sélectionnés mais ne conserve que leur intersection dans le modèle.";
+"Union"="Union";
+"combine"="combiner";
+"Combine all selected solids into a single solid and keep interior voids."="Fusionne tous les solides selectionnés en un sel solide et conserve l'intérieur vide.";
+"Subtract"="Soustraire";
+"Subtract first solid from second and keep only the result in the model."="Soustrait le premier solide du deuxième et ne conserve que le résultat dans le modèle.";
+"Trim"="Découper";
+"reduce"="réduire";
+"Trim first solid against second solid and keep both in the model."="Découpe le deuxième solide avec le premier et conserve les deux éléments dans le modèle.";
+"Split"="Diviser";
+"split"="diviser";
+"Intersect all selected solids and keep all results in the model."="Réalise l'intersection de tous les solides sélectionnés et conserve tout le résultat dans le modèle.";
+
+
+// Window
+
+"Window"="Fenêtre";
+"Model Info"="Infos sur le modèle";
+"Animation"="Animation";
+"Components"="Composants";
+"Credits"="Crédits";
+"Dimensions"="Dimensions";
+"File"="Fichier";
+"Geo-location"="Géoposition";
+"Rendering"="Rendu";
+"Statistics"="Statistiques";
+"Text"="Texte";
+"Units"="Unités";
+"Show %0"="Affiche %0";
+"Show %0 dialog"="Affiche la boîte de dialogue %0";
+"Materials"="Matières";
+"Components"="Composants";
+"Styles"="Styles";
+"Scenes"="Scènes";
+"Shadows"="Ombres";
+"Layers"="Calques";
+"SoftenEdges"="Adoucir les arêtes";
+"Outliner"="Structure";
+"Instructor"="Instructeur";
+"Fog"="Brouillard";
+"MatchPhoto"="Adapter une photo";
+"Show Ruby Panel"="Afficher la Console Ruby";
+"background"="arrière-plan";
+"watermark"="filigrane";
+"sketchy"="croquis";
+
+
+// Pages / Scenes
+
+"Scenes"="Scènes";
+"Add Scene"="Ajouter une scène";
+"page"="page";
+"scene"="scène";
+"slide"="diapositive";
+"add"="ajouter";
+"new"="nouveau";
+"Update Scene"="Actualiser la scène";
+"Delete Scene"="Supprimer la scène";
+"Previous Scene"="Scène précédente";
+"previous"="dernière";
+"Next Scene"="Scène suivante";
+"next"="prochaine";
+
+
+// Layers
+
+
+// Preferences
+
+"Preferences"="Préférences";
+"preferences"="préférences";
+"Accelerator"="Raccourcis";
+"Accelerator Preferences"="Préférences des raccourcis";
+"Applications"="Applications";
+"Applications Preferences"="Préférences des applications";
+"Compatibility"="Compatibilité";
+"Compatibility Preferences"="Préférences de compatibilité";
+"Drawing"="Dessin";
+"Drawing Preferences"="Préférences de dessin";
+"Extensions"="Extensions";
+"Extensions Preferences"="Préférences des extensions";
+"FileLocations"="Fichiers";
+"FileLocations Preferences"="Préférences des fichiers";
+"General"="Général";
+"General Preferences"="Préférences générales";
+"GraphicsCard"="Carte graphique";
+"GraphicsCard Preferences"="Préférences de la carte graphique";
+"Templates"="Modèle type";
+"Templates Preferences"="Préférences du modèle type";
+"Workspace"="Espace de travail";
+"Workspace Preferences"="Préférences de l’espace de travail";
+
+
+// Entity
+
+"Entity"="Entité";
+"Explode"="Éclater";
+"Ungroup"="Dégrouper";
+"Face"="Face";
+
+
+// Sandbox Tools if loaded
+
+"Sandbox Tools"="Outils Bac à sable";
+"Flip Edge"="Retourner l’arête";
+"Flip edge"="Retourner l’arête";
+"Smoove"="Modeler";
+
+
+// Other
+
+"Center"="Centre";
+"Center Selected"="Centrer sélection";
+"Add Photo Texture"="Ajouter une texture photographique";
+"Add photographic textures to the selected face."="Ajoute des textures photographiques à la face sélectionnée.";
+"face"="face";
+"photo texture"="texture photo";
+"street-view"="street-view";
+"Preview in Google Earth"="Afficher un aperçu du modèle dans Google Earth";
+"Preview this model in Google Earth."="Afficher un aperçu du modèle dans Google Earth.";
+"Google"="Google";
+"Solar North"="Nord solaire";
+"Set North Tool"="Outil Définir le nord";

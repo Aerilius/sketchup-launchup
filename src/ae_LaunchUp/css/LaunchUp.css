@@ -1,0 +1,390 @@
+/* General Styles */
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  position: fixed; /* Prevents scrolling of content in IE. */
+  width: 100%;
+  overflow: hidden;
+  background-color: Window;
+  color: WindowText;
+  font: message-box;
+  cursor: default;
+  user-select: none;
+}
+
+[unselectable=on] {
+  user-select: none;
+}
+
+input, select, label {
+  cursor: pointer;
+  min-height: 1.2em;
+  vertical-align: middle;
+  padding: 0.25em;
+}
+
+input[type=button] {
+  padding: 0;
+}
+
+input[type=text], input[type=number] {
+  /*background-color: Window;
+  border: 1px ButtonShadow solid;
+  margin: 1px;*/
+  cursor: auto;
+}
+
+input[type=text][disabled], input[type=number][disabled] {
+  /*background-color: ButtonFace;
+  border: 1px ButtonShadow solid;*/
+}
+
+input[type=text].num, input[type=number] {
+  text-align: right;
+  width: 2.5em;
+  padding-right: .5em;
+}
+
+button {
+  min-width: 6em;
+  font: message-box;
+  color: ButtonText;
+  padding: 0.25em 0.5em;
+}
+
+form {
+  padding: 1em;
+  /*float: left;*/ /* Important: Using this breaks documentHeight. */
+}
+
+fieldset {
+  text-indent: 0 !important;
+  margin-bottom: 1em;
+  margin-right: 0 !important;
+  padding: 1em;
+  padding-top: 0 !important;
+}
+
+fieldset div {
+  clear: both;
+  line-height: 2em;
+}
+
+fieldset div > :first-child {
+  width: 100%;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+.clear {
+  clear: both;
+}
+
+
+/* UI elements */
+
+
+
+#combo_box {
+  height: 3.25em;
+  line-height: 3.25em;
+  border-left: 0.5em transparent solid;
+  border-right: 2.25em transparent solid;
+}
+
+#combo_input, .combo_input {
+  width: 100%;
+  height: 2em;
+  line-height: 2em;
+  font: message-box;
+  font-size: medium;
+  font-style: normal;
+  padding: 0;
+  /*text-indent: 0.375em;*/ /* TODO: Not needed on OSX */
+  margin-right: -1em;
+  outline: none; /* Disables Safari's border highlighting. */
+}
+
+.default-text {
+  font: message-box;
+  font-style: italic !important;
+  color: GrayText !important;
+}
+
+#buttons_wrapper {
+  display: inline-block;
+  float: right;
+  width: 2.25em;
+  line-height: inherit;
+  margin-right: -2.25em;
+  text-align: center;
+}
+
+#buttons_wrapper * {
+  border: none;
+}
+
+#buttons_wrapper_inner {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+#button_settings {
+  display: block;
+  width: 15px;
+  height: 15px;
+  background: url('../images/settings.png') no-repeat scroll 50% 50% transparent;
+}
+
+#button_history {
+  display: block;
+  width: 15px;
+  height: 15px;
+  background: url('../images/history.png') no-repeat scroll 50% 50% transparent;
+}
+
+#button_pin {
+  display: block;
+  width: 15px;
+  height: 15px;
+  background: url('../images/unpinned.png') no-repeat scroll 50% 50% transparent;
+}
+
+#button_pin.off {
+  background: url('../images/unpinned.png') no-repeat scroll 50% 50% transparent !important;
+}
+
+#button_pin.on {
+  background: url('../images/pinned.png') no-repeat scroll 50% 50% transparent !important;
+}
+
+#lists_container {
+background: red;
+  position: relative;
+}
+
+#suggestions, #history {
+  /*This would remove the element out of the body's layout and Webkit doesn't
+   * consider it for the document height ().*/
+  /*position: absolute;*/
+  width: 100%;
+}
+
+
+
+/* Default list styles */
+
+
+
+.list {
+  list-style: none;
+}
+
+.list li {
+  width: 100%;
+  text-align: left;
+}
+
+.list li div {
+  background: url("../images/bg-normal.png") repeat scroll 0% 50% transparent;
+}
+
+.list li:hover div {
+  background: url("../images/bg-hover.png") repeat scroll 0% 50% transparent;
+}
+
+.list li div {
+  padding: 0.25em 0.5em;
+  overflow: hidden;
+  vertical-align: middle;
+}
+
+.selected, .list li:active {
+  color: HighlightText !important;
+  background: Highlight !important;
+}
+
+.grayed {
+  opacity: 0.5;
+  filter: alpha(opacity = 50);
+  zoom: 1;
+}
+
+.grayed > div {
+  background: url("../images/bg-hover.png") repeat scroll 0% 0% transparent !important;
+}
+
+.grayed img {
+  filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); /* Firefox 10+, Firefox on Android */
+  filter: gray; /* IE6-9 */
+  -webkit-filter: grayscale(100%); /* Chrome 19+, Safari 6+, Safari 6+ iOS */
+}
+
+
+
+/* slim theme */
+
+
+
+.list.slim li div {
+  padding: 0em 0.5em;
+  height: 1.5em;
+  line-height: 1.5em;
+  white-space: nowrap;
+}
+
+.list.slim li img {
+  float: left;
+  width: 16px;
+  height: 16px;
+  margin-top: -8px;
+  margin-right: 0.25em;
+  padding-top: 0.75em;
+}
+
+.list.slim li .name {
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.list.slim li .category {
+  color: GrayText;
+  font-size: 0.9em;
+  font-weight: normal;
+  font-style: italic;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.list.slim li .description {
+  display: none;
+}
+
+
+
+/* wide theme */
+
+
+
+.list.wide li div {
+  background-position: 0% 0%;
+}
+
+.list.wide li:hover div {
+  background-position: 0% 0%;
+}
+
+.list.wide li div {
+  padding: 0.5em;
+  line-height: 1em;
+}
+
+.list.wide li img {
+  float: left;
+  margin: 0 0.5em 0 0;
+  margin-bottom: 0;
+  /*width: 1.85em;
+  height: 1.85em;*/
+  max-width: 2em;
+  max-height: 2em;
+  vertical-align: middle;
+}
+
+.list.wide li .name {
+  display: inline;
+  margin-right: 0.25em;
+  font-weight: bold;
+  font-size: 1.25em;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 1px rgba(255,255,255,0.5);
+  /*white-space: nowrap;*/
+}
+
+.list.wide li .category {
+  display: inline-block;
+  margin-right: 0.5em;
+  overflow: hidden;
+  /*vertical-align: middle;*/
+  color: GrayText;
+  font-weight: normal;
+  font-size: 0.9em;
+  font-style: italic;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.list.wide li .description {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: middle;
+  font-size: 0.9em;
+  text-overflow: ellipsis;
+  text-align: justify;
+  word-break: hyphenate;
+  word-wrap: break-word;
+  /*-ms-word-break: break-all;*/
+  hyphens: auto;
+  zoom: 1;
+}
+
+
+
+/* toolbar theme */
+
+#history .list.toolbar {
+  background: url("../images/bg-normal.png") repeat scroll 0% 0% transparent;
+  /*font-size: 0.5em; This could be used to scale the icons. */
+}
+
+.list.toolbar li {
+  display: inline-block;
+  width: auto;
+  width: 3em;
+  height: 3em;
+  line-height: 3em;
+  overflow: hidden;
+}
+
+.list.toolbar li div {
+  display: inline-block;
+  padding: 0;
+  width: 3em;
+  /* without max-height it can exceed background image height; just with height vertical alignment is incorrect */
+  max-height: 3em;
+  overflow: hidden;
+  text-align: center;
+}
+
+.list.toolbar li img {
+  margin: 0em;
+  vertical-align: middle;
+  /*width: 1.85em;
+  height: 1.85em;*/
+  max-width: 2em;
+  max-height: 2em;
+}
+
+.list.toolbar li .name {
+  float: left;
+  line-height: 1em;
+  font-weight: bold;
+  font-size: 1em;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  word-wrap: break-word;
+}
+
+.list.toolbar li .category, .list.toolbar li .description {
+  display: none;
+}

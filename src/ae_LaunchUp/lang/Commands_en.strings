@@ -1,0 +1,390 @@
+// File
+
+"File"="File";
+"New"="New";
+"new"="new";
+"Create a new model."="Create a new model.";
+"Open"="Open";
+"open"="open";
+"Open an existing model."="Open an existing model.";
+"Save"="Save";
+"save"="save";
+"Save the active model."="Save the active model.";
+"Print…"="Print…";
+"Print the active model."="Print the active model.";
+"Add New Building"="Add New Building";
+"Add a new building model using Google Building Maker."="Add a new building model using Google Building Maker.";
+"Building Maker"="Building Maker";
+"Add Location"="Add Location";
+"Add a geo-location to the model, and gather site information nearby."="Add a geo-location to the model, and gather site information nearby.";
+"Geo-location"="Geo-location";
+"geo-reference"="geo-reference";
+"add"="add";
+"location"="location";
+"place"="place";
+"imagery"="imagery";
+"satellite"="satellite";
+"earth"="earth";
+"map"="map";
+"terrain"="terrain";
+"Clear Location"="Clear Location";
+"Clear the model's geo-location."="Clear the model's geo-location.";
+"clear"="clear";
+"remove"="remove";
+"delete"="delete";
+"Show Terrain"="Show Terrain";
+"Toggle terrain on and off."="Toggle terrain on and off.";
+"Get Models"="Get Models";
+"Get a model from 3D Warehouse."="Get a model from 3D Warehouse.";
+"3D Warehouse"="3D Warehouse";
+"gallery"="gallery";
+"get"="get";
+"download"="download";
+"upload"="upload";
+"share"="share";
+"publish"="publish";
+"Share Model"="Share Model";
+"Share this model to 3D Warehouse."="Share this model to 3D Warehouse.";
+"Share Component"="Share Component";
+"Share the selected component to 3D Warehouse."="Share the selected component to 3D Warehouse.";
+
+
+// Edit
+
+"Edit"="Edit";
+"Undo"="Undo";
+"Redo"="Redo";
+"Redo the previously undone action."="Redo the previously undone action.";
+"Cut"="Cut";
+"clipboard"="clipboard";
+"Copy"="Copy";
+"copy"="copy";
+"Paste"="Paste";
+"paste"="paste";
+"insert"="insert";
+"Erase"="Erase";
+"erase"="erase";
+"Hide"="Hide";
+"Hide Selected Geometry"="Hide Selected Geometry";
+"mask"="mask";
+"Unhide"="Unhide";
+"Unhide Selected Geometry"="Unhide Selected Geometry";
+"show"="show";
+"Make Component"="Make Component";
+"Make a Component from selected entities."="Make a Component from selected entities.";
+"Make Group"="Make Group";
+"Make a Group from selected entities."="Make a Group from selected entities.";
+
+
+// View
+
+"View"="View";
+"Toggle Hidden"="Toggle Hidden";
+"Toggle Hidden Geometry"="Toggle Hidden Geometry";
+"Toggle Axes"="Toggle Axes";
+"Hide Guides"="Hide Guides";
+"Display Construction Geometry"="Display Construction Geometry";
+"Shadows"="Shadows";
+"Display Shadows"="Display Shadows";
+"Fog"="Fog";
+"Display Fog"="Display Fog";
+
+// View →  Edge Style
+
+"Edge Style"="Edge Style";
+"Display Edges"="Display Edges";
+"Back Edges"="Back Edges";
+"Display the model with back edges dashed."="Display the model with back edges dashed.";
+"Profiles"="Profiles";
+"Display Profiles"="Display Profiles";
+"Depth Cue"="Depth Cue";
+"Display Depth Cue"="Display Depth Cue";
+"Jitter Edges"="Jitter Edges";
+"End Points"="End Points";
+"Display End Points"="Display End Points";
+"Edge Color Mode"="Edge Color Mode";
+"Egde Color Mode: "="Egde Color Mode: ";
+"Cycle Edge Color Mode"="Cycle Edge Color Mode";
+"Edge Color by Material"="Edge Color by Material";
+"Egde Color Mode: Default"="Egde Color Mode: Default";
+"Toggle Edge Color by Material"="Toggle Edge Color by Material";
+"Edge Color by Axis"="Edge Color by Axis";
+"Egde Color Mode: by Axis"="Egde Color Mode: by Axis";
+"Toggle Edge Color by Axis"="Toggle Edge Color by Axis";
+"Color By Layer"="Color By Layer";
+"Toggle Color By Layer"="Toggle Color By Layer";
+
+// View → Face Style
+
+"Face Style"="Face Style";
+"X-Ray Mode"="X-Ray Mode";
+"Display the model with globally transparent faces."="Display the model with globally transparent faces.";
+"Wireframe"="Wireframe";
+"Display in wireframe mode."="Display in wireframe mode.";
+"Hidden Line"="Hidden Line";
+"Display in hidden line mode."="Display in hidden line mode.";
+"Shaded"="Shaded";
+"Display in shaded mode."="Display in shaded mode.";
+"Textured"="Textured";
+"Display shaded using textures."="Display shaded using textures.";
+"Monochrome"="Monochrome";
+"Display the model with only front and back face colors."="Display the model with only front and back face colors.";
+
+// View → Component Editing
+
+"Component Editing"="Component Editing";
+"Hide Rest"="Hide Rest";
+"Hide Rest of Model"="Hide Rest of Model";
+"hide"="hide";
+"fade"="fade";
+"inactive"="inactive";
+"components"="components";
+"Hide Similar"="Hide Similar";
+"Hide Similar Components"="Hide Similar Components";
+
+
+// Camera
+
+"Camera"="Camera";
+"Previous"="Previous";
+"Undo the previous camera view."="Undo the previous camera view.";
+
+// Camera → Standard Views
+
+"Standard Views"="Standard Views";
+"Top"="Top";
+"Top View"="Top View";
+"Bottom"="Bottom";
+"Bottom View"="Bottom View";
+"Front"="Front";
+"Front View"="Front View";
+"Back"="Back";
+"Back View"="Back View";
+"Left"="Left";
+"Left View"="Left View";
+"Right"="Right";
+"Right View"="Right View";
+"Iso"="Iso";
+"Move the camera to the nearest isometric view of the model."="Move the camera to the nearest isometric view of the model.";
+"Perspective"="Perspective";
+"Camera Perspective"="Camera Perspective";
+"Orbit"="Orbit";
+"Orbit the camera view about the model."="Orbit the camera view about the model.";
+"Pan"="Pan";
+"Pan the camera view vertically or horizontally."="Pan the camera view vertically or horizontally.";
+"Hand"="Hand";
+"Field of View"="Field of View";
+"Change the field of view."="Change the field of view.";
+"Zoom"="Zoom";
+"Zoom the camera view in or out."="Zoom the camera view in or out.";
+"enlarge"="enlarge";
+"Zoom Window"="Zoom Window";
+"Zoom the camera to show everything inside the selected window."="Zoom the camera to show everything inside the selected window.";
+"Zoom Extents"="Zoom Extents";
+"Zoom to show the selection or the entire model if no selection."="Zoom to show the selection or the entire model if no selection.";
+"Camera Position"="Camera Position";
+"Position the camera view with a specific location, eye height and direction."="Position the camera view with a specific location, eye height and direction.";
+"Walk"="Walk";
+"Walk with the camera."="Walk with the camera.";
+"Look"="Look";
+"Pivot camera view about a stationary point."="Pivot camera view about a stationary point.";
+"Image Igloo"="Image Igloo";
+"Show all matched photos around the model."="Show all matched photos around the model.";
+
+
+// Draw
+
+"Draw"="Draw";
+"Line"="Line";
+"Draw edges from point to point."="Draw edges from point to point.";
+"Arc"="Arc";
+"Draw arcs from point to point with bulge."="Draw arcs from point to point with bulge.";
+"arc"="arc";
+"curve"="curve";
+"Freehand"="Freehand";
+"Draw freehand lines by clicking and dragging."="Draw freehand lines by clicking and dragging.";
+"polyline"="polyline";
+"Rectangle"="Rectangle";
+"Draw rectangular faces from corner to corner."="Draw rectangular faces from corner to corner.";
+"Circle"="Circle";
+"Draw circles from center point to radius."="Draw circles from center point to radius.";
+"Polygon"="Polygon";
+"Draw N-sided polygons from center point to radius."="Draw N-sided polygons from center point to radius.";
+
+
+// Tools
+
+"Tools"="Tools";
+"Select"="Select";
+"Select entities"="Select entities";
+"Eraser"="Eraser";
+"Erase, soften or smooth entities in the model."="Erase, soften or smooth entities in the model.";
+"Paint Bucket"="Paint Bucket";
+"Apply color and material to entities in the model."="Apply color and material to entities in the model.";
+"Move"="Move";
+"Move, stretch, copy and array selected entities."="Move, stretch, copy and array selected entities.";
+"move"="move";
+"displace"="displace";
+"Rotate"="Rotate";
+"Rotate, stretch, copy and array selected entities about an axis."="Rotate, stretch, copy and array selected entities about an axis.";
+"Scale"="Scale";
+"Scale and stretch selected entities."="Scale and stretch selected entities.";
+"scale"="scale";
+"resize"="resize";
+"bigger"="bigger";
+"smaller"="smaller";
+"Push/Pull"="Push/Pull";
+"Push and pull faces."="Push and pull faces.";
+"push"="push";
+"pull"="pull";
+"extrude"="extrude";
+"Follow"="Follow";
+"Follow a path with a selected face."="Follow a path with a selected face.";
+"follow"="follow";
+"path"="path";
+"Offset"="Offset";
+"Offset selected edges in a plane."="Offset selected edges in a plane.";
+"Tape"="Tape";
+"Measure distances, create guide lines or points."="Measure distances, create guide lines or points.";
+"Protractor"="Protractor";
+"Measure angles and create guides."="Measure angles and create guides.";
+"Axis"="Axis";
+"Move or orient the axis."="Move or orient the axis.";
+"Dimension"="Dimension";
+"Draw Dimension"="Draw Dimension";
+"Text"="Text";
+"Draw text labels."="Draw text labels.";
+"3D Text Tool"="3D Text Tool";
+"Create 3D Text"="Create 3D Text";
+"Section"="Section";
+"Solid Tools"="Solid Tools";
+"solid"="solid";
+"Outer Shell"="Outer Shell";
+"shell"="shell";
+"Combine all selected solids into a single solid and remove all interior entities."="Combine all selected solids into a single solid and remove all interior entities.";
+"Intersect"="Intersect";
+"intersect"="intersect";
+"cut"="cut";
+"Intersect all selected solids but keep only their intersection in the model."="Intersect all selected solids but keep only their intersection in the model.";
+"Union"="Union";
+"combine"="combine";
+"Combine all selected solids into a single solid and keep interior voids."="Combine all selected solids into a single solid and keep interior voids.";
+"Subtract"="Subtract";
+"Subtract first solid from second and keep only the result in the model."="Subtract first solid from second and keep only the result in the model.";
+"Trim"="Trim";
+"reduce"="reduce";
+"Trim first solid against second solid and keep both in the model."="Trim first solid against second solid and keep both in the model.";
+"Split"="Split";
+"split"="split";
+"Intersect all selected solids and keep all results in the model."="Intersect all selected solids and keep all results in the model.";
+
+
+// Window
+
+"Window"="Window";
+"Model Info"="Model Info";
+"Animation"="Animation";
+"Components"="Components";
+"Credits"="Credits";
+"Dimensions"="Dimensions";
+"File"="File";
+"Geo-location"="Geo-location";
+"Rendering"="Rendering";
+"Statistics"="Statistics";
+"Text"="Text";
+"Units"="Units";
+"Show %0"="Show %0";
+"Show %0 dialog"="Show %0 dialog";
+"Materials"="Materials";
+"Components"="Components";
+"Styles"="Styles";
+"Scenes"="Scenes";
+"Shadows"="Shadows";
+"Layers"="Layers";
+"SoftenEdges"="Soften Edges";
+"Outliner"="Outliner";
+"Instructor"="Instructor";
+"Fog"="Fog";
+"MatchPhoto"="Match Photo";
+"Show Ruby Panel"="Show Ruby Panel";
+"background"="background";
+"watermark"="watermark";
+"sketchy"="sketchy";
+
+
+// Pages / Scenes
+
+"Scenes"="Scenes";
+"Add Scene"="Add Scene";
+"page"="page";
+"scene"="scene";
+"slide"="slide";
+"add"="add";
+"new"="new";
+"Update Scene"="Update Scene";
+"Delete Scene"="Delete Scene";
+"Previous Scene"="Previous Scene";
+"previous"="previous";
+"Next Scene"="Next Scene";
+"next"="next";
+
+
+// Layers
+
+
+// Preferences
+
+"Preferences"="Preferences";
+"preferences"="preferences";
+"Accelerator"="Shortcuts";
+"Accelerator Preferences"="Shortcuts Preferences";
+"Applications"="Applications";
+"Applications Preferences"="Applications Preferences";
+"Compatibility"="Compatibility";
+"Compatibility Preferences"="Compatibility Preferences";
+"Drawing"="Drawing";
+"Drawing Preferences"="Drawing Preferences";
+"Extensions"="Extensions";
+"Extensions Preferences"="Extensions Preferences";
+"FileLocations"="File Locations";
+"FileLocations Preferences"="File Locations Preferences";
+"General"="General";
+"General Preferences"="General Preferences";
+"GraphicsCard"="Graphics Card";
+"GraphicsCard Preferences"="Graphics Card Preferences";
+"Templates"="Templates";
+"Templates Preferences"="Templates Preferences";
+"Workspace"="Workspace";
+"Workspace Preferences"="Workspace Preferences";
+
+
+// Entity
+
+"Entity"="Entity";
+"Explode"="Explode";
+"Ungroup"="Ungroup";
+"Face"="Face";
+
+
+// Sandbox Tools if loaded
+
+"Sandbox Tools"="Sandbox Tools";
+"Flip Edge"="Flip Edge";
+"Flip edge"="Flip edge";
+"Smoove"="Smoove";
+
+
+// Other
+
+"Center"="Center";
+"Center Selected"="Center Selected";
+"Add Photo Texture"="Add Photo Texture";
+"Add photographic textures to the selected face."="Add photographic textures to the selected face.";
+"face"="face";
+"photo texture"="photo texture";
+"street-view"="street-view";
+"Preview in Google Earth"="Preview in Google Earth";
+"Preview this model in Google Earth."="Preview this model in Google Earth.";
+"Google"="Google";
+"Solar North"="Solar North";
+"Set North Tool"="Set North Tool";

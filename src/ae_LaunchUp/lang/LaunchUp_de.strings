@@ -1,0 +1,66 @@
+// Plugin meta data
+"LaunchUp"="LaunchUp";
+"LaunchUp – Quick Launcher"="LaunchUp – Schnellstarter";
+"A searchable quick launcher for SketchUp tools."="Ein durchsuchbarer Schnellstarter für SketchUp-Funktionen.";
+"LaunchUp – Options"="LaunchUp – Einstellungen";
+"Options to customize the look and behavior of LaunchUp."="Einstellungen um das Aussehen und Verhalten von LaunchUp anzupassen.";
+"options"="Optionen";
+"settings"="Einstellungen";
+"preferences"="Voreinstellungen";
+
+// Other strings
+"Show %0 toolbar"="Symbolleiste „%0“ anzeigen";
+"Load extension %0"="Lade Erweiterung „%0“";
+"Extension %0 already loaded"="Erweiterung „%0“ schon geladen";
+"Extensions"="Erweiterungen";
+"extension"="Erweiterung";
+"plugin"="Plugin";
+"add-on"="Add-on";
+"File"="Datei";
+"file"="Datei";
+"Edit"="Bearbeiten";
+"edit"="Bearbeiten";
+"View"="Ansicht";
+"view"="Ansicht";
+"Camera"="Kamera";
+"camera"="Kamera";
+"Draw"="Zeichnen";
+"draw"="Zeichnen";
+"Tools"="Tools";
+"tools"="Tools";
+"Plugins"="Plugins";
+"plugins"="Plugins";
+"Help"="Hilfe";
+"help"="Hilfe";
+
+// Strings of the LaunchUp dialog itself
+"Search…"="Suchen…";
+"Unpinned. \nLaunchUp hides always after executing \na command. Click to change."="Nicht festgepinnt. Nach dem Ausführen eines Befehls wird LaunchUp immer ausgeblendet. Zum Ändern klicken.";
+"Pinned. \nLaunchUp stays always visible. \nClick to change."="Festgepinnt. \nLaunchUp bleibt immer sichtbar. \nZum Ändern klicken.";
+
+// Strings of the Options dialog
+"Appearance"="Erscheinungsbild";
+"Choose the background color of the LaunchUp dialog."="Hintergrundfarbe für den LaunchUp-Dialog auswählen.";
+"Color"="Farbe";
+"background"="Hintergrund";
+"text"="Text";
+"Style for suggestions"="Stil für Vorschläge";
+"Style for the history"="Stil für den Verlauf";
+"slim"="schmal";
+"wide"="weit";
+"toolbar"="Symbolleiste";
+"Behavior"="Verhalten";
+"Maximum amount of suggesions"="Maximale Anzahl von Vorschlägen";
+"Keep the dialog open after executing a command."="Den Dialog offen lassen, nachdem ein Befehl ausgeführt wurde.";
+"Show the history of recently used commands."="Den Verlauf der kürzlich verwendeten Befehle anzeigen.";
+"Maximum length"="Maximale Länge";
+
+// Strings of the Options dialog: extensions
+"Smart searches allow to enhance the available commands."="Erweiterte Suchfunktionen ergänzen die vorhandenen Befehle.";
+"Native tools"="Native Funktionen";
+"Show/Hide toolbars"="Symbolleisten anzeigen oder ausblenden";
+"Load extensions"="Erweiterungen laden";
+"Load Ruby files"="Ruby-Dateien laden";
+"A dictionary of local language words and synonyms allows to find even commands that don't provide detailed or translated metadata."="Ein Wörterbuch mit lokalisierten Wörtern und Synonymen erlaubt es, auch Befehle zu finden, die unvollständige oder nicht übersetzte Metadaten haben.";
+"Cancel"="Abbrechen";
+"Apply"="Anwenden";

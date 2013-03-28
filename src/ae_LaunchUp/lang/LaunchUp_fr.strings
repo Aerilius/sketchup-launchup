@@ -1,0 +1,66 @@
+// Plugin meta data
+"LaunchUp"="LaunchUp";
+"LaunchUp – Quick Launcher"="LaunchUp – lanceur rapide";
+"A searchable quick launcher for SketchUp tools."="Un lanceur rapide consultable pour les outils de SketchUp.";
+"LaunchUp – Options"="LaunchUp – Paramètres";
+"Options to customize the look and behavior of LaunchUp."="Paramètres pour personnaliser l’apparence et le comportement de LaunchUp.";
+"options"="options";
+"settings"="paramètres";
+"preferences"="préférences";
+
+// Other strings
+"Show %0 toolbar"="Affiche la barre d’outils «%0»";
+"Load extension %0"="Active l’extension «%0»";
+"Extension %0 already loaded"="Extension «%0» déjà activé";
+"Extensions"="Extensions";
+"extension"="extension";
+"plugin"="plugin";
+"add-on"="add-on";
+"File"="Fichier";
+"file"="Fichier";
+"Edit"="Édition";
+"edit"="Édition";
+"View"="Affichage";
+"view"="Affichage";
+"Camera"="Caméra";
+"camera"="Caméra";
+"Draw"="Dessiner";
+"draw"="Dessiner";
+"Tools"="Outils";
+"tools"="Outils";
+"Plugins"="Plugins";
+"plugins"="Plugins";
+"Help"="Aide";
+"help"="Aide";
+
+// Strings of the LaunchUp dialog itself
+"Search…"="Chercher…";
+"Unpinned. \nLaunchUp hides always after executing a command. Click to change."="Désépinglé. \nLaunchUp masque toujours après l’exécution d’une commande. Clique ici pour modifier.";
+"Pinned. \nLaunchUp stays always visible. \nClick to change."="Épinglé. \nLaunchUp reste toujours visible. \nClique ici pour modifier.";
+
+// Strings of the Options dialog
+"Appearance"="Apparence";
+"Choose the background color of the LaunchUp dialog."="Choisis la couleur d’arrière-plan de la boîte de dialogue LaunchUp.";
+"Color"="Couleur";
+"background"="arrière-plan";
+"text"="texte";
+"Style for suggestions"="Style des suggestions";
+"Style for the history"="Style de l’historique";
+"slim"="mince";
+"wide"="large";
+"toolbar"="barre d'outils";
+"Behavior"="Comportement";
+"Maximum amount of suggesions"="Montant maximal des suggestions";
+"Keep the dialog open after executing a command."="Garder la boîte de dialogue ouverte après l’exécution d’une commande.";
+"Show the history of recently used commands."="Visualiser l’historique des commandes récemment utilisées.";
+"Maximum length"="Montant maximal";
+
+// Strings of the Options dialog: extensions
+"Smart searches allow to enhance the available commands."="Recherches intelligentes permettent d’augmenter les commandes disponibles.";
+"Native tools"="Outils natifs";
+"Show/Hide toolbars"="Afficher/masquer les barres d’outils";
+"Load extensions"="Charge des extensions";
+"Load Ruby files"="Charge des fichiers ruby";
+"A dictionary of local language words and synonyms allows to find even commands that don't provide detailed or translated metadata."="Un dictionnaire de synonymes et de mots localisés permet de retrouver les commandes même qui ne fournissent pas des métadonnées détaillées ou traduites.";
+"Cancel"="Annuler";
+"Apply"="Appliquer";

@@ -1,0 +1,390 @@
+// File
+
+"File"="Datei";
+"New"="Neu";
+"new"="neu";
+"Create a new model."="Neues Modell erstellen";
+"Open"="Öffnen";
+"open"="öffnen";
+"Open an existing model."="Öffnet ein vorhandenes Modell.";
+"Save"="Speichern";
+"save"="sichern";
+"Save the active model."="Speichert das aktive Modell.";
+"Print…"="Drucken…";
+"Print the active model."="Druckt das aktive Modell.";
+"Add New Building"="Neues Gebäude hinzufügen";
+"Add a new building model using Google Building Maker."="Ein neues Gebäudemodell mit dem Gebäude-Erstellungstool hinzufügen.";
+"Building Maker"="Gebäude-Erstellungstool";
+"Add Location"="Ort hinzufügen";
+"Add a geo-location to the model, and gather site information nearby."="Einen Standort zum Modell hinzufügen, und Informationen über die Umgebung sammeln";
+"Geo-location"="Geostandort";
+"geo-reference"="Geo-Standort";
+"add"="hinzufügen";
+"location"="Standort";
+"place"="Platz";
+"imagery"="Bilder";
+"satellite"="Satellit";
+"earth"="Erde";
+"map"="Karte";
+"terrain"="Gelände";
+"Clear Location"="Ort löschen";
+"Clear the model's geo-location."="Die Standortinformationen des Modells löschen";
+"clear"="leeren";
+"remove"="entfernen";
+"delete"="löschen";
+"Show Terrain"="Gelände anzeigen";
+"Toggle terrain on and off."="Das Gelände an- und ausschalten.";
+"Get Models"="Modelle übernehmen";
+"Get a model from 3D Warehouse."="Ein Modell aus der 3D-Galerie herunterladen.";
+"3D Warehouse"="3D-Galerie";
+"gallery"="Galerie";
+"get"="holen";
+"download"="herunterladen";
+"upload"="hochladen";
+"share"="teilen";
+"publish"="veröffentlichen";
+"Share Model"="Modell gemeinsam verwenden";
+"Share this model to 3D Warehouse."="Dieses Modell in der 3D-Galerie veröffentlichen.";
+"Share Component"="Komponente gemeinsam verwenden";
+"Share the selected component to 3D Warehouse."="Ausgewählte Komponente in der 3D-Galerie veröffentlichen.";
+
+
+// Edit
+
+"Edit"="Bearbeiten";
+"Undo"="Rückgängig";
+"Redo"="Wiederholen";
+"Redo the previously undone action."="Wiederholt die zuletzt rückgängig gemachte Aktion.";
+"Cut"="Ausschneiden";
+"clipboard"="Zwischenablage";
+"Copy"="Kopieren";
+"copy"="Kopie";
+"Paste"="Einfügen";
+"paste"="einfügen";
+"insert"="einfügen";
+"Erase"="Löschen";
+"erase"="löschen";
+"Hide"="Ausblenden";
+"Hide Selected Geometry"="Blendet ausgewählte Geometrie aus";
+"mask"="verbergen";
+"Unhide"="Einblenden";
+"Unhide Selected Geometry"="Blendet ausgewählte Geometrie ein";
+"show"="zeigen";
+"Make Component"="Komponente erstellen";
+"Make a Component from selected entities."="Erstellt eine Komponente aus den ausgewählten Elementen.";
+"Make Group"="Gruppieren";
+"Make a Group from selected entities."="Erstellt eine Gruppe aus den ausgewählten Elementen.";
+
+
+// View
+
+"View"="Ansicht";
+"Toggle Hidden"="Anzeige ausgeblendeter Geometrie umschalten";
+"Toggle Hidden Geometry"="Ausgeblendete Geometrie umschalten";
+"Toggle Axes"="Anzeige der Achsen umschalten";
+"Hide Guides"="Führungslinie ausblenden";
+"Display Construction Geometry"="Führungslinien und -punkte anzeigen";
+"Shadows"="Schatten";
+"Display Shadows"="Schatten anzeigen";
+"Fog"="Nebel";
+"Display Fog"="Nebel anzeigen";
+
+// View →  Edge Style
+
+"Edge Style"="Kantenstil";
+"Display Edges"="Kanten anzeigen";
+"Back Edges"="Hinterkanten";
+"Display the model with back edges dashed."="Modell mit gestrichelten Hinterkanten anzeigen";
+"Profiles"="Profile";
+"Display Profiles"="Profile anzeigen";
+"Depth Cue"="Tiefenschärfe";
+"Display Depth Cue"="Tiefenschärfe anzeigen";
+"Jitter Edges"="Zitterkanten";
+"End Points"="Endpunkte";
+"Display End Points"="Endpunkte anzeigen";
+"Edge Color Mode"="Kantenfarbmodus";
+"Egde Color Mode: "="Kantenfarbmodus: ";
+"Cycle Edge Color Mode"="Kantenfarbmodus umschalten";
+"Edge Color by Material"="Kantenfarbe nach Material";
+"Egde Color Mode: Default"="Kantenfarbmodus: Standard";
+"Toggle Edge Color by Material"="Kantenfarbe nach Material umschalten";
+"Edge Color by Axis"="Kantenfarbe nach Achse";
+"Egde Color Mode: by Axis"="Kantenfarbmodus: nach Achse";
+"Toggle Edge Color by Axis"="Kantenfarbe nach Achse umschalten";
+"Color By Layer"="Farbe nach Layer";
+"Toggle Color By Layer"="Farbe nach Layer umschalten";
+
+// View → Face Style
+
+"Face Style"="Flächenstil";
+"X-Ray Mode"="Röntgenmodus";
+"Display the model with globally transparent faces."="Modell mit überall lichtdurchlässigen Flächen anzeigen";
+"Wireframe"="Drahtgitter";
+"Display in wireframe mode."="Im Drahtgittermodus anzeigen";
+"Hidden Line"="Linienausblendung";
+"Display in hidden line mode."="Mit Linienausblendung anzeigen";
+"Shaded"="Schattiert";
+"Display in shaded mode."="Im schattierten Modus anzeigen";
+"Textured"="Texturiert";
+"Display shaded using textures."="Schattiert mit Texturen anzeigen";
+"Monochrome"="Monochrom";
+"Display the model with only front and back face colors."="Modell nur mit den Farben der Vorder- und Rückseite anzeigen";
+
+// View → Component Editing
+
+"Component Editing"="Komponentenbearbeitung";
+"Hide Rest"="Rest ausblenden";
+"Hide Rest of Model"="Blendet den Rest des Modells aus";
+"hide"="verstecken";
+"fade"="überblenden";
+"inactive"="inaktiv";
+"components"="Komponenten";
+"Hide Similar"="Ähnliche ausblenden";
+"Hide Similar Components"="Blendet ähnliche Komponenten aus";
+
+
+// Camera
+
+"Camera"="Kamera";
+"Previous"="Letzte";
+"Undo the previous camera view."="Macht die vorherige Kameraansicht rückgängig.";
+
+// Camera → Standard Views
+
+"Standard Views"="Standardansichten";
+"Top"="Oben";
+"Top View"="Ansicht von oben";
+"Bottom"="Unten";
+"Bottom View"="Bodenansicht";
+"Front"="Vorne";
+"Front View"="Frontansicht";
+"Back"="Rückansicht";
+"Back View"="Rückansicht";
+"Left"="Links";
+"Left View"="Ansicht von links";
+"Right"="Rechts";
+"Right View"="Ansicht von rechts";
+"Iso"="ISO";
+"Move the camera to the nearest isometric view of the model."="Verschiebt die Kamera zur nächstmöglichen isometrischen Ansicht auf das Modell.";
+"Perspective"="Perspektive";
+"Camera Perspective"="Kameraperspektive";
+"Orbit"="Rotieren";
+"Orbit the camera view about the model."="Dreht die Kameraansicht um das Modell.";
+"Pan"="Hand";
+"Pan the camera view vertically or horizontally."="Schwenkt die Kameraansicht vertikal oder horizontal.";
+"Hand"="Hand";
+"Field of View"="Blickfeld";
+"Change the field of view."="Ändert das Blickfeld.";
+"Zoom"="Zoomen";
+"Zoom the camera view in or out."="Zoomt die Kameraansicht ein oder aus.";
+"enlarge"="vergrößern";
+"Zoom Window"="Zoombereich";
+"Zoom the camera to show everything inside the selected window."="Zoomt die Kamera, um alles innerhalb des ausgewählten Fensters anzuzeigen.";
+"Zoom Extents"="Alles zeigen";
+"Zoom to show the selection or the entire model if no selection."="Zoomt auf die Auswahl oder auf das gesamte Modell, wenn nichts ausgewählt.";
+"Camera Position"="Kamera positionieren";
+"Position the camera view with a specific location, eye height and direction."="Positioniert die Kameraansicht an einem bestimmten Ort sowie in einer bestimmten Augenhöhe und Richtung.";
+"Walk"="Gehen";
+"Walk with the camera."="Geht mit der Kamera.";
+"Look"="Umschauen";
+"Pivot camera view about a stationary point."="Dreht die Kameraansicht um einen festen Punkt.";
+"Image Igloo"="Bild-Igloo";
+"Show all matched photos around the model."="Zeigt alle abgeglichenen Fotos um das Modell herum.";
+
+
+// Draw
+
+"Draw"="Zeichnen";
+"Line"="Linie";
+"Draw edges from point to point."="Zeichnet Kanten von Punkt zu Punkt.";
+"Arc"="Bogen";
+"Draw arcs from point to point with bulge."="Zeichnet Bogen von Punkt zu Punkt mit Rundung.";
+"arc"="Bogen";
+"curve"="Kurve";
+"Freehand"="Freihand";
+"Draw freehand lines by clicking and dragging."="Zeichnet Freihandlinien durch Klicken und Ziehen.";
+"polyline"="Linienzug";
+"Rectangle"="Rechteck";
+"Draw rectangular faces from corner to corner."="Zeichnet rechteckige Flächen von Ecke zu Ecke.";
+"Circle"="Kreis";
+"Draw circles from center point to radius."="Zeichnet Kreise von Mittelpunkt zum Radius.";
+"Polygon"="Vieleck";
+"Draw N-sided polygons from center point to radius."="Zeichnet n-seitige Vielecke vom Mittelpunkt zum Radius.";
+
+
+// Tools
+
+"Tools"="Tools";
+"Select"="Auswählen";
+"Select entities"="Elemente auswählen";
+"Eraser"="Radiergummi";
+"Erase, soften or smooth entities in the model."="Löscht oder glättet Elemente im Modell oder mildert sie ab.";
+"Paint Bucket"="Farbeimer";
+"Apply color and material to entities in the model."="Wendet Farbe und Material auf Elemente im Modell an.";
+"Move"="Verschieben";
+"Move, stretch, copy and array selected entities."="Verschiebt, dehnt und kopiert ausgewählte Elemente und reiht sie auf.";
+"move"="bewegen";
+"displace"="verschieben";
+"Rotate"="Drehen";
+"Rotate, stretch, copy and array selected entities about an axis."="Rotiert, dehnt und kopiert die ausgewählten Elemente und reiht sie um eine Achse auf.";
+"Scale"="Skalieren";
+"Scale and stretch selected entities."="Skaliert und dehnt ausgewählte Elemente.";
+"scale"="skalieren";
+"resize"="vergrößern";
+"bigger"="größer";
+"smaller"="kleiner";
+"Push/Pull"="Drücken/Ziehen";
+"Push and pull faces."="Drückt und zieht Flächenelemente.";
+"push"="drücken";
+"pull"="ziehen";
+"extrude"="extrudieren";
+"Follow"="Folge mir";
+"Follow a path with a selected face."="Folgt einem Pfad mit einer ausgewählten Fläche.";
+"follow"="folgen";
+"path"="Pfad";
+"Offset"="Versatz";
+"Offset selected edges in a plane."="Versetzt ausgewählte Kanten in einer Ebene.";
+"Tape"="Maßband";
+"Measure distances, create guide lines or points."="Misst Abstände, erstellt Führungslinien und -punkte.";
+"Protractor"="Winkelmesser";
+"Measure angles and create guides."="Misst Winkel und erstellt Führungslinien.";
+"Axis"="Achse";
+"Move or orient the axis."="Verschiebt die Zeichnungsachsen oder richtet sie neu aus.";
+"Dimension"="Abmessung";
+"Draw Dimension"="Abmessung zeichnen";
+"Text"="Text";
+"Draw text labels."="Zeichnet Textmarkierungen.";
+"3D Text Tool"="3D-Textfunktion";
+"Create 3D Text"="Zeichnet 3D-Text";
+"Section"="Schnitt";
+"Solid Tools"="Volumenkörperfunktionen";
+"solid"="Festkörper";
+"Outer Shell"="Äußere Schale";
+"shell"="Schale";
+"Combine all selected solids into a single solid and remove all interior entities."="Vereint alle ausgewählten Volumenkörper zu einem einzelnen Volumenkörper und entfernt alle inneren Elemente.";
+"Intersect"="Verschneiden";
+"intersect"="verschneiden";
+"cut"="schneiden";
+"Intersect all selected solids but keep only their intersection in the model."="Verschneidet alle ausgewählten Volumenkörper, aber behält nur ihre Verschneidung im Modell.";
+"Union"="Vereinigen";
+"combine"="kombinieren";
+"Combine all selected solids into a single solid and keep interior voids."="Vereint alle ausgewählten Volumenkörper zu einem einzelnen Volumenkörper und behält die inneren Hohlräume.";
+"Subtract"="Subtrahieren";
+"Subtract first solid from second and keep only the result in the model."="Subtrahiert den ersten Volumenkörper vom zweiten und behält nur das Ergebnis im Modell";
+"Trim"="Stutzen";
+"reduce"="beschneiden";
+"Trim first solid against second solid and keep both in the model."="Stutzt den ersten Volumenkörper um den zweiten und behält beide im Modell.";
+"Split"="Teilen";
+"split"="teilen";
+"Intersect all selected solids and keep all results in the model."="Verschneidet alle ausgewählten Volumenkörper und behält alle Ergebnisse im Modell.";
+
+
+// Window
+
+"Window"="Fenster";
+"Model Info"="Modellinformationen";
+"Animation"="Animation";
+"Components"="Komponenten";
+"Credits"="Credits";
+"Dimensions"="Abmessungen";
+"File"="Datei";
+"Geo-location"="Geostandort";
+"Rendering"="Darstellung";
+"Statistics"="Statistiken";
+"Text"="Text";
+"Units"="Einheiten";
+"Show %0"="Zeige %0";
+"Show %0 dialog"="Zeige %0-Dialog";
+"Materials"="Materialien";
+"Components"="Komponenten";
+"Styles"="Stile";
+"Scenes"="Szenen";
+"Shadows"="Schatten";
+"Layers"="Layer";
+"SoftenEdges"="Kanten abmildern";
+"Outliner"="Gliederung";
+"Instructor"="Mentor";
+"Fog"="Nebel";
+"MatchPhoto"="Mit Foto abgleichen";
+"Show Ruby Panel"="Ruby-Konsole anzeigen";
+"background"="Hintergrund";
+"watermark"="Wasserzeichen";
+"sketchy"="skizzenhaft";
+
+
+// Pages / Scenes
+
+"Scenes"="Szenen";
+"Add Scene"="Szene hinzufügen";
+"page"="Seite";
+"scene" = Szene";
+"slide"="Folie";
+"add"="hinzufügen";
+"new"="neu";
+"Update Scene"="Szene aktualisieren";
+"Delete Scene"="Szene löschen";
+"Previous Scene"="Vorherige Szene";
+"previous"="vorherige";
+"Next Scene"="Nächste Szene";
+"next"="nächste";
+
+
+// Layers
+
+
+// Preferences
+
+"Preferences"="Voreinstellungen";
+"preferences"="Einstellungen";
+"Accelerator"="Tastenkürzel";
+"Accelerator Preferences"="Tastenkürzel-Einstellungen";
+"Applications"="Programme";
+"Applications Preferences"="Programm-Einstellungen";
+"Compatibility"="Kompatibilität";
+"Compatibility Preferences"="Kompatibilitätseinstellungen";
+"Drawing"="Zeichnen";
+"Drawing Preferences"="Zeicheneinstellungen";
+"Extensions"="Erweiterungen";
+"Extensions Preferences"="Erweiterungseinstellungen";
+"FileLocations"="Dateien";
+"FileLocations Preferences"="Dateispeicherort-Einstellungen";
+"General"="Allgemeines";
+"General Preferences"="Allgemeine Einstellungen";
+"GraphicsCard"="Grafikkarte";
+"GraphicsCard Preferences"="Grafikkarten-Einstellungen";
+"Templates"="Vorlagen";
+"Templates Preferences"="Vorlagen-Einstellungen";
+"Workspace"="Arbeitsbereich";
+"Workspace Preferences"="Arbeitsbereich-Einstellungen";
+
+
+// Entity
+
+"Entity"="Element";
+"Explode"="In Einzelteile auflösen";
+"Ungroup"="Gruppierung auflösen";
+"Face"="Fläche";
+
+
+// Sandbox Tools if loaded
+
+"Sandbox Tools"="Sandkistenfunktionen";
+"Flip Edge"="Kante spiegeln";
+"Flip edge"="Kante Spiegeln";
+"Smoove"="Formen";
+
+
+// Other
+
+"Center"="Zentrieren";
+"Center Selected"="Auswahl zentrieren";
+"Add Photo Texture"="Fototextur hinzufügen";
+"Add photographic textures to the selected face."="Fügt der ausgewählten Fläche Fototexturen hinzu.";
+"face"="Fläche";
+"photo texture"="Fototextur";
+"street-view"="Street-View";
+"Preview in Google Earth"="Vorschau in Google Earth";
+"Preview this model in Google Earth."="Zeigt dieses Modell in Google Earth in der Vorschau an.";
+"Google"="Google";
+"Solar North"="Sonnennorden";
+"Set North Tool"="Nordfunktion einstellen";

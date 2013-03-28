@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>LaunchUp – Options</title>
+<meta http-equiv="content-type" content="text/html; charset = UTF-8">
+<meta http-equiv="MSThemeCompatible" content="Yes">
+<meta http-equiv="X-UA-Compatible" content="IE=8"/>
+<link href="../css/LaunchUp.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="../js/Base.js"></script>
+<script type="text/javascript" src="../js/LaunchUpOptions.js"></script>
+</head>
+<body scroll="no">
+
+<form id="options">
+
+
+  <fieldset>
+    <legend>Appearance</legend>
+
+    <div>
+      <span title="Choose the background color of the LaunchUp dialog." class="left">
+        Color:
+        <label class="right">
+        <select name="color" id="color">
+          <option value="ButtonFace" style="color:ButtonText;background-color:ButtonFace">ButtonFace</option>
+          <option value="Menu" style="color:MenuText;background-color:Menu">Menu</option>
+          <option value="Window" style="color:WindowText;background-color:Window">Window</option>
+          <option value="ActiveCaption" style="color:CaptionText;background-color:ActiveCaption">ActiveCaption</option>
+          <option value="InactiveCaption" style="color:InactiveCaptionText;background-color:InactiveCaption">InactiveCaption</option>
+          <option value="custom" id="color_custom" selected>custom</option>
+        </select>
+        </label>
+        <div id="color_custom_inputs" class="right">
+          <label>
+            background: <input name="color_custom" value="#dddddd" size="7" />
+          </label>
+          <label>
+            text: <input name="color_custom_text" value="#222222" size="7" />
+          </label>
+        </div>
+      </span>
+    </div>
+    <div>
+      <label class="left">
+        Style for suggestions:
+        <select name="style_suggestions" class="right">
+          <option value="slim" >slim</option>
+          <option value="wide" selected>wide</option>
+        </select>
+      </label>
+    </div>
+    <div>
+      <label class="left">
+        Style for the history:
+        <select name="style_history" class="right">
+          <option value="slim" selected>slim</option>
+          <option value="wide" >wide</option>
+          <option value="toolbar" selected>toolbar</option>
+        </select>
+      </label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Behavior</legend>
+    <div>
+      <label title="Maximum length of suggestions" class="left">
+        Maximum amount of suggesions:
+        <input type="number" name="max_length" class="number integer" size="3" />
+      </label>
+    </div>
+    <div>
+      <label title="Keep the dialog open after executing a command." class="left">
+        <input type="checkbox" name="pinned" />
+        Keep the dialog open after executing a command.
+      </label>
+    </div>
+    <div>
+      <span class="left">
+        <label title="Show the history of recently used commands.">
+          <input type="checkbox" name="show_history" />
+          Show the history of recently used commands.
+        </label>
+        <label title="Maximum length" class="right">
+          Maximum length:
+          <input type="number" name="history_max_length" class="number integer" size="3" />
+        </label>
+      </span>
+    </div>
+  </fieldset>
+
+<!--
+  <fieldset>
+    <legend>Search</legend>
+
+    <div>
+      <label title="Smart searches allow to enhance the available commands." class="left">
+        Smart searches:
+        <select name="smart_searches" class="right" multiple="multiple">
+          <option value="native_tools">Native tools</option>
+          <option value="show_toolbars">Show/Hide toolbars</option>
+          <option value="load_extensions">Load extensions</option>
+          <option value="load_ruby_files">Load Ruby files</option>
+        </select>
+      </label>
+    </div>
+
+    <div>
+      <label title="A dictionary of local language words and synonyms allows to find even commands that don't provide detailed or translated metadata." class="left">
+        <input type="checkbox" name="use_dictionaries" />
+        Use language dictionary to improve search results.
+      </label>
+    </div>
+
+  </fieldset>
+-->
+  <input type="hidden" id="results" />
+
+<div class="right">
+  <button id="cancel_button">Cancel</button> &nbsp; <button id="apply_button">Apply</button>
+</div>
+<div class="clear"></div>
+
+</form>
+
+
+<script type="text/javascript">AE.Bridge.callRuby('initialize')</script>
+</body>
+</html>
