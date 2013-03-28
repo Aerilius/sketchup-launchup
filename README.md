@@ -1,4 +1,4 @@
-sketchup-launchup
+LaunchUp
 =================
 
 ##A Quick Launcher for SketchUp
