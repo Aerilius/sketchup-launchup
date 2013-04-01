@@ -1,3 +1,4 @@
+/* TODO: any CSS3 magic to fit fontsize to text length? */
 /* General Styles */
 
 * {
@@ -378,7 +379,7 @@ background: red;
 .list.toolbar li .name {
   float: left;
   line-height: 1em;
-  font-weight: bold;
+  /*font-weight: bold;*/
   font-size: 1em;
   text-overflow: ellipsis;
   word-break: break-all;
