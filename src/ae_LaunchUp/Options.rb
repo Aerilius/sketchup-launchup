@@ -11,6 +11,8 @@ WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 Name:         Translate.rb
 Author:       Andreas Eisenbarth
 Description:  Class to store and retrieve options/settings.
+              Options can only be of a JSON compatible class (no subclasses currently).
+              Options preserve their class (a value that was initialized as string cannot be changed into Fixnum).
 Usage:        Create an instance:        @options = @options.new(default={key => value})
               Get an option:             @options[String||Symbol]
               Get an option and provide default (if not yet set in initialization):
@@ -21,8 +23,9 @@ Usage:        Create an instance:        @options = @options.new(default={key =>
               Get all options as json:   @options.get_json()
               Update all options:        @options.update_json(String)
               Save all options to disk:  @options.save
-Version:      1.0
-Date:         06.02.2013
+              Reset to original state  : @options.reset
+Version:      1.0.2
+Date:         02.04.2013
 
 =end
 
@@ -46,8 +49,9 @@ class Options
 def initialize(identifier, default={})
   raise "Options.new needs a string argument to identify the option." unless identifier.is_a?(String)
   @identifier = identifier
+  @default = Marshal.dump(default) # Allows later to create deep copies.
   @options = normalize_keys(default)
-  @options.merge!(normalize_keys(read()))
+  self.update(normalize_keys(read()))
 end
 
 
@@ -86,7 +90,15 @@ end
 # Updates all options with new ones (overwriting or adding to existing key/value pairs).
 # @param [Hash] hash of new data to be merged
 def update(hash)
-  @options.merge!(hash)
+  @options.merge!(hash){|key, oldval, newval|
+    # Accept all new values
+    (!@options.include?(key) ||
+    # Accept updated values only if they have the same type as the old value.
+    # Do a special test for Boolean which consists in Ruby of two classes (TrueClass != FalseClass).
+    @@valid_types.include?(newval.class) &&
+    (newval.class == oldval.class || oldval == true && newval == false || oldval == false && newval == true)) ?
+    newval : oldval
+  }
 end
 
 
@@ -103,7 +115,7 @@ end
 # @param [String] string of JSON data
 def update_json(string)
   hash = normalize_keys(from_json(string))
-  @options.merge!(hash)
+  self.update(hash)
 end
 
 
@@ -120,6 +132,12 @@ def save
 end
 
 
+# Resets the options to the plugin's original state.
+# This is useful to get rid of corrupted options and prevent saving and reloading them to the registry.
+def reset
+  @options = Marshal.load(@default)
+end
+
 
 # Reads the options from disk.
 def read
@@ -133,8 +151,8 @@ private :read
 
 
 
-# Set all keys to Symbols. Remove keys that are neither Symbol nor String.
-# Remove keys whose value is not allowed.
+# Remove all keys whose value is not allowed. Set all keys to Symbols.
+# Remove all keys that are neither Symbol nor String.
 # @TODO: Or maybe tolerate Fixnum?
 # @param [Hash] hash
 def normalize_keys(hash)

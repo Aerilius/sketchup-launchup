@@ -27,9 +27,9 @@ Description:  This Plugin adds a quick launcher to search and execute commands.
 
 Recommended:  SketchUp 8 M2 or higher (it works in a limited way in lower versions)
 
-Version:      1.0.1
+Version:      1.0.2
 
-Date:         27.03.2013
+Date:         28.03.2013
 
 Note:
   This plugin has only been possible by modifying (intercepting) SketchUp API
@@ -109,7 +109,7 @@ require(File.join(PATH_ROOT, 'Options.rb'))
   :color_custom => '#dddddd', # A CSS color expression if :color == 'custom'
   :color_custom_text => '#222222',
   :style_suggestions => 'wide', # The style and layout of the list items (CSS class).
-  :style_history => 'toolbar', # The style and layout of the list items (CSS class).
+  :style_history => 'slim', # The style and layout of the list items (CSS class).
   :show_history => false, # Whether to show the history (list of recent actions).
   :history_max_length => 10, # The maximum number of items in the history.
   :history_entries => [], # The list of recently used commands (their IDs).
@@ -243,7 +243,9 @@ def self.show_dialog
       search_string = dlg.get_element_value("combo_input")
       message_id = param[/\#\d+$/][/\d+/]
       next unless message_id
-      results = @index.look_up(search_string, @options[:max_length])
+      length = (@options[:max_length].is_a?(Fixnum)) ? @options[:max_length] : nil
+      # In case of failure, nil gives the method's default value.
+      results = @index.look_up(search_string, length)
       dlg.execute_script("AE.Bridge.callbackJS(#{message_id}, #{@index.to_json(results)})")
     }
 
@@ -430,6 +432,13 @@ end
 
 
 
+# Resets the options to the plugin's original state.
+def self.reset
+  @options.reset
+end
+
+
+
 # Dumps the index to a file as JSON string, for debugging.
 # @param [String] file where to save the index.
 def self.save_index(file=nil, json=false)
@@ -457,13 +466,13 @@ unless file_loaded?(File.basename(__FILE__))
 
 
   # Add this plugin to the UI
-  cmd_launchup = UI::Command.new(TRANSLATE["LaunchUp – Quick Launcher"]){AE::LaunchUp.show_dialog}
+  cmd_launchup = UI::Command.new(TRANSLATE["LaunchUp – Quick Launcher"]){ AE::LaunchUp.show_dialog }
   cmd_launchup.tooltip = TRANSLATE["A searchable quick launcher for SketchUp tools."]
   cmd_launchup.small_icon = File.join(PATH_ROOT, "images", "icon_launchup_16.png")
   cmd_launchup.large_icon = File.join(PATH_ROOT, "images", "icon_launchup_24.png")
   UI.menu("Plugins").add_item(cmd_launchup)
 
-  cmd_options = UI::Command.new(TRANSLATE["LaunchUp – Options"]){AE::LaunchUp.show_options}
+  cmd_options = UI::Command.new(TRANSLATE["LaunchUp – Options"]){ AE::LaunchUp.show_options }
   cmd_options.tooltip = TRANSLATE["Options to customize the look and behavior of LaunchUp."]
   cmd_options.small_icon = File.join(PATH_ROOT, "images", "icon_options_16.png")
   cmd_options.large_icon = File.join(PATH_ROOT, "images", "icon_options_24.png")
