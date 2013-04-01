@@ -894,6 +894,7 @@ cmd.tooltip = cmd.status_bar_text = TRANSLATE["Move the camera to the nearest is
 cmd.small_icon = "./ViewIsoSmall.png"
 cmd.large_icon = "./ViewIsoLarge.png"
 cmd.category = "Camera > Standard Views"
+cmd.keywords = ["parallel"]
 
 
 cmd = UI::Command.new(TRANSLATE["Perspective"]) { Sketchup.send_action("viewPerspective:") }
@@ -924,6 +925,7 @@ cmd.set_validation_proc {
   end
 }
 cmd.category = "Camera"
+cmd.keywords = ["rotate"]
 
 
 cmd = UI::Command.new(TRANSLATE["Pan"]) { Sketchup.send_action("selectDollyTool:") }
@@ -940,6 +942,7 @@ cmd.set_validation_proc {
 }
 cmd.category = "Camera"
 cmd.keywords = ["Hand"]
+cmd.keywords = ["dolly"]
 
 
 cmd = UI::Command.new(TRANSLATE["Field of View"]) { Sketchup.send_action("selectFieldOfViewTool:") }
@@ -1000,6 +1003,7 @@ cmd.tooltip = cmd.status_bar_text = TRANSLATE["Zoom to show the selection or the
 cmd.small_icon = "./ZoomExtentsSmall.png"
 cmd.large_icon = "./ZoomExtentsLarge.png"
 cmd.category = "Camera"
+cmd.keywords = ["zoom"]
 
 
 cmd = UI::Command.new(TRANSLATE["Camera Position"]) { Sketchup.send_action("selectPositionCameraTool:") }
@@ -1140,6 +1144,7 @@ cmd.set_validation_proc {
   end
 }
 cmd.category = "Draw"
+cmd.keywords = ["circle"]
 
 
 cmd = UI::Command.new(TRANSLATE["Polygon"]) { Sketchup.send_action("selectPolygonTool:") }
@@ -1155,6 +1160,7 @@ cmd.set_validation_proc {
   end
 }
 cmd.category = "Draw"
+cmd.keywords = ["polygon"]
 
 
 # Tools
