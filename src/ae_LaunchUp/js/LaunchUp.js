@@ -69,7 +69,7 @@ LaunchUp.initialize = function(opt) {
     AE.Style.addClass(buttonPin, bool ? "on" : "off");
     ComboBox.focus();
   };
-  buttonPin.onmouseup = buttonPin.toggle;
+  buttonPin.onmouseup = function(event) { buttonPin.toggle() };
   buttonPin.toggle(Options.pinned); // Set the default.
 
   var buttonHistory = $("#button_history");
@@ -80,7 +80,7 @@ LaunchUp.initialize = function(opt) {
     bool ? History.on() : History.off();
     ComboBox.focus();
   };
-  buttonHistory.onmouseup = buttonHistory.toggle;
+  buttonHistory.onmouseup = function(event) { buttonHistory.toggle() };
   buttonHistory.toggle(Options.show_history); // Set the default.
 
   // We load recent entries only now after initializing the history button so
