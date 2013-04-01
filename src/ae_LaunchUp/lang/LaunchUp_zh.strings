@@ -1,0 +1,75 @@
+// WWW.SUBAR.ME & WWW.SUAPP.ME - 麦兜 & 双鱼 汉化
+
+// Plugin meta data
+"LaunchUp"="LaunchUp [SUAPP.ME汉化]";
+"LaunchUp – Quick Launcher"="LaunchUp快捷搜索";
+"A searchable quick launcher for SketchUp tools."="菜单命令搜索快速启动工具";
+"LaunchUp – Options"="LaunchUp参数选项";
+"Options to customize the look and behavior of LaunchUp."="设置LaunchUp的外观和特性";
+"LaunchUp Options"="LaunchUp参数选项 [SUAPP.ME汉化]";
+"options"="参数选项";
+"settings"="设置";
+"preferences"="个人喜好";
+
+// Other strings
+"Show %0 toolbar"="显示“%0”工具栏";
+"Load extension %0"="加载扩展“%0”";
+"Extension %0 already loaded"="已载入“%0”扩展";
+"Extensions"="扩展";
+"extension"="扩展";
+"plugin"="插件";
+"add-on"="扩展";
+"File"="文件";
+"file"="文件";
+"Edit"="编辑";
+"edit"="编辑";
+"View"="视图";
+"view"="视图";
+"Camera"="相机";
+"camera"="相机";
+"Draw"="绘图";
+"draw"="绘图";
+"Tools"="工具";
+"tools"="工具";
+"Plugins"="插件";
+"plugins"="插件";
+"Help"="帮助";
+"help"="帮助";
+
+// Strings of the LaunchUp dialog itself
+"Search…"="输入插件名称快速搜索执行…";
+"Unpinned. LaunchUp hides always after executing a command. Click to change."="取消固定。执行命令后关闭LaunchUp搜索框，点击更改。";
+"Pinned. LaunchUp stays always visible. Click to change."="固定。保持LaunchUp始终可见，点击更改。";
+"History of recent commands"="显示/隐藏最近使用的命令";
+
+// Strings of the Options dialog
+"Appearance"="外观";
+"Choose the background color of the LaunchUp dialog."="选择LaunchUp搜索框的背景颜色";
+"Color"="颜色";
+"background"="背景";
+"text"="文本";
+"Style for suggestions"="命令搜索结果样式";
+"Style for the history"="最近使用命令样式";
+"slim"="精简";
+"wide"="详细";
+"toolbar"="工具条";
+"Behavior"="特性";
+"Maximum amount of suggestions"="命令搜索结果显示最大个数";
+"Keep the dialog open after executing a command."="执行命令后不关闭LaunchUp搜索对话框";
+"Show the history of recently used commands."="显示最近使用的命令";
+"Maximum length"="最大个数";
+
+// Strings of the Options dialog: extensions
+"Search"="搜索";
+"Smart searches"="智能搜索";
+"Smart searches allow to enhance the available commands."="智能搜索通过快速查找命令以提高工作效率";
+"Native tools"="本地工具";
+"Show/Hide toolbars"="显示/隐藏工具栏";
+"Load extensions"="加载扩展";
+"Load Ruby files"="加载插件";
+"Use language dictionary to improve search results."="使用语言词典以改善搜索结果";
+"A dictionary of local language words and synonyms allows to find even commands that don't provide detailed or translated metadata."="本地语言词汇和别名允许查询不包含细节和翻译内容的词典";
+"Cancel"="取消";
+"Apply"="应用";
+
+// WWW.SUBAR.ME & WWW.SUAPP.ME - 麦兜 & 双鱼 汉化

@@ -1,0 +1,395 @@
+// WWW.SUBAR.ME & WWW.SUAPP.ME - 麦兜 & 双鱼 汉化
+
+// File
+
+"File"="文件";
+"New"="新建";
+"new"="新建";
+"Create a new model."="新建一个模型";
+"Open"="打开";
+"open"="打开";
+"Open an existing model."="打开一个现有模型";
+"Save"="保存";
+"save"="保存";
+"Save the active model."="保存当前的模型";
+"Print…"="打印…";
+"Print the active model."="打印当前的模型";
+"Add New Building"="添加新建筑物";
+"Add a new building model using Google Building Maker."="使用Google建筑模型制作工具添加新的建筑物模型";
+"Building Maker"="建筑模型制作";
+"Add Location"="添加位置";
+"Add a geo-location to the model, and gather site information nearby."="给模型添加地理位置信息并收集附近的地点信息";
+"Geo-location"="地理位置";
+"geo-reference"="地理参考";
+"add"="添加";
+"location"="位置";
+"place"="放置";
+"imagery"="图像";
+"satellite"="卫星";
+"earth"="地球";
+"map"="地图";
+"terrain"="地形";
+"Clear Location"="清除位置";
+"Clear the model's geo-location."="清除模型中的地理位置信息";
+"clear"="清除";
+"remove"="移除";
+"delete"="删除";
+"Show Terrain"="显示地形";
+"Toggle terrain on and off."="打开和关闭地形";
+"Get Models"="获取模型";
+"Get a model from 3D Warehouse."="从3D模型库获取模型";
+"3D Warehouse"="3D模型库";
+"gallery"="展示";
+"get"="获取";
+"download"="下载";
+"upload"="上传";
+"share"="分享";
+"publish"="发布";
+"Share Model"="分享模型";
+"Share this model to 3D Warehouse."="分享此模型到3D模型库";
+"Share Component"="分享组件";
+"Share the selected component to 3D Warehouse."="分享所选组件到3D模型库";
+
+
+// Edit
+
+"Edit"="编辑";
+"Undo"="撤销";
+"Redo"="恢复";
+"Redo the previously undone action."="恢复上一次命令";
+"Cut"="剪切";
+"clipboard"="剪贴板";
+"Copy"="复制";
+"copy"="复制";
+"Paste"="粘贴";
+"paste"="粘贴";
+"insert"="插入";
+"Erase"="删除";
+"erase"="删除";
+"Hide"="隐藏";
+"Hide Selected Geometry"="隐藏所选物体";
+"mask"="蒙板";
+"Unhide"="取消隐藏";
+"Unhide Selected Geometry"="取消隐藏所选物体";
+"show"="显示";
+"Make Component"="创建组件";
+"Make a Component from selected entities."="把所选对象制作成组件";
+"Make Group"="创建群组";
+"Make a Group from selected entities."="把所选对象制作成群组";
+
+
+// View
+
+"View"="视图";
+"Toggle Hidden"="切换隐藏";
+"Toggle Hidden Geometry"="切换隐藏的物体";
+"Toggle Axes"="更改坐标轴";
+"Hide Guides"="显示/隐藏辅助线";
+"Display Construction Geometry"="显示/隐藏辅助线";
+"Shadows"="阴影";
+"Display Shadows"="显示阴影";
+"Fog"="雾化";
+"Display Fog"="显示雾化效果";
+
+// View →  Edge Style
+
+"Edge Style"="边线样式";
+"Display Edges"="显示边线";
+"Back Edges"="后部边线";
+"Display the model with back edges dashed."="虚线样式显示模型的后部边线.";
+"Profiles"="轮廓";
+"Display Profiles"="显示/隐藏轮廓边线";
+"Depth Cue"="加粗边线";
+"Display Depth Cue"="显示/隐藏加粗边线";
+"Jitter Edges"="抖动边线";
+"End Points"="端点";
+"Display End Points"="显示/隐藏端点";
+"Edge Color Mode"="边线颜色样式";
+"Egde Color Mode: "="边线颜色样式: ";
+"Cycle Edge Color Mode"="循环切换边线颜色样式";
+"Edge Color by Material"="根据材质显示边线颜色";
+"Egde Color Mode: Default"="边线颜色样式: 默认";
+"Toggle Edge Color by Material"="切换边线颜色样式为：按材质";
+"Edge Color by Axis"="根据坐标轴显示边线颜色";
+"Egde Color Mode: by Axis"="边线颜色样式: 按坐标轴";
+"Toggle Edge Color by Axis"="根据坐标轴切换显示边线颜色";
+"Color By Layer"="显示图层颜色";
+"Toggle Color By Layer"="根据图层颜色切换颜色样式";
+
+// View → Face Style
+
+"Face Style"="面的样式";
+"X-Ray Mode"="X光模式";
+"Display the model with globally transparent faces."="以X光模式显示（透明）";
+"Wireframe"="线框";
+"Display in wireframe mode."="以线框模式显示视图";
+"Hidden Line"="消隐";
+"Display in hidden line mode."="以消隐模式显示视图";
+"Shaded"="着色";
+"Display in shaded mode."="以着色模式显示视图.";
+"Textured"="材质";
+"Display shaded using textures."="以材质模式显示视图";
+"Monochrome"="单色";
+"Display the model with only front and back face colors."="以单色模式显示视图";
+
+// View → Component Editing
+
+"Component Editing"="组件编辑";
+"Hide Rest"="隐藏剩余模型";
+"Hide Rest of Model"="隐藏剩余模型";
+"hide"="隐藏";
+"fade"="fade";
+"inactive"="inactive";
+"components"="组件";
+"Hide Similar"="隐藏关联组件";
+"Hide Similar Components"="隐藏相关联的组件;
+
+
+// Camera
+
+"Camera"="相机";
+"Previous"="上一个视图";
+"Undo the previous camera view."="恢复到上一个视图";
+
+// Camera → Standard Views
+
+"Standard Views"="标准视图";
+"Top"="顶视图";
+"Top View"="顶视图";
+"Bottom"="底视图";
+"Bottom View"="底视图";
+"Front"="前视图";
+"Front View"="前视图";
+"Back"="后视图";
+"Back View"="后视图";
+"Left"="左视图";
+"Left View"="左视图";
+"Right"="右视图";
+"Right View"="右视图";
+"Iso"="等轴视图";
+"Move the camera to the nearest isometric view of the model."="将相机移动到最接近模型的等距视图";
+"Perspective"="透视显示";
+"Camera Perspective"="切换相机的视角";
+"Orbit"="旋转";
+"Orbit the camera view about the model."="旋转观察模型.";
+"Pan"="平移";
+"Pan the camera view vertically or horizontally."="垂直或水平移动观察模型";
+"Hand"="手";
+"Field of View"="视角";
+"Change the field of view."="更改视角";
+"Zoom"="缩放";
+"Zoom the camera view in or out."="实时缩放视图";
+"enlarge"="enlarge";
+"Zoom Window"="缩放窗口";
+"Zoom the camera to show everything inside the selected window."="根据鼠标选定矩形窗口大小进行缩放";
+"Zoom Extents"="充满视窗";
+"Zoom to show the selection or the entire model if no selection."="缩放以充满视窗显示所有物体";
+"Camera Position"="定位相机";
+"Position the camera view with a specific location, eye height and direction."="按照具体的位置、眼睛高度和方向来定位相机观察模型";
+"Walk"="漫游";
+"Walk with the camera."="以当前相机为视角进行漫游";
+"Look"="正面观察";
+"Pivot camera view about a stationary point."="以定位相机为中心旋转观察模型";
+"Image Igloo"="冰屋图片";
+"Show all matched photos around the model."="显示所有模型匹配照片";
+
+
+// Draw
+
+"Draw"="绘图";
+"Line"="直线";
+"Draw edges from point to point."="根据起点和终点绘制直线";
+"Arc"="圆弧";
+"Draw arcs from point to point with bulge."="根据起点、终点和凸起部分绘制圆弧";
+"arc"="圆弧";
+"curve"="曲线";
+"Freehand"="徒手线";
+"Draw freehand lines by clicking and dragging."="通过点击并拖动鼠标绘制徒手线";
+"polyline"="polyline";
+"Rectangle"="矩形";
+"Draw rectangular faces from corner to corner."="根据起始角点和终止角点绘制矩形平面";
+"Circle"="圆形";
+"Draw circles from center point to radius."="根据中心点和半径绘制圆形";
+"Polygon"="多边形";
+"Draw N-sided polygons from center point to radius."="根据中心点和半径绘制N边形";
+
+
+// Tools
+
+"Tools"="工具";
+"Select"="选择";
+"Select entities"="选择实体";
+"Eraser"="橡皮擦";
+"Erase, soften or smooth entities in the model."="擦除、软化或平滑模型中的对象";
+"Paint Bucket"="材质";
+"Apply color and material to entities in the model."="用于给模型附材质";
+"Move"="移动";
+"Move, stretch, copy and array selected entities."="移动、缩放、复制以及阵列所选物体";
+"move"="移动";
+"displace"="displace";
+"Rotate"="旋转";
+"Rotate, stretch, copy and array selected entities about an axis."="围绕指定轴进行旋转、缩放、复制以及阵列所选物体";
+"Scale"="缩放";
+"Scale and stretch selected entities."="调整所选物体比例并对其进行缩放";
+"scale"="scale";
+"resize"="resize";
+"bigger"="bigger";
+"smaller"="smaller";
+"Push/Pull"="推/拉";
+"Push and pull faces."="对面进行推或拉";
+"push"="push";
+"pull"="pull";
+"extrude"="extrude";
+"Follow"="路径跟随";
+"Follow a path with a selected face."="根据所选平面跟随路径";
+"follow"="follow";
+"path"="path";
+"Offset"="偏移";
+"Offset selected edges in a plane."="偏移平面上的所选边线";
+"Tape"="卷尺";
+"Measure distances, create guide lines or points."="测量距离，创建辅助线、辅助点，调整整个模型的比例";
+"Protractor"="量角器";
+"Measure angles and create guides."="测量角度并创建辅助线";
+"Axis"="坐标轴";
+"Move or orient the axis."="移动或重设坐标轴";
+"Dimension"="尺寸标注";
+"Draw Dimension"="对任意两点进行尺寸标注";
+"Text"="文字";
+"Draw text labels."="创建文本标签，进行文字标注";
+"3D Text Tool"="3D文字";
+"Create 3D Text"="创建3D文字";
+"Section"="剖切平面";
+"Solid Tools"="实体工具";
+"solid"="solid";
+"Outer Shell"="外壳";
+"shell"="shell";
+"Combine all selected solids into a single solid and remove all interior entities."="将所有选择实体合并为一个实体并删除内部所有物体";
+"Intersect"="相交";
+"intersect"="intersect";
+"cut"="cut";
+"Intersect all selected solids but keep only their intersection in the model."="将所有选定全部实体相交并仅将其交点保留在模型内";
+"Union"="并集";
+"combine"="combine";
+"Combine all selected solids into a single solid and keep interior voids."="将所有选定实体合并为一个实体并保留内部空隙";
+"Subtract"="去除";
+"Subtract first solid from second and keep only the result in the model."="从第二个实体减去第一个实体并仅将结果保留在模型中";
+"Trim"="修剪";
+"reduce"="reduce";
+"Trim first solid against second solid and keep both in the model."="根据第二个实体剪辑第一个实体并将两者同时保留在模型中";
+"Split"="拆分";
+"split"="split";
+"Intersect all selected solids and keep all results in the model."="将所选的全部实体相交并将所有结果保留在模型中";
+
+
+// Window
+
+"Window"="窗口";
+"Model Info"="模型信息";
+"Animation"="动画";
+"Components"="组件";
+"Credits"="作者";
+"Dimensions"="尺寸";
+"File"="文件";
+"Geo-location"="位置";
+"Rendering"="渲染";
+"Statistics"="统计";
+"Text"="文字";
+"Units"="单位";
+"Show %0"="显示 %0";
+"Show %0 dialog"="显示 %0 对话框";
+"Materials"="材质";
+"Components"="组件";
+"Styles"="风格";
+"Scenes"="场景";
+"Shadows"="阴影";
+"Layers"="图层";
+"SoftenEdges"="边线柔化";
+"Outliner"="目录";
+"Instructor"="工具向导";
+"Fog"="雾化";
+"MatchPhoto"="照片匹配";
+"Show Ruby Panel"="Ruby 控制台";
+//不显示
+"background"="背景";
+"watermark"="水印";
+"sketchy"="sketchy";
+
+
+// Pages / Scenes
+
+"Scenes"="场景";
+"Add Scene"="添加场景";
+"page"="页面";
+"scene"="scene";
+"slide"="幻灯";
+"add"="添加";
+"new"="新建";
+"Update Scene"="更新场景";
+"Delete Scene"="删除场景";
+"Previous Scene"="上一场景";
+"previous"="previous";
+"Next Scene"="下一场境";
+"next"="next";
+
+
+// Layers
+
+
+// Preferences
+
+"Preferences"="参数设置";
+"preferences"="preferences";
+"Accelerator"="快捷键";
+"Accelerator Preferences"="快捷键设置";
+"Applications"="应用程序";
+"Applications Preferences"="应用程序设置";
+"Compatibility"="兼容性";
+"Compatibility Preferences"="兼容性设置";
+"Drawing"="绘图";
+"Drawing Preferences"="绘图参数设置";
+"Extensions"="扩展栏";
+"Extensions Preferences"="扩展参数设置";
+"FileLocations"="文件位置";
+"FileLocations Preferences"="文件位置设置";
+"General"="常规";
+"General Preferences"="常规参数设置";
+"GraphicsCard"="OpenGL";
+"GraphicsCard Preferences"="OpenGL设置";
+"Templates"="模版";
+"Templates Preferences"="模版设置";
+"Workspace"="工作区";
+"Workspace Preferences"="工具面板设置";
+
+
+// Entity
+
+"Entity"="实体";
+"Explode"="炸开";
+"Ungroup"="炸开";
+"Face"="面";
+
+
+// Sandbox Tools if loaded
+
+"Sandbox Tools"="地形工具";
+"Flip Edge"="Flip Edge";
+"Flip edge"="Flip edge";
+"Smoove"="Smoove";
+
+
+// Other
+
+"Center"="中心";
+"Center Selected"="将所选物体显示在视窗中心";
+"Add Photo Texture"="添加照片匹配";
+"Add photographic textures to the selected face."="向所选平面添加拍摄的照片匹配";
+"face"="面";
+"photo texture"="photo texture";
+"street-view"="street-view";
+"Preview in Google Earth"="在Google地球中预览模型";
+"Preview this model in Google Earth."="在Google地球中预览模型";
+"Google"="Google";
+"Solar North"="指北针设置";
+"Set North Tool"="指北针";
+
+// WWW.SUBAR.ME & WWW.SUAPP.ME - 麦兜 & 双鱼 汉化
