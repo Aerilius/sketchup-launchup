@@ -216,7 +216,8 @@ class Index
   # @param [String] search_string
   # @return [Array] an array of sorted results of the form:
   #    {:name => …, :description => …, :id => …, :proc => …, :validation_proc => …}
-  def look_up(search_string, length=10)
+  def look_up(search_string, length=nil)
+    length = 10 unless length.is_a?(Fixnum)
     return slice(rank(find(search_string)), length)
   end
 
@@ -349,6 +350,7 @@ class Index
       search_words.each{|search_word|
         next if search_word.empty?
         # 181
+        # TODO: increase relevance, especially longest common substring, less fuzzy
         score += 2 * AE::LaunchUp::Scorer.score(search_word, entry[:name]) if entry[:name].is_a?(String)
         score += exact_matches(search_word, entry[:description].gsub(/\b\w{0,4}\b/, "")) if entry[:description].is_a?(String) && search_word.length > 4
         score += AE::LaunchUp::Scorer.score(search_word, entry[:category]) if entry[:category].is_a?(String)
