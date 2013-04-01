@@ -526,10 +526,10 @@ AE.Form = (function(self) {
       }
       // Optionally add an event handler to update the key/value in Ruby.
       if (autoupdate === true) {
-        var fn = function(name,input){
+        var fn = function(name, input){
           return function() {
             var hash = {};
-            hash[name] = input.value;
+            hash[name] = get_value(input);
             AE.Bridge.callRuby('update_options', hash);
           };
         }(name,input);
@@ -553,39 +553,47 @@ AE.Form = (function(self) {
       var input = inputs[i];
       // Continue only if the input is enabled and has a name.
       if (input.disabled || !input.name || input.name === "") { continue; }
-      var key = input.name;
-      // Checkbox: Boolean true/false
-      if (input.type === "checkbox") {
-        hash[key] = input.checked;
-      }
-      // Radio checked: value as Symbol
-      else if (input.type === "radio" && input.checked) {
-        hash[key] = input.value;
-      }
-      else if (input.type === "radio" && !input.checked) {}
-      // Text that is number: Numeric
-      else if (!isNaN(input.value) && (input.type === "text" && /\b(num|number|numeric|fixnum|integer|int|float)\b/i.test(input.className) || input.type === "number")) {
-        // [optional] Use html5 step attribute or classNames to distinguish between Integer and Float input.
-        if (input.step && (input.step%1) === 0 || input.className && /\b(fixnum|integer|int)\b/i.test(input.className)) {
-          hash[key] = parseInt(input.value);
-        } else { // if (input.step && (input.step%1) !== 0 || input.className && /\bfloat\b/i.test(input.className)) {
-          hash[key] = parseFloat(input.value);
-        }
-      }
-      // Select multiple: Array of Strings
-      else if (input.type === "select-multiple") {
-        var s = [];
-        for (var j=0; j < input.length; j++) {
-          if (input[j].selected) { s.push(input[j].value) }
-        }
-        hash[key] = s;
-      }
-      // Text or select: String
-      else {
-        hash[key] = String(input.value);
-      }
+      hash[input.name] = get_value(input);
     }
     return hash;
+  };
+
+  /* Function to get and validate data from a single input element */
+  var get_value = function(input) {
+    var val = null;
+    // Make sure it responds to input's methods (better: is an HTMLInputElement).
+    if (!input || !input.type || typeof input.value === "undefined" || input.value === null) { return null; }
+    // Checkbox: Boolean true/false
+    if (input.type === "checkbox") {
+      val = input.checked;
+    }
+    // Radio checked: value as Symbol
+    else if (input.type === "radio" && input.checked) {
+      val = input.value;
+    }
+    else if (input.type === "radio" && !input.checked) {}
+    // Text that is number: Numeric
+    else if (!isNaN(input.value) && (input.type === "text" && /\b(num|number|numeric|fixnum|integer|int|float)\b/i.test(input.className) || input.type === "number")) {
+      // [optional] Use html5 step attribute or classNames to distinguish between Integer and Float input.
+      if (input.step && (input.step%1) === 0 || input.className && /\b(fixnum|integer|int)\b/i.test(input.className)) {
+        val = parseInt(input.value);
+      } else { // if (input.step && (input.step%1) !== 0 || input.className && /\bfloat\b/i.test(input.className)) {
+        val = parseFloat(input.value);
+      }
+    }
+    // Select multiple: Array of Strings
+    else if (input.type === "select-multiple") {
+      var s = [];
+      for (var j=0; j < input.length; j++) {
+        if (input[j].selected) { s.push(input[j].value) }
+      }
+      val = s;
+    }
+    // Text or select: String
+    else {
+      val = String(input.value);
+    }
+    return val;
   };
 
   return self;
