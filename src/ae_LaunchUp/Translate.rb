@@ -17,7 +17,7 @@ Description:  Class to translate single strings or webdialogs
 Usage:        Have translation files of the scheme
                 toolname_EN.strings with "original string"="translated string";
               or
-                toolname_EN.lingvo with original_string=>translated string
+                toolname_EN.lingvo with original_string<==>translated string
               or a Ruby file (.rb) with a Hash
               Create an instance:        translate = Translate.new(toolname, translation_directory)
               Translate a single string: translate[String]
@@ -49,7 +49,7 @@ class Translate
   def initialize(toolname=nil, dir=nil)
     @strings = {}
     locale = Sketchup.get_locale
-    # parse_strings(toolname, "en", dir) if locale!="en" # as basis
+    parse_strings(toolname, "en", dir) if locale!="en" # as basis
     parse_strings(toolname, locale, dir)
   end
 
@@ -65,9 +65,11 @@ class Translate
   #
   # @returns [Boolean] whether the strings have been added
   #
-  def parse_strings(toolname="", locale="en", dir=nil)
-    raise "Translate.rb: argument 'toolname' needs to be a String" unless toolname.is_a?(String)
-    raise "Translate.rb: argument 'locale' needs to be a String" unless locale.is_a?(String)
+  def parse_strings(toolname=nil, locale="en", dir=nil)
+    toolname = "" if toolname.nil?
+    raise(ArgumentError, "Argument 'toolname' needs to be a String") unless toolname.is_a?(String)
+    raise(ArgumentError, "Argument 'locale' needs to be a String") unless locale.is_a?(String)
+    raise(ArgumentError, "Argument 'dir' needs to be a String") unless dir.is_a?(String) || dir.nil?
     dir = File.dirname(File.expand_path(__FILE__)) if dir.nil? || !File.exists?(dir.to_s)
     language = locale[/^[^\-]+/]
     extensions = ["strings", "lingvo", "rb"]
@@ -75,7 +77,7 @@ class Translate
     available_files = Dir.entries(dir).find_all{|f|
       File.basename(f)[/(^|#{toolname}[^a-zA-Z]?)#{locale}\.(#{extensions.join('|')})/i]
     }.concat(Dir.entries(dir).find_all{|f|
-      File.basename(f)[/(^|#{toolname}[^a-zA-Z]?)#{language}\.(#{extensions.join('|')})/i]
+      File.basename(f)[/(^|#{toolname}[^a-zA-Z]?)#{language}(-\w{2,3})?\.(#{extensions.join('|')})/i]
     })
     return if available_files.empty?
     path = File.join(dir, available_files.first)
@@ -104,8 +106,8 @@ class Translate
           end
           if format == "strings" && entry.include?(";") || format == "lingvo" && !entry.empty?
             keyvalue = entry.strip.gsub(/^\s*\"|\"\s*;$/, "").split(/\"\s*=\s*\"|\s*<==>\s*/)
-            key = keyvalue[0]
-            value = keyvalue[1]
+            key = keyvalue[0].gsub(/\\\"/,'"').gsub(/\\\\/, "\\")
+            value = keyvalue[1].gsub(/\\\"/,'"').gsub(/\\\\/, "\\")
             strings[key] = value
             entry = ""
           end
@@ -115,8 +117,6 @@ class Translate
 
     @strings.merge!(strings)
     return (strings.empty?)? false : true
-  rescue
-    return false
   end
 
 
@@ -131,6 +131,7 @@ class Translate
   #     string: translated string
   #
   def get(key, *si)
+    raise(ArgumentError, "Argument 'key' must be a String or an Array of Strings.") unless key.is_a?(String) || key.is_a?(Array) && key.grep(String).length == key.length
     return key.map{|k| self.[](k, *si)} if key.is_a?(Array) # Allow batch translation of strings
     value = (@strings[key] || key).to_s.clone
     # Substitution of additional strings.
@@ -139,8 +140,8 @@ class Translate
     }
     value.gsub!(/\%\%/,"%")
     return value.chomp
-  rescue
-    return key.to_s
+  #rescue
+    #return key.to_s
   end
   alias_method(:[], :get)
 

@@ -1,0 +1,24 @@
+//"single line comment"="false";
+
+/*
+"multiple line comment"="false";
+*/
+
+"before single line comment"="true";// "single line end comment"="false";
+
+"before multiple line comment"="true";/*
+multiple line comment
+*/
+
+"single 'quotes'"="true";
+"double \"quotes\""="true";
+"entity reference for &quote;quotes&quote;"="true";
+"escape \\"="true";
+"forward slash //"="true";
+"forward slash asterisk /* */"="true";
+"  spaces  "="true";
+"equal with spaces" = "true";
+"semicolon with spaces"="true"  ;
+"semicolon missing"="false"
+"after semicolon missing"="false";
+
