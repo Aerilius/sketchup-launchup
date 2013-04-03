@@ -158,6 +158,7 @@ cmd = UI::Command.new(TRANSLATE["Clear Location"]) {
   m.entities.each{|e| ents << e if e.valid? && e.respond_to?(:layer) && (e.layer == t || e.layer == s) }
   ents.each{|e| e.erase! if e.valid?}
   m.layers.purge_unused
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Clear the model's geo-location."]
@@ -182,6 +183,7 @@ cmd = UI::Command.new(TRANSLATE["Show Terrain"]) {
   else
     s.visible = true if s
   end
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Toggle terrain on and off."]
@@ -371,6 +373,7 @@ cmd = UI::Command.new(TRANSLATE["Make Component"]) {
     m.selection.clear
     m.selection.add(c)
   end
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Make a Component from selected entities."]
@@ -392,6 +395,7 @@ cmd = UI::Command.new(TRANSLATE["Make Group"]) {
   g = m.active_entities.add_group(m.selection.to_a)
   m.selection.clear
   m.selection.add(g)
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Make a Group from selected entities."]
@@ -436,6 +440,7 @@ cmd.category = "View"
 
 cmd = UI::Command.new(TRANSLATE["Hide Guides"]) {
   Sketchup.active_model.rendering_options["HideConstructionGeometry"] = !Sketchup.active_model.rendering_options["HideConstructionGeometry"]
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Display Construction Geometry"]
@@ -453,6 +458,7 @@ cmd.category = "View"
 
 cmd = UI::Command.new(TRANSLATE["Shadows"]) {
   Sketchup.active_model.shadow_info["DisplayShadows"] =! Sketchup.active_model.shadow_info["DisplayShadows"]
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Display Shadows"]
@@ -468,7 +474,10 @@ cmd.set_validation_proc {
 cmd.category = "View"
 
 
-cmd = UI::Command.new(TRANSLATE["Fog"]) { Sketchup.active_model.rendering_options["DisplayFog"] = !Sketchup.active_model.rendering_options["DisplayFog"] }
+cmd = UI::Command.new(TRANSLATE["Fog"]) {
+  Sketchup.active_model.rendering_options["DisplayFog"] = !Sketchup.active_model.rendering_options["DisplayFog"]
+  true
+}
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Display Fog"]
 cmd.small_icon = "./ToggleFogSmall.png"
@@ -492,6 +501,7 @@ cmd = UI::Command.new(TRANSLATE["Display Edges"]) {
   else
     Sketchup.active_model.rendering_options["EdgeDisplayMode"] = 0
   end
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Display Edges"]
@@ -530,6 +540,7 @@ cmd.category = TRANSLATE["View > Edge Style"]
 cmd = UI::Command.new(TRANSLATE["Profiles"]) {
   opts = Sketchup.active_model.rendering_options
   opts["DrawSilhouettes"] = !opts["DrawSilhouettes"]
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = TRANSLATE["Display Profiles"]
@@ -549,6 +560,7 @@ cmd.category = "View > Edge Style"
 cmd = UI::Command.new(TRANSLATE["Depth Cue"]) {
   opts = Sketchup.active_model.rendering_options
   opts["DrawDepthQue"] = !opts["DrawDepthQue"]
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Display Depth Cue"]
@@ -566,6 +578,7 @@ cmd.category = "View > Edge Style"
 
 cmd = UI::Command.new(TRANSLATE["Jitter Edges"]) {
   Sketchup.active_model.rendering_options["JitterEdges"] = !Sketchup.active_model.rendering_options["JitterEdges"]
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Jitter Edges"]
@@ -584,6 +597,7 @@ cmd.category = "View > Edge Style"
 cmd = UI::Command.new(TRANSLATE["End Points"]) {
   opts = Sketchup.active_model.rendering_options
   opts["DrawLineEnds"] = !opts["DrawLineEnds"]
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Display End Points"]
@@ -605,6 +619,7 @@ cmd = UI::Command.new(TRANSLATE["Edge Color Mode"]) {
   ecm = ((ecm + 1) % 3)
   ro["EdgeColorMode"] = ecm
   Sketchup.set_status_text(TRANSLATE["Egde Color Mode: "] + TRANSLATE["by Material", "all same", "by Axis"][ecm])
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Cycle Edge Color Mode"]
@@ -624,6 +639,7 @@ cmd = UI::Command.new(TRANSLATE["Edge Color by Material"]) {
     Sketchup.set_status_text(TRANSLATE["Egde Color Mode: Default"])
   end
   ro["EdgeColorMode"] = ecm
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Toggle Edge Color by Material"]
@@ -650,6 +666,7 @@ cmd = UI::Command.new(TRANSLATE["Edge Color by Axis"]) {
     Sketchup.set_status_text(TRANSLATE["Egde Color Mode: Default"])
   end
   ro["EdgeColorMode"] = ecm
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Toggle Edge Color by Axis"]
@@ -667,6 +684,7 @@ cmd.category = "View > Edge Style"
 
 cmd = UI::Command.new(TRANSLATE["Color By Layer"]) {
   Sketchup.active_model.rendering_options["DisplayColorByLayer"] = !Sketchup.active_model.rendering_options["DisplayColorByLayer"]
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Toggle Color By Layer"]
@@ -687,6 +705,7 @@ cmd.category = "View > Edge Style"
 
 cmd = UI::Command.new(TRANSLATE["X-Ray Mode"]) {
   Sketchup.active_model.rendering_options["ModelTransparency"] = !Sketchup.active_model.rendering_options["ModelTransparency"]
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Display the model with globally transparent faces."]
@@ -704,6 +723,7 @@ cmd.category = "View > Face Style"
 
 cmd = UI::Command.new(TRANSLATE["Wireframe"]) {
   Sketchup.active_model.rendering_options["RenderMode"] = 0
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Display in wireframe mode."]
@@ -721,6 +741,7 @@ cmd.category = "View > Face Style"
 
 cmd = UI::Command.new(TRANSLATE["Hidden Line"]) {
   Sketchup.active_model.rendering_options["RenderMode"] = 1
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Display in hidden line mode."]
@@ -739,6 +760,7 @@ cmd.category = "View > Face Style"
 cmd = UI::Command.new(TRANSLATE["Shaded"]) {
   Sketchup.active_model.rendering_options["RenderMode"] = 2
   Sketchup.active_model.rendering_options["Texture"] = false
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Display in shaded mode."]
@@ -757,6 +779,7 @@ cmd.category = "View > Face Style"
 cmd = UI::Command.new(TRANSLATE["Textured"]) {
   Sketchup.active_model.rendering_options["RenderMode"] = 2
   Sketchup.active_model.rendering_options["Texture"] = true
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Display shaded using textures."]
@@ -792,6 +815,7 @@ cmd.category = "View > Face Style"
 
 cmd = UI::Command.new(TRANSLATE["Hide Rest"]) {
   Sketchup.active_model.rendering_options["InactiveHidden"] = !Sketchup.active_model.rendering_options["InactiveHidden"]
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Hide Rest of Model"]
@@ -810,6 +834,7 @@ cmd.keywords = ["hide", "fade", "inactive", "components"]
 
 cmd = UI::Command.new(TRANSLATE["Hide Similar"]) {
   Sketchup.active_model.rendering_options["InstanceHidden"] = !Sketchup.active_model.rendering_options["InstanceHidden"]
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Hide Similar Components"]
@@ -1415,9 +1440,10 @@ cmd.category = "Tools"
 
 cmd = UI::Command.new(TRANSLATE["Outer Shell"]) {
   groups = Sketchup.active_model.selection.find_all{|e| (e.is_a?(Sketchup::Group) || e.is_a?(Sketchup::ComponentInstance)) && e.manifold? }
-  return unless groups.length > 2
+  next false unless groups.length > 2
   group = groups.shift
   group = group.outer_shell(groups.shift) until groups.empty?
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Combine all selected solids into a single solid and remove all interior entities."]
@@ -1440,9 +1466,10 @@ if Sketchup.is_pro?
 
 cmd = UI::Command.new(TRANSLATE["Intersect"]) {
   groups = Sketchup.active_model.selection.find_all{|e| (e.is_a?(Sketchup::Group) || e.is_a?(Sketchup::ComponentInstance)) && e.manifold? }
-  return unless groups.length > 2
+  next false unless groups.length > 2
   group = groups.shift
   group = group.intersect(groups.shift) until groups.empty?
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Intersect all selected solids but keep only their intersection in the model."]
@@ -1462,9 +1489,10 @@ cmd.keywords = ["solid", "intersect", "cut"]
 
 cmd = UI::Command.new(TRANSLATE["Union"]) {
   groups = Sketchup.active_model.selection.find_all{|e| (e.is_a?(Sketchup::Group) || e.is_a?(Sketchup::ComponentInstance)) && e.manifold? }
-  return unless groups.length > 2
+  next false unless groups.length > 2
   group = groups.shift
   group = group.union(groups.shift) until groups.empty?
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Combine all selected solids into a single solid and keep interior voids."]
@@ -1484,9 +1512,10 @@ cmd.keywords = ["solid", "combine"]
 
 cmd = UI::Command.new(TRANSLATE["Trim"]) {
   groups = Sketchup.active_model.selection.find_all{|e| (e.is_a?(Sketchup::Group) || e.is_a?(Sketchup::ComponentInstance)) && e.manifold? }
-  return unless groups.length > 2
+  next false unless groups.length > 2
   group = groups.shift
   group = group.trim(groups.shift) until groups.empty?
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Trim first solid against second solid and keep both in the model."]
@@ -1506,9 +1535,10 @@ cmd.keywords = ["solid", "reduce"]
 
 cmd = UI::Command.new(TRANSLATE["Split"]) {
   groups = Sketchup.active_model.selection.find_all{|e| (e.is_a?(Sketchup::Group) || e.is_a?(Sketchup::ComponentInstance)) && e.manifold? }
-  return unless groups.length > 2
+  next false unless groups.length > 2
   group = groups.shift
   group = group.split(groups.shift) until groups.empty?
+  true
 }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Intersect all selected solids and keep all results in the model."]
