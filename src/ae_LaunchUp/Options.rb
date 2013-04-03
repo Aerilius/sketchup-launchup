@@ -47,11 +47,12 @@ class Options
 # @param [String] identifier
 # @param [Hash] default options
 def initialize(identifier, default={})
-  raise "Options.new needs a string argument to identify the option." unless identifier.is_a?(String)
+  raise(ArgumentError, "Argument 'identifier' must be a String argument to identify the option.") unless identifier.is_a?(String)
+  raise(ArgumentError, "Optional argument 'default' must be a Hash.") unless default.nil? || default.is_a?(Hash)
   @identifier = identifier
   @default = Marshal.dump(default) # Allows later to create deep copies.
-  @options = normalize_keys(default)
-  self.update(normalize_keys(read()))
+  @options = default
+  self.update(read())
 end
 
 
@@ -61,6 +62,7 @@ end
 # @param [Object] default if key is not found
 # @returns [Object] value with a type of @@valid_types
 def get(key, default=nil)
+  raise(ArgumentError, "Argument 'key' must be a String or Symbol.") unless key.is_a?(String) || key.is_a?(Symbol)
   # Alternative ways can be implemented here. (reading individual registry keys etc.)
   key = key.to_sym unless key.is_a?(Symbol)
   return (@options.include?(key)) ? @options[key] : default
@@ -73,8 +75,9 @@ alias_method(:[], :get)
 # @param [Symbol] key
 # @param [Object] value with a type of @@valid_types
 def set(key, value)
-  raise "Not a valid type for Options.[]=" unless @@valid_types.include?(value.class)
-  @options[key.to_sym] = value
+  raise(ArgumentError, "Argument 'key' must be a String or Symbol.") unless key.is_a?(String) || key.is_a?(Symbol)
+  raise(ArgumentError, "Not a valid type for Options.[]=") unless @@valid_types.include?(value.class)
+  self.update({key => value})
 end
 alias_method(:[]=, :set)
 
@@ -90,6 +93,8 @@ end
 # Updates all options with new ones (overwriting or adding to existing key/value pairs).
 # @param [Hash] hash of new data to be merged
 def update(hash)
+  raise(ArgumentError, "Argument 'hash' must be a Hash.") unless hash.is_a?(Hash)
+  normalize_keys(hash)
   @options.merge!(hash){|key, oldval, newval|
     # Accept all new values
     (!@options.include?(key) ||
@@ -114,7 +119,8 @@ end
 # Updates all options with new ones from a JSON string.
 # @param [String] string of JSON data
 def update_json(string)
-  hash = normalize_keys(from_json(string))
+  raise(ArgumentError, "Argument 'string' must be a String.") unless string.is_a?(String)
+  hash = from_json(string)
   self.update(hash)
 end
 
@@ -132,6 +138,7 @@ def save
 end
 
 
+
 # Resets the options to the plugin's original state.
 # This is useful to get rid of corrupted options and prevent saving and reloading them to the registry.
 def reset
@@ -139,13 +146,14 @@ def reset
 end
 
 
+
 # Reads the options from disk.
 def read
   # Alternative ways can be implemented here. (text file etc.)
-  default = eval(Sketchup.read_default("Plugins_ae", @identifier, "{}")) rescue {}
-  return default
+  default = eval(Sketchup.read_default("Plugins_ae", @identifier, "{}"))
+  return (default.is_a?(Hash)) ? default : {}
 rescue
-  {}
+  return {}
 end
 private :read
 
@@ -198,6 +206,7 @@ end
 # @param [String] json_string
 # TODO: undefined is not allowed to occur, but in case it happens not sure what to do?
 def from_json(json_string)
+  raise(ArgumentError, "Argument 'json_string' must be a String.") unless json_string.is_a?(String)
   # Split at every even number of unescaped quotes.
   # If it's not a string then replace : and null
   ruby_string = json_string.split(/(\"(?:.*?[^\\])*?\")/).
