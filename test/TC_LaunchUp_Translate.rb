@@ -116,8 +116,9 @@ def test_get
   translate = AE::LaunchUp::Translate.new("test4", @dir)
   # It should be aliased as [].
   assert(translate.method(:[]) == translate.method(:get), "It should be aliased as [].")
-  # It should accept a string or array of strings and optionally any amount of strings.
-  assert_nothing_raised("Translate.get: argument should accept a string.") { translate.get("something") }
+  # It should accept a string or array of strings and optionally any amount of strings. It should tolerate nil.
+  assert_nothing_raised("Translate.get: argument should accept a string.")
+  assert_nothing_raised("Translate.get: argument should tolerate nil.") { translate.get(nil) }
   assert_nothing_raised("Translate.get: argument should accept an array of strings.") { translate.get(["something", "something more"]) }
   assert_raise(ArgumentError, "Translate.get: argument should only accept a string or array.") { translate.get(42) }
   assert_raise(ArgumentError, "Translate.get: argument should only accept a string or array.") { translate.get(3.14) }

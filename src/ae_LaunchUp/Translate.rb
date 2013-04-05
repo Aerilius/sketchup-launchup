@@ -106,6 +106,7 @@ class Translate
           end
           if format == "strings" && entry.include?(";") || format == "lingvo" && !entry.empty?
             keyvalue = entry.strip.gsub(/^\s*\"|\"\s*;$/, "").split(/\"\s*=\s*\"|\s*<==>\s*/)
+            next unless keyvalue.length == 2
             key = keyvalue[0].gsub(/\\\"/,'"').gsub(/\\\\/, "\\")
             value = keyvalue[1].gsub(/\\\"/,'"').gsub(/\\\\/, "\\")
             strings[key] = value
@@ -131,7 +132,7 @@ class Translate
   #     string: translated string
   #
   def get(key, *si)
-    raise(ArgumentError, "Argument 'key' must be a String or an Array of Strings.") unless key.is_a?(String) || key.is_a?(Array) && key.grep(String).length == key.length
+    raise(ArgumentError, "Argument 'key' must be a String or an Array of Strings.") unless key.is_a?(String) || key.nil? || key.is_a?(Array) && key.grep(String).length == key.length
     return key.map{|k| self.[](k, *si)} if key.is_a?(Array) # Allow batch translation of strings
     value = (@strings[key] || key).to_s.clone
     # Substitution of additional strings.
