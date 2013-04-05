@@ -1,9 +1,12 @@
-/* TODO: any CSS3 magic to fit fontsize to text length? */
 /* General Styles */
 
 * {
   margin: 0;
   padding: 0;
+}
+
+html {
+  overflow: hidden;
 }
 
 body {
