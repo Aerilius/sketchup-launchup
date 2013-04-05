@@ -17,7 +17,6 @@ module AE
     .callbackJS(id, data)          // To be called from Ruby action_callback, with message id and optional argument.
     .puts(object)                  // Outputs to Ruby console, the same for console.log().
     .updateOptions(hash)
-    .updateOptionsfromForm(form)
   module Dialog                    // Dialog-related functions
     .initialize
     .adjustSize(width, height)
@@ -226,20 +225,32 @@ AE.Bridge = (function(self) {
   // SketchUp/OSX/Safari skips skp urls if they happen in a too short time interval.
   // We pass all skp urls through a scheduler that makes sure that between each
   // url request is a minimum time span.
-  var scheduler = new AE.Scheduler(1);
+  var messageQueue = [];
+  var ready = true; // Whether the queue is ready to send another messge.
+
+  var nextMessage = function() {
+    var message = messageQueue.shift();
+    if (!message) { ready=true; return; }
+    // Lock the status variable before sending the message.
+    // (because window.location is synchronous in IE)
+    ready = false;
+    window.setTimeout(function(){ window.location.href = message; }, 0);
+  };
 
   /* Function to call a SketchUp Ruby action_callback. */
   self.callRuby = function(name, data, callbackFunction) {
     // if (!/SketchUp/i.test(navigator.userAgent)) { return console.log(JSON.stringify([name, data, callbackFunction])) } // DEBUG: Only SU8Win has "SketchUp" in the user agent!
-    data = rubify(data);
+    data = rubify([name, data]);
     // We assign an id to this message so we can identify a callback (if there is one).
     if (callbackFunction) { callbacks[messageID] = callbackFunction }
     // Trick: Since we Ruby-hash-encode the data we can pass an ID as a comment
     // at the end. This does not have an impact when using eval, to_i, to_f on
     // the Ruby side. In Ruby we can optionally extract the id and call:
-    // AE.Bridge.callbackJS(id, data)
-    var url = "skp:" + name + "@" + encodeURIComponent(data) + "#" + messageID;
-    scheduler.queue(function(){ window.location.href = url; });
+    // // AE.Bridge.callbackJS(id, data)
+    var url = "skp:AE.Dialog.receive_message@" + encodeURIComponent(data) + "#" + messageID;
+    messageQueue.push(url);
+    // If the queue is not running, start it. If the message queue contains many urls, then
+    if (ready) { nextMessage(); }
     // Increase the id for the next message.
     messageID++;
     // Return the id of this message.
@@ -248,14 +259,16 @@ AE.Bridge = (function(self) {
 
   /* Call a SketchUp Ruby action_callback. */
   self.callbackJS = function(id, data) {
-    if (AE.debug) { AE.Bridge.puts("Dialog.callbackJS called with id #"+id); } // DEBUG
-    if (callbacks[id]) {
+    // Ruby has returned that it's finished.
+    // If there is a callback, execute it.
+    if (id && callbacks[id]) {
       try { callbacks[id](data) }
       catch (e) { if (AE.debug) { AE.Bridge.puts("AE.Dialog.callbackJS: Error when executing callback #"+id); } }
       delete callbacks[id];
-    } else {
-      if (AE.debug) { AE.Bridge.puts("AE.Dialog.callbackJS: No callback found for #"+id); }
     }
+    // Ready for next message.
+    ready = true;
+    nextMessage();
   };
 
   /* For debugging. */
@@ -268,38 +281,11 @@ AE.Bridge = (function(self) {
     log: function(text) { self.puts(text) }
   };
 
-  /* A Method to produce a JSON string from a JSON object */
-  var stringify = function(object) {
-    //if (JSON) return JSON.stringify(object); // only IE8+
-    if (Object.prototype.toString.call(object) === "[object Array]") {
-      var a = [];
-      for (var i=0; i < object.length; i++) {
-        var v = stringify(object[i]);
-        if (!!v) { a.push(v) }
-      }
-      return '[' + a.join(', ') + ']';
-    } else if (typeof object === "object") {
-      var o = [];
-      for (var e in object) {
-        // if (object.hasOwnProperty(e)) { // Out of memory?!
-        var k = stringify(e);
-        var v = stringify(object[e]);
-        if (!!k && !!v) { o.push(k + ": " + v) }
-        // }
-      }
-      return '{' + o.join(', ') + '}';
-    } else if (typeof object === "string") {
-      return '"' + object.replace(/\\/g, "\\\\").replace(/\"/g, "\\\"").replace(/\'/g, "\\'").replace(/\#/g, "\\#") + '"';
-    } else if (typeof object === "number" || typeof object === "null" || typeof object === "boolean") {
-      return String(object);
-    } // else: undefined
-  };
-
   /* A Method to produce a Ruby object string from a JSON object */
   var rubify = function(object) {
     var rubyString = '';
     // null → nil
-    if (typeof object === 'null' || typeof object === 'undefined') {
+    if (object === null || typeof object === 'undefined') {
       rubyString = 'nil';
     // Array → Array
     } else if (Object.prototype.toString.call(object) === '[object Array]') {
@@ -340,12 +326,7 @@ AE.Bridge = (function(self) {
    * implementation on the Ruby side.
    */
   self.updateOptions = function(hash) {
-    self.callRuby('update_options', hash);
-  };
-
-  /* A method to retrieve options from form elements and send them to Ruby. */
-  self.updateOptionsfromForm = function(form) {
-    self.updateOptions(AE.Form.read(form));
+    self.callRuby('updateOptions', hash);
   };
 
   return self;
@@ -365,11 +346,13 @@ AE.Dialog = (function(self) {
   // Private methods.
 
   var windowWidth = function() {
-    return window.innerWidth || document.documentElement.clientWidth;
+// AE.Bridge.puts(["windowWidth", window.innerWidth, document.documentElement.clientWidth, document.documentElement.offsetWidth, document.documentElement.scrollWidth]); // DEBUG
+    return window.innerWidth || document.documentElement.offsetWidth; //clientWidth;
   };
 
   var windowHeight = function() {
-    return window.innerHeight || document.documentElement.clientHeight;
+// AE.Bridge.puts(["windowHeight", window.innerHeight, document.documentElement.clientHeight, document.documentElement.offsetHeight, document.documentElement.scrollHeight]); // DEBUG
+    return window.innerHeight || document.documentElement.offsetHeight; //clientHeight;
   };
 
   var documentWidth = function() {
@@ -377,7 +360,8 @@ AE.Dialog = (function(self) {
   };
 
   var documentHeight = function() {
-    h = document.documentElement.offsetHeight
+// AE.Bridge.puts(["documentHeight", document.body.clientHeight, document.body.offsetHeight, document.body.scrollHeight, document.documentElement.clientHeight, document.documentElement.offsetHeight, document.documentElement.scrollHeight]); // DEBUG
+    h = document.documentElement.offsetHeight;
     if (h == windowHeight() || h == 0) { h = document.body.offsetHeight };
     return h;
   };
@@ -389,33 +373,33 @@ AE.Dialog = (function(self) {
    * This is important so that we have precise control over the window dimensions
    */
   self.initialize = function() {
+    initialized = true;
     var w = windowWidth();
     var h = windowHeight();
+    var wl = window.screenX || window.screenLeft;
+    var wt = window.screenY || window.screenTop;
     var sw = screen.width;
     var sh = screen.height;
-    initialized = true;
-    AE.Bridge.callRuby("window_dimensions", [w, h, sw, sh]);
+    geometry = [w, h, wl, wt, sw, sh];
+    AE.Bridge.callRuby("AE.Dialog.initialize", geometry);
   };
 
   /* Method to adjust the size of the dialog to its content or a specified size. */
   self.adjustSize = function(w, h) {
     // Measure the document's width and height.
-    //if (AE.debug) { AE.Bridge.puts(["width of document", document.body.offsetWidth, document.body.clientWidth, document.body.scrollWidth, document.documentElement.offsetWidth, document.documentElement.clientWidth, document.documentElement.scrollWidth]); } // DEBUG
-    //if (AE.debug) { AE.Bridge.puts(["height of document", document.body.offsetHeight, document.body.clientHeight, document.body.scrollHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight]); } // DEBUG
-    w = documentWidth();
-    h = documentHeight();
+    w = (typeof w == "number" && !isNaN(w)) ? w : documentWidth();
+    h = (typeof h == "number" && !isNaN(h)) ? h : documentHeight();
     // We send also the dialog's position to Ruby because we need to override the dialog position on OSX.
     var l = window.screenX || window.screenLeft;
     var t = window.screenY || window.screenTop;
-    if (AE.debug) { AE.Bridge.puts("AE.Dialog.adjustSize("+w+", "+h+", "+l+", "+t+")"); } // DEBUG
     scheduler.replace(function(){
-      AE.Bridge.callRuby("adjust_size", [w, h, l, t]);
+      AE.Bridge.callRuby("AE.Dialog.adjustSize", [w, h, l, t]);
     });
   };
 
   /* Close the dialog */
   self.close = function() {
-    AE.Bridge.callRuby("close");
+    AE.Bridge.callRuby("AE.Dialog.close");
     window.close();
   };
 
@@ -530,7 +514,7 @@ AE.Form = (function(self) {
           return function() {
             var hash = {};
             hash[name] = get_value(input);
-            AE.Bridge.callRuby('update_options', hash);
+            AE.Bridge.callRuby('updateOptions', hash);
           };
         }(name,input);
         if (input.addEventListener) {

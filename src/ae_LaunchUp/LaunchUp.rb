@@ -27,9 +27,9 @@ Description:  This Plugin adds a quick launcher to search and execute commands.
 
 Recommended:  SketchUp 8 M2 or higher (it works in a limited way in lower versions)
 
-Version:      1.0.2
+Version:      1.0.3
 
-Date:         28.03.2013
+Date:         04.04.2013
 
 Note:
   This plugin has only been possible by modifying (intercepting) SketchUp API
@@ -89,6 +89,8 @@ PATH_ROOT = File.dirname(__FILE__) unless defined?(self::PATH_ROOT)
 require(File.join(PATH_ROOT, 'Translate.rb'))
 # Load translation strings and add plugin to UI.
 TRANSLATE = Translate.new("LaunchUp", File.join(PATH_ROOT, "lang")) unless defined?(self::TRANSLATE)
+# WebDialog Helper.
+require(File.join(PATH_ROOT, 'Dialog.rb'))
 # Since the API does not expose the procs in UI::Command and the
 # menu name and proc in Sketchup::Menu, we try to get those via aliasing and
 # intercepting the API methods that create them.
@@ -117,16 +119,13 @@ require(File.join(PATH_ROOT, 'Options.rb'))
   :tracking => {}, # This hash keeps track how often a command was executed.
 })
 # Reference to the main dialog.
-@launchdlg ||= nil #FIXME: remove this after debugging
-# Reference to the index object.
-@index ||= nil
-load(File.join(PATH_ROOT, 'Test.rb')) if File.exists?(File.join(PATH_ROOT, 'Test.rb')) # DEBUG
+@launchdlg ||= nil
 
 
 
 # Platform detection.
-OSX = ( Object::RUBY_PLATFORM =~ /(darwin)/i ) unless defined?(self::OSX)
-WIN = ( !OSX ) unless defined?(self::WIN)
+OSX = ( Object::RUBY_PLATFORM =~ /darwin/i ) unless defined?(self::OSX)
+WIN = ( RUBY_PLATFORM =~ /mswin/i ) unless defined?(self::WIN)
 
 
 
@@ -154,119 +153,57 @@ end
 
 # This displays the main dialog with search field.
 def self.show_dialog
-  # Check whether index has been created.
-  @index ||= create_index
   # If the dialog exists, bring it to the front.
   if @launchdlg && @launchdlg.visible?
     @launchdlg.bring_to_front
   else
-    # Create the WebDialog.
-    @launchdlg = UI::WebDialog.new(TRANSLATE["LaunchUp"], false, false, 800, 200, @options[:width], 60, true)
+    @launchdlg = AE::LaunchUp::Dialog.new(TRANSLATE["LaunchUp"], false, false, 800, 200, @options[:width], 60, true)
     @launchdlg.min_width = 150
     @launchdlg.max_width = 500
     @launchdlg.min_height = 40
     window_width = (@options[:width].is_a?(Numeric)) ? @options[:width] : 250 # outer width
     window_height = 40 # outer height
-    window_border_width = 0
-    window_titlebar_height = 28
-    screen_width = 1200
-    screen_height = 800
     @launchdlg.set_size(window_width, window_height)
     html_path = File.join(PATH_ROOT, "html", "LaunchUp.html")
     @launchdlg.set_file(html_path)
 
-    # Callbacks
-    # Initialize the form and pass the default options to it.
-    @launchdlg.add_action_callback("initialize") {|dlg, param|
+    @launchdlg.on_show {|dlg|
       TRANSLATE.webdialog(dlg)
       dlg.execute_script("AE.LaunchUp.initialize(#{@options.get_json})")
     }
 
-    # Receives the document's inner dimensions.
-    # This is necessary, especially because SketchUp's API method can set the outer
-    # size of a WebDialog, but JavaScript tells us only the document size (inner size).
-    @launchdlg.add_action_callback("window_dimensions") { |dlg, param|
-      w, h, sw, sh = eval(param) rescue next
-      window_border_width = (window_width - w.to_f) / 2
-      window_titlebar_height = window_height - h.to_f
-      puts("window_dimensions(#{w}, #{h}, #{sw}, #{sh}) #{window_border_width} #{window_titlebar_height}") if @options[:debug] # DEBUG
-      screen_width = sw if sw.is_a?(Numeric) && sw > 0
-      screen_height = sh if sh.is_a?(Numeric) && sh > 0
-      dlg.execute_script("AE.Dialog.adjustSize()")
-    }
-
-    # Receives the html's dimensions in order set a specific webdialog size.
-    @launchdlg.add_action_callback("adjust_size") { |dlg, param|
-      w, h, l, t = eval(param) rescue next
-      # Calculate the outer window size from the given document size:
-      window_width = @options[:width] = w.to_f + 2 * window_border_width
-      window_height = h.to_f + window_titlebar_height
-      # Allow the dialog not to exceed the screen size:
-      window_width = [window_width, screen_width - l + window_border_width - 1].min if l.is_a?(Numeric)
-      window_height = [window_height, screen_height - t + window_titlebar_height - 1].min if t.is_a?(Numeric)
-      # Set the new size
-      dlg.set_size(window_width, window_height)
-      # If we are on OSX, SketchUp resizes towards the top, changing the dialog's top position.
-      # We need to compensate that:
-      if OSX && l.is_a?(Numeric) && t.is_a?(Numeric)
-        left = l #- window_border_width
-        top = t #- window_titlebar_height
-        dlg.set_position(left, top)
-      end
-      puts("#{param[/\#\d+$/]} adjust_size(#{window_width}, #{window_height}, #{l}, #{t})") if @options[:debug] # DEBUG
-    }
-
     # Update the @options object in Ruby.
-    @launchdlg.add_action_callback("update_options") { |dlg, param|
-      @options.update(eval(param))
+    @launchdlg.on("updateOptions") { |dlg, hash|
+      @options.update(hash)
+      nil
     }
 
     # Load the index.
-    @launchdlg.add_action_callback("load_index") { |dlg, param|
-      dlg.execute_script("AE.LaunchUp.Index.load(#{@index.to_json})") if @options[:local_index]
+    @launchdlg.on("load_index") { |dlg, param|
+      dlg.execute_script("AE.LaunchUp.Index.load(#{Index.instance.to_json})") if @options[:local_index]
     }
 
     # Send entries from the Index to the WebDialog.
-    @launchdlg.add_action_callback("get_entries") { |dlg, param|
-      puts("get_entries called for #{param}") if @options[:debug]
-      ids = eval(param) rescue [] # array of IDs
-      message_id = param[/\#\d+$/][/\d+/]  # Lookbehind not supported: [/(?<=\#)\d+$/]
-      next unless message_id
-      entries = ids.map{|id| @index.get_by_id(id)}
-      dlg.execute_script("AE.Bridge.callbackJS(#{message_id}, " + @index.to_json(entries) + ")")
+    @launchdlg.on("get_entries") { |dlg, ids|
+      entries = ids.map{|id| Index.instance.get_by_id(id)}
     }
 
     # Search the index.
-    @launchdlg.add_action_callback("look_up") { |dlg, param|
-      # search_string = eval(param) rescue (puts "AE::LaunchUp: look_up arguments could not be evaluated."; next)
+    @launchdlg.on("look_up") { |dlg, search_string|
       # We better get the string directly from the input instead of encoding/unencoding. This preserves Unicode characters.
       search_string = dlg.get_element_value("combo_input")
-      message_id = param[/\#\d+$/][/\d+/]
-      next unless message_id
       length = (@options[:max_length].is_a?(Fixnum)) ? @options[:max_length] : nil
       # In case of failure, nil gives the method's default value.
-      results = @index.look_up(search_string, length)
-      dlg.execute_script("AE.Bridge.callbackJS(#{message_id}, #{@index.to_json(results)})")
+      results = Index.instance.look_up(search_string, length)
     }
 
     # Execute an action.
-    @launchdlg.add_action_callback("execute") { |dlg, param|
-      id = param.to_i
-      message_id = param[/\#\d+$/][/\d+/]
-      next unless message_id
-      success = @index.execute(id)
-      @options[:tracking][id] = @index.get_by_id(id)[:track] if success
-      dlg.execute_script("AE.Bridge.callbackJS(#{message_id}, #{success})")
+    @launchdlg.on("execute") { |dlg, id|
+      success = Index.instance.execute(id)
+      @options[:tracking][id] = Index.instance.get_by_id(id)[:track] if success
       dlg.close if @options[:pinned] == false
+      success
     }
-
-    # For debugging.
-    @launchdlg.add_action_callback("puts") { |dlg, param|
-      puts(param.sub(/\#\d+$/, ""))
-    }
-
-    # Close the dialog.
-    @launchdlg.add_action_callback("close") { |dlg, param| dlg.close } # TODO: does this trigger always set_on_close?
 
     # Close
     @launchdlg.set_on_close {
@@ -300,62 +237,21 @@ def self.show_options
     @optionsdlg.min_height = 300
     window_width = 500 # outer width
     window_height = 300 # outer height
-    window_border_width = 0
-    window_titlebar_height = 28
-    screen_width = 1200
-    screen_height = 800
     @optionsdlg.set_size(window_width, window_height)
     html_path = File.join(PATH_ROOT, "html", "LaunchUpOptions.html")
     @optionsdlg.set_file(html_path)
 
     # Callbacks
     # initialize: Pass the default options to the form.
-    @optionsdlg.add_action_callback("initialize") {|dlg, param|
+    @optionsdlg.on_show {|dlg|
       dlg.execute_script("document.getElementsByTagName('body')[0].style.background='#{dlg.get_default_dialog_color}'")
       TRANSLATE.webdialog(dlg)
       dlg.execute_script("AE.LaunchUpOptions.initialize(#{@options.get_json})")
     }
 
-    # Receives the document's inner dimensions.
-    # This is necessary, especially because SketchUp's API method can set the outer
-    # size of a WebDialog, but JavaScript tells us only the document size (inner size).
-    @optionsdlg.add_action_callback("window_dimensions") { |dlg, param|
-      w, h, sw, sh = eval(param) rescue next
-      puts("window_dimensions(#{w}, #{h}, #{sw}, #{sh}) #{window_border_width} #{window_titlebar_height}") if @options[:debug] # DEBUG
-      window_border_width = (window_width - w.to_f) / 2
-      window_titlebar_height = window_height - h.to_f
-      screen_width = sw if sw.is_a?(Numeric) && sw > 0
-      screen_height = sh if sh.is_a?(Numeric) && sh > 0
-      dlg.execute_script("AE.Dialog.adjustSize();")
-      # Set the dialog into the center of the screen to prevent overlap with LaunchUp,
-      # otherwise SketchUp places dialogs in the center of the previously active SketchUp dialog.
-      dlg.set_position(0.5*(screen_width-w), 0.5*(screen_height-h))
-    }
-
-    # Receives the html's dimensions in order set a specific webdialog size.
-    @optionsdlg.add_action_callback("adjust_size") { |dlg, param|
-      w, h, l, t = eval(param) rescue next
-      # Calculate the outer window size from the given document size:
-      window_width = @options[:width] = w.to_f + 2 * window_border_width
-      window_height = h.to_f + window_titlebar_height
-      # Don't allow the dialog to exceed the screen size:
-      window_width = [window_width, screen_width - l + window_border_width - 1].min if l.is_a?(Numeric)
-      window_height = [window_height, screen_height - t + window_titlebar_height - 1].min if t.is_a?(Numeric)
-      # Set the new size
-      dlg.set_size(window_width, window_height)
-      # If we are on OSX, SketchUp resizes towards the top, changing the dialog's top position.
-      # We need to compensate that:
-      #if OSX && l.is_a?(Numeric) && t.is_a?(Numeric)
-      #  left = l #- window_border_width
-      #  top = t #- window_titlebar_height
-      #  dlg.set_position(left, top)
-      #end
-      puts("#{param[/\#\d+$/]} adjust_size(#{window_width}, #{window_height}, #{l}, #{t})") if @options[:debug] # DEBUG
-    }
-
     # Update the options.
-    @optionsdlg.add_action_callback("update_options") { |dlg, param|
-      @options.update(eval(param))
+    @optionsdlg.add_action_callback("update_options") { |dlg, hash|
+      @options.update(hash)
       @options.save
       # Try to update options in LaunchUp dialog.
       if @launchdlg && @launchdlg.visible?
@@ -368,14 +264,6 @@ def self.show_options
           AE.LaunchUp.History.updateStyle();
         ")
       end
-    }
-
-    # Close the dialog.
-    @optionsdlg.add_action_callback("close") { |dlg, param| dlg.close }
-
-    # For debugging.
-    @optionsdlg.add_action_callback("puts") { |dlg, param|
-      puts(param)
     }
 
     # Show the webdialog.
@@ -414,9 +302,7 @@ end
 def self.look_up(search_string, length=@options[:max_length])
   raise(ArgumentError, "First argument 'search_string' must be a String.") unless search_string.is_a?(String)
   raise(ArgumentError, "Second argument 'length' must be a Fixnum.") unless length.is_a?(Fixnum)
-  # Check whether index has been created.
-  @index ||= create_index
-  @index.look_up(search_string, length)
+  Index.instance.look_up(search_string, length)
 end
 
 
@@ -426,8 +312,7 @@ end
 # @returns [Boolean] whether the command was executed (otherwise not found)
 def self.execute(identifier)
   raise(ArgumentError, "Argument 'identifier' must be a Fixnum.") unless identifier.is_a?(Fixnum)
-  return false unless @index
-  return @index.execute(identifier)
+  return Index.instance.execute(identifier)
 end
 
 
@@ -446,11 +331,11 @@ def self.save_index(file=nil, json=false)
   return if file.nil?
   File.open(file, "w"){|f|
     if json == true
-      f.puts(@index.to_json)
+      f.puts(Index.instance.to_json)
     else
       # We only want to include classes whose inspect value contains a valid Ruby object.
       classes = [String, Numeric, Array, Hash, TrueClass, FalseClass, NilClass]
-      array = @index.map{|entry| new = {}
+      array = Index.instance.instance_variable_get(:@data).map{|entry| new = {}
         entry.each{|k,v| new[k] = v if classes.include?(k.class) && classes.include?(v.class)}
         new
       }

@@ -112,9 +112,6 @@ LaunchUp.initialize = function(opt) {
   // dimensions and the dialog flickers.
   window.onresize = function(){window.setTimeout(AE.Dialog.adjustSize, 0)};
 
-  // Workaround: No idea why it hasn't already adjusted the size in time.
-  if (AE.PLATFORM == "OSX") { window.setTimeout(AE.Dialog.adjustSize, 250); window.setTimeout(AE.Dialog.adjustSize, 500); }
-
   // Load the index from ruby.
   // @deprecated
   if (Options.local_index) { AE.Bridge.callRuby("load_index"); }
@@ -293,6 +290,7 @@ var ComboBox = LaunchUp.ComboBox = function(self) {
       if (Options.local_index) {
         Index.execute(entry.id);
         History.add(entry);
+        AE.Bridge.updateOptions({history_entries: Options.history_entries});
         if (Options.pinned) { Dialog.close() }
       } else {
         if (AE.debug) { AE.Bridge.puts("ComboBox.submit("+entry.id+")") } // DEBUG
@@ -301,6 +299,7 @@ var ComboBox = LaunchUp.ComboBox = function(self) {
           // Success: continue.
           if (success === true) {
             History.add(entry);
+            AE.Bridge.updateOptions({history_entries: Options.history_entries});
             if (Options.pinned===false) { AE.Dialog.close() }
           }
           // Failure: Show error message.
@@ -651,7 +650,6 @@ var History = LaunchUp.History = function(self) {
     // Add it to data.
     DATA.unshift(entry);
     Options.history_entries.unshift(entry.id);
-    AE.Bridge.updateOptions({history_entries: Options.history_entries});
     // Create the HTML.
     var div = document.createElement("div");
     var li = document.createElement("li");
@@ -746,7 +744,7 @@ return LaunchUp;
 
 
 // Catch errors in the WebDialog and send them to the Ruby Console
-window.onerror = function(errorMsg, url, lineNumber){
+/*window.onerror = function(errorMsg, url, lineNumber){
   AE.Bridge.puts("JavaScript error:\n"+url+" (line "+lineNumber+"): "+errorMsg);
   return true;
-}
+}*/

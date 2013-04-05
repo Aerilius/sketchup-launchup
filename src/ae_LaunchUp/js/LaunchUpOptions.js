@@ -54,9 +54,6 @@ LaunchUpOptions.initialize = function(opt) {
 
   // Initialize the Dialog module.
   AE.Dialog.initialize();
-
-  // Workaround: No idea why it hasn't already adjusted the size in time.
-  if (AE.PLATFORM == "OSX") { window.setTimeout(AE.Dialog.adjustSize, 250); window.setTimeout(AE.Dialog.adjustSize, 500); }
 };
 
 
