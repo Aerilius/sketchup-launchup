@@ -21,18 +21,28 @@ class Index
 
 
 
+  # Make this a singleton class.
+  private_class_method :new
+
+  class << self
+
+  def instance
+    if @__instance__.nil?
+      @__instance__ = self.__send__(:new)
+      def instance; return @__instance__; end
+    end
+    return @__instance__
+  end
+
+  end # class << self
+
+
+
   # List of commands with unknown Proc (probably loaded before Interception.rb).
   # For debugging.
   @@missing = []
   def self.missing
     return @@missing
-  end
-
-
-
-  # Returns a singleton of this class, creates and instance if none exists.
-  def self.instance(*args)
-    return @@instance ||= self.new(*args)
   end
 
 
@@ -62,7 +72,7 @@ class Index
 
     # If new commands are added at run time, we want to get notified so we can
     # add them to this Index.
-    @scheduler = Scheduler.new(0.25)
+    @scheduler = Scheduler.new(1)
     AE::Interception::Command.add_listener(:new){|*args|
       command = args[0]
       break unless command.is_a?(UI::Command)
@@ -136,23 +146,34 @@ class Index
   # proc and validation_proc (and more).
   #
   def add(command=nil, hash={})
+    raise(ArgumentError, "Argument 'command' must be a UI::Command.") unless command.is_a?(UI::Command) || command.nil?
+    raise(ArgumentError, "Argument 'hash' must be a Hash.") unless hash.is_a?(Hash)
     hash[:command] = command
+
     # Proc
     hash[:proc] ||= command.respond_to?(:proc) ? command.proc : AE::Interception::Command.proc[command]
+
     # Validation Proc
     hash[:validation_proc] ||= command.respond_to?(:validation_proc) ? command.validation_proc : AE::Interception::Command.validation_proc[command]
+
     # Name
     hash[:name] ||= command.respond_to?(:menu_text) ? command.menu_text : AE::Interception::Command.text[command]
+
     # If we don't get a proc and name, it's useless.
     return @@missing << command unless hash[:proc] && hash[:name]
+
     # Description
-    hash[:description] ||= command.respond_to?(:status_bar_text) ? command.status_bar_text || command.tooltip : TRANSLATE["LaunchUp requires SketchUp > 8M1 to display more descriptive info."]
+    hash[:description] ||= command.respond_to?(:status_bar_text) ?
+      command.status_bar_text || command.tooltip :
+      TRANSLATE["LaunchUp requires SketchUp > 8M1 to display more descriptive info."]
+
     # Icon
     # Note: If developer assigns a relative file path, SketchUp interprets it
     # relative to the file where it has been assigned command.large_icon=() and
     # converts it into an absolute path. So the getter method command.large_icon
     # gets always an absolute path.
     hash[:icon] ||= command.respond_to?(:large_icon) ? command.large_icon || command.small_icon : nil
+
     # Category
     # A category defines more clearly the context of a command (if the name is unspecific).
     if !hash[:category] && command.respond_to?(:category)
@@ -161,12 +182,14 @@ class Index
       # If not given, we use the menu path or toolbar name.
       # TODO: A nice separator would be Unicode › or 〉 or → , or fallback to ASCII >
       menu_path = AE::Interception::Menu.get_menu_path(command)[0..-2]
-      if menu_path.length > 0 && (menu_path.first.nil? || menu_path.first.empty?)
-        menu_path[0] = TRANSLATE["Context menu"]
-      else
-        # Ruby scripts have only access to the top-level native menus. Those are
-        # given in English (upper/lowercase and optionally ending with s) and need translation.
-        menu_path[0] = TRANSLATE[menu_path[0]]
+      if menu_path.length > 0
+        if menu_path.first.nil? || menu_path.first.empty?
+          menu_path[0] = TRANSLATE["Context menu"]
+        else
+          # Ruby scripts have only access to the top-level native menus. Those are
+          # given in English (upper/lowercase and optionally ending with s) and need translation.
+          menu_path[0] = TRANSLATE[menu_path[0]]
+        end
       end
       if !menu_path.nil? && !menu_path.empty?
         hash[:category] ||= menu_path.join(" › ")
@@ -174,9 +197,11 @@ class Index
         hash[:category] ||= TRANSLATE[@toolbars[command]]
       end
     end
+
     # Keywords
     # TODO: We could add here synonyms, translations, synonyms, maybe from a dictionary.
     hash[:keywords] = command.respond_to?(:keywords) ? command.keywords : nil
+
     # File path
     # Get the file path of where the UI::Command was created. It might be useful info.
     file = hash[:proc].inspect[/[^@]+(?=\:\d+\>)/]
@@ -184,15 +209,22 @@ class Index
     # Making the file path relative to a load path is 400× too slow:
     # file = $:.map{|p| file.sub(p, "") }.min{|s| s.length } unless file.nil?
     hash[:file] = file
+
     # Create a short id to distinguish it from other commands.
     id = hash_code(hash[:name].to_s + hash[:description].to_s)
     # TODO: This would make unique ids: id += 1 while @data.find{|data| data[:id]==id }
     hash[:id] = id
+
     # Track usage statistics for better ranking
     hash[:track] = 0
+
     @data << hash unless @data.find{ |other_command| other_command[:id] == id }
-  rescue
+    return true
+  rescue ArgumentError
+    raise
+  rescue StandardError
     puts("LaunchUp: Command #{command} could not be added to index.") if $VERBOSE
+    return false
   end
 
 
@@ -217,7 +249,9 @@ class Index
   # @return [Array] an array of sorted results of the form:
   #    {:name => …, :description => …, :id => …, :proc => …, :validation_proc => …}
   def look_up(search_string, length=nil)
-    length = 10 unless length.is_a?(Fixnum)
+    raise(ArgumentError, "Argument 'search_string' must be a String") unless search_string.is_a?(String)
+    length = 10 if length.nil?
+    raise(ArgumentError, "Argument 'length' must be a Fixnum") unless length.is_a?(Fixnum)
     return slice(rank(find(search_string)), length)
   end
 
@@ -227,7 +261,7 @@ class Index
   # @param [Fixnum] id
   # @returns [Hash] entry
   def get_by_id(id)
-    raise(ArgumentError, "Argument 'id' must be a Fixnum") unless hash.is_a?(Fixnum)
+    raise(ArgumentError, "Argument 'id' must be a Fixnum") unless id.is_a?(Fixnum)
     @data.find{|entry| entry[:id] == id }
   end
   alias_method(:[], :get_by_id)
@@ -377,7 +411,7 @@ class Index
     }
     return result_array
   rescue Exception => e
-    puts("AE::LaunchUp::Index: Error in find when searching #{search_string}\n#{e.message.to_s}\n#{e.backtrace.join("\n")}") #if $VERBOSE
+    puts("AE::LaunchUp::Index: Error in find when searching #{search_string}\n#{e.message.to_s}\n#{e.backtrace.join("\n")}") if $VERBOSE
     return []
   end
 
