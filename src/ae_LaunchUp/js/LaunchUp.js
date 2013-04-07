@@ -409,7 +409,6 @@ var ComboBox = LaunchUp.ComboBox = function(self) {
         div.appendChild(span);
       }
       // Description of the command.
-      if (AE.debug && typeof entry.dbg_info !== "undefined" && entry.dbg_info !== null) { entry.description = entry.dbg_info + " " + entry.description } // DEBUG, TODO: remove this.
       if (entry.description !== entry.name && entry.enabled !== false) {
         var span = document.createElement("span");
         span.setAttribute("class", "description");
