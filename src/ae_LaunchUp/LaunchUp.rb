@@ -29,7 +29,7 @@ Recommended:  SketchUp 8 M2 or higher (it works in a limited way in lower versio
 
 Version:      1.0.3
 
-Date:         04.04.2013
+Date:         07.04.2013
 
 Note:
   This plugin has only been possible by modifying (intercepting) SketchUp API
