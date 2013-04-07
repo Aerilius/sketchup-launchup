@@ -27,7 +27,7 @@ Description:  This Plugin adds a quick launcher to search and execute commands.
 
 Recommended:  SketchUp 8 M2 or higher (it works in a limited way in lower versions)
 
-Version:      1.0.3
+Version:      1.0.4
 
 Date:         07.04.2013
 
@@ -231,7 +231,7 @@ def self.show_options
     @optionsdlg.bring_to_front
   else
     # Create the WebDialog.
-    @optionsdlg = UI::WebDialog.new(TRANSLATE["LaunchUp Options"], false, false, 600, 200, 500, 300, true)
+    @optionsdlg = AE::LaunchUp::Dialog.new(TRANSLATE["LaunchUp Options"], false, false, 600, 200, 500, 300, true)
     @optionsdlg.min_width = 300
     @optionsdlg.max_width = 600
     @optionsdlg.min_height = 300
@@ -250,7 +250,7 @@ def self.show_options
     }
 
     # Update the options.
-    @optionsdlg.add_action_callback("update_options") { |dlg, hash|
+    @optionsdlg.on("updateOptions") { |dlg, hash|
       @options.update(hash)
       @options.save
       # Try to update options in LaunchUp dialog.

@@ -356,6 +356,7 @@ AE.Dialog = (function(self) {
   };
 
   var documentWidth = function() {
+// AE.Bridge.puts(["documentWidth", document.body.clientWidth, document.body.offsetWidth, document.body.scrollWidth, document.documentElement.clientWidth, document.documentElement.offsetWidth, document.documentElement.scrollWidth]); // DEBUG
     return document.body.offsetWidth;
   };
 

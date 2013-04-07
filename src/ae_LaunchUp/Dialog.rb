@@ -23,7 +23,7 @@ class Dialog < UI::WebDialog
 #
 # @return [String] the instance's class and object id
 def inspect
-  return "#<#{self.class}:0x#{(self.object_id/2).to_s(16)}>"
+  super#return "#<#{self.class}:0x#{(self.object_id/2).to_s(16)}>"
 end
 
 
@@ -81,6 +81,7 @@ def initialize(*args)
 
   # Get some initial data.
   @procs_callback["AE.Dialog.initialize"] = Proc.new{|dlg, params|
+    next if @dialog_initialized
     w, h, wl, wt, sw, sh = params
     @window_border_width = (@window_width - w.to_f) / 2
     @window_titlebar_height = @window_height - h.to_f
