@@ -53,7 +53,7 @@ def initialize(*args)
     # Trigger all event handlers for when the dialog is shown.
     @procs_show.each{|block| block.call(dlg) }
   }
-  self.on("initialize") {|dlg, param|
+  @procs_callback["initialize"] = Proc.new{|dlg, param|
     next if @dialog_initialized
     # Trigger all event handlers for when the dialog is shown.
     @procs_show.each{|block| block.call(dlg) }
