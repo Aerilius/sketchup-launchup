@@ -212,13 +212,18 @@ class Index
 
     # Create a short id to distinguish it from other commands.
     id = hash_code(hash[:name].to_s + hash[:description].to_s)
-    # TODO: This would make unique ids: id += 1 while @data.find{|data| data[:id]==id }
     hash[:id] = id
 
     # Track usage statistics for better ranking
     hash[:track] = 0
 
-    @data << hash unless @data.find{ |other_command| other_command[:id] == id }
+    # Add this entry only if it is not already contained.
+    # Assume that an existing entry is equivalent and update it.
+    if @data.find{ |e| e[:id] == id }
+      update(hash)
+    else
+      @data << hash
+    end
     return true
   rescue ArgumentError
     raise
@@ -372,43 +377,57 @@ class Index
   # @returns [Array] an array of result hashes
   def find(search_string)
     result_array = []
-    search_words = search_string.split(/\s/)
+    search_words = search_string.split(/\s+/)
 
     # Loop over all entries in the index.
     @data.each{|entry|
-      # Check whether this command is available for the current context.
-      # next if entry[:validation_proc] && entry[:validation_proc].call != MF_ENABLED rescue nil # Proc contains a "return"? Rescue, ignore and continue.
+      begin
+        # Check whether this entry matches the search words.
+        score = 0
+        search_words.each{|search_word|
+          next if search_word.empty?
 
-      # Then check whether it matches the search words.
-      score = 0
-      search_words.each{|search_word|
-        next if search_word.empty?
-        # 181
-        # TODO: increase relevance, especially longest common substring, less fuzzy
-        score += 2 * AE::LaunchUp::Scorer.score(search_word, entry[:name]) if entry[:name].is_a?(String)
-        score += exact_matches(search_word, entry[:description].gsub(/\b\w{0,4}\b/, "")) if entry[:description].is_a?(String) && search_word.length > 4
-        score += AE::LaunchUp::Scorer.score(search_word, entry[:category]) if entry[:category].is_a?(String)
-        score += exact_matches(search_word, entry[:keywords].join(" "))/(entry[:keywords].length|1).to_f if entry[:keywords].is_a?(Array)
-        score += 2 * AE::LaunchUp::Scorer.score(search_word, entry[:keywords].join(" ")) if entry[:keywords].is_a?(Array)
-        #score += AE::LaunchUp::Scorer.score( search_word.gsub(/\/\\/, ""), entry[:file].gsub(/\/\\/, "") ) if entry[:file].is_a?(String) # && search_word[/\w[\.\/\\]\w/]
-        score *= 2 if entry[:icon].is_a?(String)
-      }
-      if entry[:validation_proc]
-        status = entry[:validation_proc].call == MF_ENABLED rescue nil # Proc contains a "return"? Rescue, ignore and continue.
-        entry[:enabled] = status
-        score *= 0.5 if status == false
+          s = 2 * AE::LaunchUp::Scorer.score(search_word, entry[:name]) if entry[:name].is_a?(String)
+          s += AE::LaunchUp::Scorer.score(search_word, entry[:description]) if entry[:description].is_a?(String)
+          s += 2 * AE::LaunchUp::Scorer.score(search_word, entry[:category]) if entry[:category].is_a?(String)
+          s += exact_matches(search_word, entry[:keywords].join(" "))/(entry[:keywords].length|1).to_f if entry[:keywords].is_a?(Array) && !entry[:keywords].empty?
+          s += 2 * AE::LaunchUp::Scorer.score(search_word, entry[:keywords].join(" ")) if entry[:keywords].is_a?(Array)
+          s += AE::LaunchUp::Scorer.score( search_word.gsub(/\/\\/, ""), entry[:file].gsub(/\/\\/, "") ) if entry[:file].is_a?(String) # && search_word[/\w[\.\/\\]\w/]
+
+          # Skip if no match has been found.
+          break score = 0.0 if s == 0.0
+          score += s
+        }
+
+        # Tweaks for relevance:
+        # Entries with icons match better with users's expectation,
+        # urls or "about" rather not.
+        score *= 3 if entry[:icon].is_a?(String)
+        #score *= 0.5 if entry[:name][/about|paypal/i] || entry[:description][/http/]
+
+        # Check wether the command is available in the current context. We don't
+        # want to reject it completely from the search results, so that the user
+        # won't miss it in an explicit search will. We give a hint if it's disabled.
+        if entry[:validation_proc]
+          status = entry[:validation_proc].call == MF_ENABLED rescue nil # Proc contains a "return"? Rescue, ignore and continue.
+          entry[:enabled] = status
+          score *= 0.5 if status == false
+        end
+
+        # Skip if no match has been found.
+        next if score <= 1.0
+
+        # Consider tracking data, how often this entry has been selected over others:
+        score += [10 * entry[:track] / (@total_track|1).to_f, 2.0].min if entry[:track]
+        entry[:score] = score
+
+        # Add it to results.
+        result_array << entry
+      rescue
+        next
       end
-
-      # Skip if no match has been found.
-      next if score <= 0.5
-
-      # Consider tracking data, how often this entry has been selected over others:
-      score += [10 * entry[:track] / (@total_track|1).to_f, 2.0].min if entry[:track]
-      entry[:score] = score
-
-      # Add it to results.
-      result_array << entry
     }
+
     return result_array
   rescue Exception => e
     puts("AE::LaunchUp::Index: Error in find when searching #{search_string}\n#{e.message.to_s}\n#{e.backtrace.join("\n")}") if $VERBOSE
