@@ -27,7 +27,7 @@ Description:  This Plugin adds a quick launcher to search and execute commands.
 
 Recommended:  SketchUp 8 M2 or higher (it works in a limited way in lower versions)
 
-Version:      1.0.5
+Version:      1.0.6
 
 Date:         08.04.2013
 

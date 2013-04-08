@@ -228,7 +228,7 @@ class Index
   rescue ArgumentError
     raise
   rescue StandardError
-    puts("LaunchUp: Command #{command} could not be added to index.") if $VERBOSE
+    puts("LaunchUp: Command #{command} could not be added to index.")
     return false
   end
 
@@ -288,8 +288,13 @@ class Index
     else
       raise
     end
-  rescue
-    puts("AE::LaunchUp::Index: Command #{id} failed to execute.") if $VERBOSE
+  rescue LocalJumpError => e
+    # Proc contains a "return"?
+    puts("Proc of '#{entry[:name]}' (#{entry[:id]}) contains 'return'\n#{e.message.to_s}\n#{e.backtrace.join("\n")}")
+    return false
+  rescue Exception => e
+    # Proc contains other bug.
+    puts("Error in proc of '#{entry[:name]}' (#{entry[:id]})\n#{e.message.to_s}\n#{e.backtrace.join("\n")}")
     return false
   end
 
@@ -409,7 +414,16 @@ class Index
         # want to reject it completely from the search results, so that the user
         # won't miss it in an explicit search will. We give a hint if it's disabled.
         if entry[:validation_proc]
-          status = entry[:validation_proc].call == MF_ENABLED rescue nil # Proc contains a "return"? Rescue, ignore and continue.
+          status = nil
+          begin
+            status = entry[:validation_proc].call == MF_ENABLED
+          rescue LocalJumpError => e
+            # Validation proc contains a "return"?
+            puts("Validation proc of '#{entry[:name]}' (#{entry[:id]}) contains 'return'\n#{e.message.to_s}\n#{e.backtrace.join("\n")}")
+          rescue Exception => e
+            # Validation proc contains other bug.
+            puts("Error in validation proc of '#{entry[:name]}' (#{entry[:id]})\n#{e.message.to_s}\n#{e.backtrace.join("\n")}")
+          end
           entry[:enabled] = status
           score *= 0.5 if status == false
         end
@@ -423,14 +437,15 @@ class Index
 
         # Add it to results.
         result_array << entry
-      rescue
-        next
+      rescue Exception => e
+        puts("AE::LaunchUp::Index: Error in 'find' when searching '#{entry[:name]}' (#{entry[:id]})\n#{e.message.to_s}\n#{e.backtrace.join("\n")}")
+        break
       end
     }
 
     return result_array
   rescue Exception => e
-    puts("AE::LaunchUp::Index: Error in find when searching #{search_string}\n#{e.message.to_s}\n#{e.backtrace.join("\n")}") if $VERBOSE
+    puts("AE::LaunchUp::Index: Error in 'find' when searching '#{search_string}'\n#{e.message.to_s}\n#{e.backtrace.join("\n")}")
     return []
   end
 

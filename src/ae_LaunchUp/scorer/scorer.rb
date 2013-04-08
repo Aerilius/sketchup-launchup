@@ -42,7 +42,7 @@ module Scorer
 
       # Match.
       if string[index_in_string] == abbreviation[index_in_abbrev]
-        score_total += self.score_char(string_orig, index_in_string, abbreviation_orig[index_in_abbrev])
+        score_total += score_char(string_orig, index_in_string, abbreviation_orig[index_in_abbrev])
 
       # No match.
       elsif fuzziness
@@ -54,7 +54,7 @@ module Scorer
           fuzzies += 1.0
           index_in_string += 1
           index_in_abbrev += 1
-          score_total += self.score_char(string_orig, index_in_string, abbreviation_orig[index_in_abbrev])
+          score_total += score_char(string_orig, index_in_string, abbreviation_orig[index_in_abbrev])
 
         # It is missing but the next character is correct.
         elsif string[index_in_string] == abbreviation[index_in_abbrev+1]
@@ -62,7 +62,7 @@ module Scorer
           fuzzies += 1.0
           # index_in_string += 0
           index_in_abbrev += 1
-          score_total += self.score_char(string_orig, index_in_string, abbreviation_orig[index_in_abbrev])
+          score_total += score_char(string_orig, index_in_string, abbreviation_orig[index_in_abbrev])
 
         # There is one wrong character inbetween.
         elsif string[index_in_string+1] == abbreviation[index_in_abbrev]
@@ -70,7 +70,7 @@ module Scorer
           fuzzies += 1.0
           index_in_string += 1
           # index_in_abbrev += 0
-          score_total += self.score_char(string_orig, index_in_string, abbreviation_orig[index_in_abbrev])
+          score_total += score_char(string_orig, index_in_string, abbreviation_orig[index_in_abbrev])
         # Or we are at the end of consecutive characters (jump to next word).
         else
           fuzzies += 2.0
