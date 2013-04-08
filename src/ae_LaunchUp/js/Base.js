@@ -401,7 +401,6 @@ AE.Dialog = (function(self) {
   /* Close the dialog */
   self.close = function() {
     AE.Bridge.callRuby("AE.Dialog.close");
-    window.close();
   };
 
   /* Wrapper around window.onfocus or window.onblur.

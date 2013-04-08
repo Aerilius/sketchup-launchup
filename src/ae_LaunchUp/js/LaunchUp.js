@@ -215,6 +215,10 @@ var ComboBox = LaunchUp.ComboBox = function(self) {
         if (SELECTED == -1) { select(0) };
         submit();
       }
+      // escape key: Close the dialog.
+      else if ( keycode == 27 ) {
+        AE.Dialog.close();
+      }
       // other keys
       else {
         // To prevent complete searches at every key event, we use a scheduler to limit them to a minimum interval.
