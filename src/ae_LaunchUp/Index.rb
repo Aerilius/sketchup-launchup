@@ -422,7 +422,7 @@ class Index
             puts("Validation proc of '#{entry[:name]}' (#{entry[:id]}) contains 'return'\n#{e.message.to_s}\n#{e.backtrace.join("\n")}")
           rescue Exception => e
             # Validation proc contains other bug.
-            puts("Error in validation proc of '#{entry[:name]}' (#{entry[:id]})\n#{e.message.to_s}\n#{e.backtrace.join("\n")}")
+            puts("Error in validation proc of '#{entry[:name]}' (#{entry[:id]})\n#{e.message.to_s}\n#{e.backtrace.join("\n")}") if $VERBOSE
           end
           entry[:enabled] = status
           score *= 0.5 if status == false
