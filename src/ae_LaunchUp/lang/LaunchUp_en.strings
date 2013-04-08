@@ -54,6 +54,9 @@
 "Keep the dialog open after executing a command."="Keep the dialog open after executing a command.";
 "Show the history of recently used commands."="Show the history of recently used commands.";
 "Maximum length"="Maximum length";
+"Cancel"="Cancel";
+"Apply"="Apply";
+"OK"="OK";
 
 // Strings of the Options dialog: extensions
 "Smart searches allow to enhance the available commands."="Smart searches allow to enhance the available commands.";
@@ -62,5 +65,3 @@
 "Load extensions"="Load extensions";
 "Load Ruby files"="Load Ruby files";
 "A dictionary of local language words and synonyms allows to find even commands that don't provide detailed or translated metadata."="A dictionary of local language words and synonyms allows to find even commands that don't provide detailed or translated metadata.";
-"Cancel"="Cancel";
-"Apply"="Apply";

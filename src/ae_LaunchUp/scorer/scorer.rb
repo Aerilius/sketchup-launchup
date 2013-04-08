@@ -128,7 +128,7 @@ module Scorer
     #  score = SCORE_BEGIN
     #elsif
     # After a whitespace.
-    if ((p=string[index_in_string-1]) == 32 || p == 9) #&& (byte_last == 32 || byte_last == 9)# or index_prev?
+    if ((p=string[index_in_string-1]) == 32 || p == 9)
       score = SCORE_WORD_BEGIN
     # Within a word.
     else
@@ -138,6 +138,7 @@ module Scorer
     score *= PENALTY_CASE if string[index_in_string] != char
     return score
   end
+  private_class_method(:score_char)
 
 
 

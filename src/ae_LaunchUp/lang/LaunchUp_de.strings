@@ -54,6 +54,9 @@
 "Keep the dialog open after executing a command."="Den Dialog offen lassen, nachdem ein Befehl ausgeführt wurde.";
 "Show the history of recently used commands."="Den Verlauf der kürzlich verwendeten Befehle anzeigen.";
 "Maximum length"="Maximale Länge";
+"Cancel"="Abbrechen";
+"Apply"="Anwenden";
+"OK"="OK";
 
 // Strings of the Options dialog: extensions
 "Smart searches allow to enhance the available commands."="Erweiterte Suchfunktionen ergänzen die vorhandenen Befehle.";
@@ -62,5 +65,3 @@
 "Load extensions"="Erweiterungen laden";
 "Load Ruby files"="Ruby-Dateien laden";
 "A dictionary of local language words and synonyms allows to find even commands that don't provide detailed or translated metadata."="Ein Wörterbuch mit lokalisierten Wörtern und Synonymen erlaubt es, auch Befehle zu finden, die unvollständige oder nicht übersetzte Metadaten haben.";
-"Cancel"="Abbrechen";
-"Apply"="Anwenden";

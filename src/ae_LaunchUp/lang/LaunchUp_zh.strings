@@ -58,6 +58,9 @@
 "Keep the dialog open after executing a command."="执行命令后不关闭LaunchUp搜索对话框";
 "Show the history of recently used commands."="显示最近使用的命令";
 "Maximum length"="最大个数";
+"Cancel"="取消";
+"Apply"="应用";
+"OK"="确定";
 
 // Strings of the Options dialog: extensions
 "Search"="搜索";
@@ -69,7 +72,5 @@
 "Load Ruby files"="加载插件";
 "Use language dictionary to improve search results."="使用语言词典以改善搜索结果";
 "A dictionary of local language words and synonyms allows to find even commands that don't provide detailed or translated metadata."="本地语言词汇和别名允许查询不包含细节和翻译内容的词典";
-"Cancel"="取消";
-"Apply"="应用";
 
 // WWW.SUBAR.ME & WWW.SUAPP.ME - 麦兜 & 双鱼 汉化

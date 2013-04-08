@@ -37,20 +37,22 @@ LaunchUpOptions.initialize = function(opt) {
   };
   $("#color").onchange();
 
-  // Cancel button.
-  $("#cancel_button").onclick = function() { AE.Dialog.close() };
-
-  // Apply button.
-  $("#apply_button").onclick = function() {
-    AE.Bridge.updateOptionsfromForm();
+  // OK button.
+  $("#ok_button").onclick = function() {
+    // Now all inputs have sent changes back to Ruby so we don't need to send all
+    // input back.
+    // AE.Bridge.updateOptions(AE.Form.read());
     AE.Dialog.close();
   };
+
+  // Prevent page reloading on buttons in form element.
+  $("form")[0].onsubmit = function() { return false };
 
   // Adjust the size (height) when the dialog has been manually resized.
   // On Windows it requires a little delay to complete resizing because it triggers
   // onresize twice (for height & width). Otherwise we would use incorrect
   // dimensions and the dialog flickers.
-  window.onresize = function(){window.setTimeout(AE.Dialog.adjustSize, 0)};
+  window.onresize = function(){ window.setTimeout(AE.Dialog.adjustSize, 0) };
 
   // Initialize the Dialog module.
   AE.Dialog.initialize();

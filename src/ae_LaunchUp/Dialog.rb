@@ -28,6 +28,7 @@ end
 
 
 
+@@reserved_callbacks = ["AE.Dialog.receive_message", "AE.Dialog.initialize", "initialize", "AE.Dialog.adjustSize"]
 def initialize(*args)
   # messaging variables
   @procs_callback = {} # Hash of callback_name => Proc
@@ -138,8 +139,7 @@ end
 # @param [Proc] block
 def on(callback_name, &block)
   raise(ArgumentError, "Argument 'callback_name' must be a String.") unless callback_name.is_a?(String)
-  raise(ArgumentError, "Argument 'callback_name' can not be 'AE.Dialog.receive_message' or 'AE.Dialog.initialize' or 'initialize' or 'AE.Dialog.adjustSize'.") if
-    callback_name == "AE.Dialog.receive_message" || callback_name == "AE.Dialog.initialize" || callback_name == "initialize" || callback_name == "AE.Dialog.adjustSize"
+  raise(ArgumentError, "Argument 'callback_name' can not be '#{callback_name}'.") if @@reserved_callbacks.include?(callback_name)
   raise(ArgumentError, "Must have a Proc.") unless block_given?
   @procs_callback[callback_name] = block
   return self
