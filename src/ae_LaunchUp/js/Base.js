@@ -149,7 +149,7 @@ AE.Scheduler = function(dt) {
   var check = function() {
     var c = Number(new Date().getTime());
     // Last function call is long enough ago (or first time), execute given function immediately.
-    if (c > t && scheduled.length > 0) {
+    if (c >= t && scheduled.length > 0) {
       run();
       // Set timer for next possible function call.
       t = c + dt;
