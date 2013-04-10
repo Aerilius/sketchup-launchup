@@ -98,7 +98,7 @@ class Index
         :description => extension.description,
         :category => TRANSLATE["Extensions"],
         :keywords => [TRANSLATE["extension"], TRANSLATE["plugin"], TRANSLATE["addon"], extension.creator],
-        :proc => Proc.new{|extension| extension.load },
+        :proc => Proc.new{|extension| extension.check },
         # The command is enabled as long as the extension is not loaded.
         :validation_proc => extension.loaded? ? Proc.new{ MF_GRAYED } : Proc.new{ (extension.loaded?) ? MF_GRAYED : MF_ENABLED },
         # :no_history => true, # TODO: If it is not added to the history, we need other feedback that it has been loaded.
@@ -286,8 +286,12 @@ class Index
       @total_track += 1
       return success
     else
-      raise
+      raise ArgumentError
     end
+  rescue ArgumentError => e
+    # Proc contains other bug.
+    puts("Command with id '#{id}' does not exist\n#{e.message.to_s}\n#{e.backtrace.join("\n")}")
+    return false
   rescue LocalJumpError => e
     # Proc contains a "return"?
     puts("Proc of '#{entry[:name]}' (#{entry[:id]}) contains 'return'\n#{e.message.to_s}\n#{e.backtrace.join("\n")}")
