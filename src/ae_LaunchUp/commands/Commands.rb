@@ -1440,7 +1440,7 @@ cmd.category = "Tools"
 
 cmd = UI::Command.new(TRANSLATE["Outer Shell"]) {
   groups = Sketchup.active_model.selection.find_all{|e| (e.is_a?(Sketchup::Group) || e.is_a?(Sketchup::ComponentInstance)) && e.manifold? }
-  next false unless groups.length > 2
+  next false unless groups.length >= 2
   group = groups.shift
   group = group.outer_shell(groups.shift) until groups.empty?
   true
@@ -1451,7 +1451,7 @@ cmd.small_icon = "./16x16_tb_solidshell.png"
 cmd.large_icon = "./24x24_tb_solidshell.png"
 cmd.set_validation_proc {
   s = Sketchup.active_model.selection
-  if s.length < 2 && s.find{|e| !e.is_a?(Sketchup::Group) && !e.is_a?(Sketchup::ComponentInstance) }
+  if s.length < 2 || s.find{|e| !e.is_a?(Sketchup::Group) && !e.is_a?(Sketchup::ComponentInstance) }
     MF_GRAYED
   else
     MF_ENABLED
@@ -1466,7 +1466,7 @@ if Sketchup.is_pro?
 
 cmd = UI::Command.new(TRANSLATE["Intersect"]) {
   groups = Sketchup.active_model.selection.find_all{|e| (e.is_a?(Sketchup::Group) || e.is_a?(Sketchup::ComponentInstance)) && e.manifold? }
-  next false unless groups.length > 2
+  next false unless groups.length >= 2
   group = groups.shift
   group = group.intersect(groups.shift) until groups.empty?
   true
@@ -1477,7 +1477,7 @@ cmd.small_icon = "./16x16_tb_solidintersect.png"
 cmd.large_icon = "./24x24_tb_solidintersect.png"
 cmd.set_validation_proc {
   s = Sketchup.active_model.selection
-  if s.length < 2 && s.find{|e| !e.is_a?(Sketchup::Group) && !e.is_a?(Sketchup::ComponentInstance) }
+  if s.length < 2 || s.find{|e| !e.is_a?(Sketchup::Group) && !e.is_a?(Sketchup::ComponentInstance) }
     MF_GRAYED
   else
     MF_ENABLED
@@ -1489,7 +1489,7 @@ cmd.keywords = ["solid", "intersect", "cut"]
 
 cmd = UI::Command.new(TRANSLATE["Union"]) {
   groups = Sketchup.active_model.selection.find_all{|e| (e.is_a?(Sketchup::Group) || e.is_a?(Sketchup::ComponentInstance)) && e.manifold? }
-  next false unless groups.length > 2
+  next false unless groups.length >= 2
   group = groups.shift
   group = group.union(groups.shift) until groups.empty?
   true
@@ -1500,7 +1500,7 @@ cmd.small_icon = "./16x16_tb_solidunion.png"
 cmd.large_icon = "./24x24_tb_solidunion.png"
 cmd.set_validation_proc {
   s = Sketchup.active_model.selection
-  if s.length < 2 && s.find{|e| !e.is_a?(Sketchup::Group) && !e.is_a?(Sketchup::ComponentInstance) }
+  if s.length < 2 || s.find{|e| !e.is_a?(Sketchup::Group) && !e.is_a?(Sketchup::ComponentInstance) }
     MF_GRAYED
   else
     MF_ENABLED
@@ -1512,7 +1512,7 @@ cmd.keywords = ["solid", "combine"]
 
 cmd = UI::Command.new(TRANSLATE["Trim"]) {
   groups = Sketchup.active_model.selection.find_all{|e| (e.is_a?(Sketchup::Group) || e.is_a?(Sketchup::ComponentInstance)) && e.manifold? }
-  next false unless groups.length > 2
+  next false unless groups.length >= 2
   group = groups.shift
   group = group.trim(groups.shift) until groups.empty?
   true
@@ -1523,7 +1523,7 @@ cmd.small_icon = "./16x16_tb_solidtrim.png"
 cmd.large_icon = "./24x24_tb_solidtrim.png"
 cmd.set_validation_proc {
   s = Sketchup.active_model.selection
-  if s.length < 2 && s.find{|e| !e.is_a?(Sketchup::Group) && !e.is_a?(Sketchup::ComponentInstance) }
+  if s.length < 2 || s.find{|e| !e.is_a?(Sketchup::Group) && !e.is_a?(Sketchup::ComponentInstance) }
     MF_GRAYED
   else
     MF_ENABLED
@@ -1535,7 +1535,7 @@ cmd.keywords = ["solid", "reduce"]
 
 cmd = UI::Command.new(TRANSLATE["Split"]) {
   groups = Sketchup.active_model.selection.find_all{|e| (e.is_a?(Sketchup::Group) || e.is_a?(Sketchup::ComponentInstance)) && e.manifold? }
-  next false unless groups.length > 2
+  next false unless groups.length >= 2
   group = groups.shift
   group = group.split(groups.shift) until groups.empty?
   true
@@ -1546,7 +1546,7 @@ cmd.small_icon = "./16x16_tb_solidsplit.png"
 cmd.large_icon = "./24x24_tb_solidsplit.png"
 cmd.set_validation_proc {
   s = Sketchup.active_model.selection
-  if s.length < 2 && s.find{|e| !e.is_a?(Sketchup::Group) && !e.is_a?(Sketchup::ComponentInstance) }
+  if s.length < 2 || s.find{|e| !e.is_a?(Sketchup::Group) && !e.is_a?(Sketchup::ComponentInstance) }
     MF_GRAYED
   else
     MF_ENABLED
