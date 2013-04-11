@@ -37,11 +37,12 @@ exclude=". .. *~ .* *.bak *.old *.alt *.rbz *.rb! *.zip"
 # Build archive.
 cd ./src
 [ -e ../archive ] && archivepath=../archive || archivepath=$0
+zip -b /tmp -r $archivepath/$name\.rbz ./* --exclude $exclude
 # Modification for LaunchUp: exclude commands.
-zip -b /tmp -r $archivepath/$name\.rbz ./* --exclude $exclude "ae_LaunchUp/commands/*"
+#zip -b /tmp -r $archivepath/$name\.rbz ./* --exclude $exclude "ae_LaunchUp/commands/*"
 
 # Modification for LaunchUp: export commands as separate archive.
-name=$loaderbasename\_$version\_commands
-zip -b /tmp -r ../archive/$name\.rbz ae_LaunchUp/commands/* --exclude $exclude
+#name=$loaderbasename\_$version\_commands
+#zip -b /tmp -r ../archive/$name\.rbz ae_LaunchUp/commands/* --exclude $exclude
 
 exit 0
