@@ -27,9 +27,9 @@ Description:  This Plugin adds a quick launcher to search and execute commands.
 
 Recommended:  SketchUp 8 M2 or higher (it works in a limited way in lower versions)
 
-Version:      1.0.6
+Version:      1.0.7
 
-Date:         08.04.2013
+Date:         11.04.2013
 
 Note:
   This plugin has only been possible by modifying (intercepting) SketchUp API
@@ -256,13 +256,7 @@ def self.show_options
       # Try to update options in LaunchUp dialog.
       if @launchdlg && @launchdlg.visible?
         json = @options.get_json
-        @launchdlg.execute_script("
-          var opt = #{json};
-          for (var i in opt) { AE.LaunchUp.Options[i] = opt[i] };
-          AE.LaunchUp.updateColors();
-          AE.LaunchUp.ComboBox.updateStyle();
-          AE.LaunchUp.History.updateStyle();
-        ")
+        @launchdlg.execute_script("AE.LaunchUp.update(#{json});")
       end
     }
 
@@ -275,17 +269,6 @@ def self.show_options
   end
 
   return @optionsdlg
-end
-
-
-
-class << self
-  private
-  def create_index
-    index = Index.instance
-    index.load_tracking(@options[:tracking])
-    return index
-  end
 end
 
 
@@ -325,6 +308,10 @@ end
 
 
 # Dumps the index to a file as JSON string, for debugging.
+# This can be used in a web browser with:
+#   AE.LaunchUp.initialize();
+#   AE.LaunchUp.Options.local_index = true;
+#   AE.LaunchUp.Index.load(this_array);
 # @param [String] file where to save the index.
 def self.save_index(file=nil, json=false)
   file = UI.savepanel if file.nil? || !File.exists?(file)

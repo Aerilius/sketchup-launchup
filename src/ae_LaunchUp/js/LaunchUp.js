@@ -4,10 +4,12 @@
 Library summary:
 module AE
   module LaunchUp
-    Options
+    Options                              // Hash of all options
+    .update                              // Updates the UI according to the options.
     .initialize(hash)                    // Initializes the UI with data/settings from a hash.
     module ComboBox                      // A search field widget with suggestions.
       .initialize(input, list)
+      .update
       .focus                             // Give focus to the input field.
       .reset                             // Resets the suggestions and clears the input field.
     module Index                         // Deprecated: This is now all don in Ruby.
@@ -16,7 +18,8 @@ module AE
       .execute(id)
     module History                      // A list of previously executed commands.
       .initialize(element)
-      .load(aray)
+      .update
+      .load(array)
       .add(entry)
       .show                             // Shows the History after hiding it temporarily.
       .hide                             // Hides the History temporarily.
@@ -47,9 +50,6 @@ LaunchUp.initialize = function(opt) {
   // Initialize the Dialog module.
   AE.Dialog.initialize();
 
-  // Set the background color.
-  LaunchUp.updateColors();
-
   // Initialize the combobox.
   ComboBox.initialize($("#combo_input"), $("#combo_list"));
 
@@ -58,30 +58,35 @@ LaunchUp.initialize = function(opt) {
 
   // Initialize buttons.
   var buttonPin = $("#button_pin");
-  buttonPin.toggle = function(bool) {
-    if (bool === true || bool === false) { Options.pinned = bool }
-    else { bool = Options.pinned = !Options.pinned };
-    AE.Bridge.updateOptions({pinned: bool});
+  buttonPin.set = function(bool) {
     buttonPin.title = (bool) ?
     AE.Translate.get("Pinned. \nLaunchUp stays always visible. \nClick to change.") :
     AE.Translate.get("Unpinned. \nLaunchUp hides always after executing \na command. Click to change.");
     AE.Style.removeClass(buttonPin, bool ? "off" : "on");
     AE.Style.addClass(buttonPin, bool ? "on" : "off");
+  };
+  buttonPin.onmouseup = function(event) {
+    var bool = Options.pinned = !Options.pinned;
+    buttonPin.set(bool);
+    AE.Bridge.updateOptions({pinned: bool});
     ComboBox.focus();
   };
-  buttonPin.onmouseup = function(event) { buttonPin.toggle() };
-  buttonPin.toggle(Options.pinned); // Set the default.
 
   var buttonHistory = $("#button_history");
-  buttonHistory.toggle = function(bool) {
-    if (bool !== true && bool !== false) { bool = Options.show_history = !Options.show_history };
+  buttonHistory.set = function(bool) {
     AE.Style.removeClass(buttonHistory, bool ? "off" : "on");
     AE.Style.addClass(buttonHistory, bool ? "on" : "off");
+  };
+  buttonHistory.onmouseup = function(event) {
+    var bool = Options.show_history = !Options.show_history;
+    buttonHistory.set(bool);
+    AE.Bridge.updateOptions({show_history: bool});
     bool ? History.on() : History.off();
     ComboBox.focus();
   };
-  buttonHistory.onmouseup = function(event) { buttonHistory.toggle() };
-  buttonHistory.toggle(Options.show_history); // Set the default.
+
+  // Set default UI according to Options.
+  LaunchUp.update();
 
   // We load recent entries only now after initializing the history button so
   // that the on/off status is already set.
@@ -110,7 +115,7 @@ LaunchUp.initialize = function(opt) {
   // On Windows it requires a little delay to complete resizing because it triggers
   // onresize twice (for height & width). Otherwise we would use incorrect
   // dimensions and the dialog flickers.
-  window.onresize = function(){window.setTimeout(AE.Dialog.adjustSize, 0)};
+  window.onresize = function(){ window.setTimeout(AE.Dialog.adjustSize, 0) };
 
   // Load the index from ruby.
   // @deprecated
@@ -119,7 +124,15 @@ LaunchUp.initialize = function(opt) {
 
 
 
-LaunchUp.updateColors = function() {
+LaunchUp.update = function(opt) {
+  if (Object.prototype.toString.call(opt) !== '[object Object]') { return; }
+  // Merge new options into Options hash.
+  for (var i in opt) { AE.LaunchUp.Options[i] = opt[i] };
+  // Button for pinned mode
+  $("#button_pin").set(Options.pinned);
+  // Button for History
+  $("#button_history").set(Options.show_history);
+  // Colors
   var color = (Options.color !== "custom") ? Options.color : Options.color_custom;
   if (color) { document.getElementsByTagName('body')[0].style.backgroundColor = color; }
   // Set the text color.
@@ -132,7 +145,11 @@ LaunchUp.updateColors = function() {
     "custom": Options.color_custom_text
   }[Options.color]
   if (text_color) document.getElementsByTagName('body')[0].style.color = text_color;
-}
+  // ComboBox
+  ComboBox.update();
+  // History
+  History.update();
+};
 
 
 
@@ -241,17 +258,19 @@ var ComboBox = LaunchUp.ComboBox = function(self) {
       }
     };
 
-    // Important: If we set focus, then with delay, otherwise NS_ERROR_XPC_BAD_CONVERT_JS error.
+    // Important: Only set focus with delay, otherwise NS_ERROR_XPC_BAD_CONVERT_JS error.
     // window.setTimeout(INPUT.focus, 0);
   };
 
-  /* Set the style of the list items. */
-  self.updateStyle = function() {
-    if (Options.style_suggestions === STYLE) { return; }
-    AE.Style.removeClass(LIST, STYLE);
-    AE.Style.addClass(LIST, Options.style_suggestions);
-    STYLE = Options.style_suggestions;
-    AE.Dialog.adjustSize();
+  /* Update properties. */
+  self.update = function() {
+    // Style
+    if (!AE.Style.hasClass(LIST, Options.style_suggestions)) {
+      AE.Style.removeClass(LIST, STYLE);
+      AE.Style.addClass(LIST, Options.style_suggestions);
+      STYLE = Options.style_suggestions;
+      AE.Dialog.adjustSize();
+    }
   };
 
   /* Select an entry to highlight it and mark it for submission. */
@@ -605,6 +624,7 @@ var History = LaunchUp.History = function(self) {
   var LIST = null;
   var MAX_LENGTH = 20;
   var STYLE = "slim";
+  var ON = null;
 
   // Public methods.
 
@@ -614,18 +634,32 @@ var History = LaunchUp.History = function(self) {
     LIST = (ul) ? ul[0] : ELEMENT.appendChild(document.createElement("ul"));
     if (!Options.style_history) { Options.style_history = STYLE }
     else { STYLE = Options.style_history }
-    AE.Style.addClass(LIST, Options.style_history);
     if (!Options.history_max_length) { Options.history_max_length = MAX_LENGTH }
     if (!Options.history_entries) { Options.history_entries = [] }
   };
 
-  /* Set the style of the list items. */
-  self.updateStyle = function() {
-    if (Options.style_history === STYLE) { return; }
-    AE.Style.removeClass(LIST, STYLE);
-    AE.Style.addClass(LIST, Options.style_history);
-    STYLE = Options.style_history;
-    AE.Dialog.adjustSize();
+  /* Update properties. */
+  self.update = function() {
+    // Visibility
+    if (ON !== Options.show_history) {
+      (Options.show_history) ? self.on() : self.off();
+    }
+    // Length
+    if (DATA.length > Options.history_max_length) {
+      for(var i=DATA.length; i>Options.history_max_length; i--) {
+        DATA.pop();
+        Options.history_entries.pop();
+        LIST.removeChild(LIST.lastChild);
+      }
+      AE.Dialog.adjustSize();
+    };
+    // Style
+    if (!AE.Style.hasClass(LIST, Options.style_history)) {
+      AE.Style.removeClass(LIST, STYLE);
+      AE.Style.addClass(LIST, Options.style_history);
+      STYLE = Options.style_history;
+      AE.Dialog.adjustSize();
+    }
   };
 
   self.load = function(array) {
@@ -724,14 +758,16 @@ var History = LaunchUp.History = function(self) {
   self.on = function() {
     if (ELEMENT) { AE.Style.show(ELEMENT) };
     Options.show_history = true;
+    ON = true;
     AE.Bridge.updateOptions({show_history: true});
     AE.Dialog.adjustSize();
-};
+  };
 
   /* Turn the history off. */
   self.off = function() {
     if (ELEMENT) { AE.Style.hide(ELEMENT) }
     Options.show_history = false;
+    ON = false;
     AE.Bridge.updateOptions({show_history: false});
     AE.Dialog.adjustSize();
   };
