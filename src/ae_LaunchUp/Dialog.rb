@@ -111,10 +111,13 @@ def initialize(*args)
     # Set the new size
     dlg.set_size(@window_width, @window_height)
     # If we are on OSX, SketchUp resizes towards the top, changing the dialog's top position.
-    # We need to compensate that:
+    # We need to compensate that by enforcing the original position again.
+    # In WebKit, window.screenX/Y and window.screenLeft/Top return the outer position
+    # of the window, not the client area. So there is no need to subtract the width
+    # of the window border or the height of the titlebar.
     if OSX && l.is_a?(Numeric) && t.is_a?(Numeric)
-      left = l # not - window_border_width
-      top = t # not - window_titlebar_height
+      left = l
+      top = t
       dlg.set_position(left, top)
     end
   }
