@@ -23,7 +23,7 @@ class Dialog < UI::WebDialog
 #
 # @return [String] the instance's class and object id
 def inspect
-  super#return "#<#{self.class}:0x#{(self.object_id/2).to_s(16)}>"
+  return "#<#{self.class}:0x#{(self.object_id << 1).to_s(16)}>"
 end
 
 
