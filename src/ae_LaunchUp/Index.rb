@@ -11,7 +11,7 @@ require(File.join(PATH_ROOT, 'Translate.rb'))
 # Load translation strings.
 TRANSLATE = Translate.new("LaunchUp", File.join(PATH_ROOT, "lang")) unless defined?(self::TRANSLATE)
 # Scorer to judge relevance of strings.
-require(File.join(PATH_ROOT, "scorer", "scorer.rb"))
+require(File.join(PATH_ROOT, "scorer", "Scorer.rb"))
 
 
 
