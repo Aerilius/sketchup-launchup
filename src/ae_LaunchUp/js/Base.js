@@ -487,6 +487,7 @@ AE.Form = (function(self) {
       var name = input.name.replace(/\-/,"_");
       // If options contain a key that matches the input's name; radios only when the value matches.
       if ((name in hash) && (input.type === "radio" && hash[name] === input.value || input.type !== "radio")) {
+        input.original_value = hash[name];
         // Checkbox
         if (input.type === "checkbox") {
           input.checked = hash[name];
@@ -512,8 +513,11 @@ AE.Form = (function(self) {
       if (autoupdate === true) {
         var fn = function(name, input){
           return function() {
+            var newValue = get_value(input);
+            if (typeof input.original_value !== "undefined" && typeof input.original_value !== typeof newValue) { return input.value = input.original_value }
+            input.original_value = newValue;
             var hash = {};
-            hash[name] = get_value(input);
+            hash[name] = newValue;
             AE.Bridge.callRuby('updateOptions', hash);
           };
         }(name,input);
@@ -521,6 +525,9 @@ AE.Form = (function(self) {
           input.addEventListener("change", fn, false);
         } else if (input.attachEvent) {
           input.attachEvent("onchange", fn);
+          // In IE we add an onclick event, otherwise changes on checkboxes trigger
+          // only onchange when blurring the element.
+          input.attachEvent("onclick", fn);
         }
       }
     }
