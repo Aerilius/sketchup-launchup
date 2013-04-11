@@ -1746,8 +1746,8 @@ end
 cmd = UI::Command.new(TRANSLATE["Set North Tool"]) { Sketchup.send_action("selectNorthTool:") }
 cmd.extend(Command)
 cmd.tooltip = cmd.status_bar_text = TRANSLATE["Center Selected"]
-cmd.small_icon = Sketchup.find_support_file("SolarNorth/northtext_small.png", "Tools")
-cmd.large_icon = Sketchup.find_support_file("SolarNorth/northtext.png", "Tools")
+cmd.small_icon = "./SetNorthSmall.png"
+cmd.large_icon = "./SetNorthLarge.png"
 cmd.category = "Solar North"
 
 
