@@ -342,6 +342,9 @@ unless file_loaded?(File.basename(__FILE__))
   cmd_launchup.tooltip = TRANSLATE["A searchable quick launcher for SketchUp tools."]
   cmd_launchup.small_icon = File.join(PATH_ROOT, "images", "icon_launchup_16.png")
   cmd_launchup.large_icon = File.join(PATH_ROOT, "images", "icon_launchup_24.png")
+  cmd_launchup.set_validation_proc {
+    (@launchdlg && @launchdlg.visible?) ? MF_CHECKED : MF_UNCHECKED
+  }
   UI.menu("Plugins").add_item(cmd_launchup)
 
   cmd_options = UI::Command.new(TRANSLATE["LaunchUp – Options"]){ AE::LaunchUp.show_options }
