@@ -190,17 +190,16 @@ var ComboBox = LaunchUp.ComboBox = function(self) {
     } else { // Fallback: Create overlay element.
       DEFAULT_OVERLAY_CONTENT = document.createElement("div");
       DEFAULT_OVERLAY_CONTENT.className = "default-text";
-      DEFAULT_OVERLAY_CONTENT = document.createElement("span");
       DEFAULT_OVERLAY_CONTENT.style.whiteSpace = "nowrap";
       DEFAULT_OVERLAY_CONTENT.appendChild( document.createTextNode(DEFAULT_SEARCH_TEXT) );
       DEFAULT_OVERLAY = document.createElement("span");
-      DEFAULT_OVERLAY.onselectstart = function(){return false;};
+      DEFAULT_OVERLAY.onselectstart = function() { return false; };
       DEFAULT_OVERLAY.unselectable = "on";
       DEFAULT_OVERLAY.style.width = 0;
       DEFAULT_OVERLAY.style.height = 0;
       DEFAULT_OVERLAY.style.display = "inline-block";
       DEFAULT_OVERLAY.style.overflow = "visible";
-      DEFAULT_OVERLAY.style.position = "relative";
+      DEFAULT_OVERLAY.style.position = "absolute";
       DEFAULT_OVERLAY.style.verticalAlign = "-5%";
       DEFAULT_OVERLAY.style.textIndent = "0.75em";
       INPUT.parentNode.insertBefore(DEFAULT_OVERLAY, INPUT);
@@ -210,6 +209,8 @@ var ComboBox = LaunchUp.ComboBox = function(self) {
       setDefaultText = function(text) {
         DEFAULT_OVERLAY_CONTENT.innerHTML = text;
       };
+      INPUT.onmouseover = function() { AE.Style.hide(DEFAULT_OVERLAY) };
+      INPUT.onmouseout = function() { AE.Style.show(DEFAULT_OVERLAY) };
     }
 
     // Attach event handlers.
@@ -259,7 +260,8 @@ var ComboBox = LaunchUp.ComboBox = function(self) {
     };
 
     // Important: Only set focus with delay, otherwise NS_ERROR_XPC_BAD_CONVERT_JS error.
-    // window.setTimeout(INPUT.focus, 0);
+    // This needs a closure (instead of just INPUT.focus) to work in IE7.
+    window.setTimeout(function(){INPUT.focus()}, 0);
   };
 
   /* Update properties. */
@@ -389,7 +391,7 @@ var ComboBox = LaunchUp.ComboBox = function(self) {
           }
         // Otherwise show it grayed.
         } else {
-          li.setAttribute("class", "grayed");
+          li.className = "grayed";
           // Allow to add the entry to the History (as dynamic toolbar), although it can't be used now but for later.
           li.onclick = function() {
             History.add(this.entry);
@@ -419,14 +421,14 @@ var ComboBox = LaunchUp.ComboBox = function(self) {
       };
       // Name of the command.
       var span = document.createElement("span");
-      span.setAttribute("class", "name");
+      span.className = "name"; // Important: Don't use setAttribute("class",) because not supported by IE7.
       span.appendChild(
         document.createTextNode(entry.name||""));
       div.appendChild(span);
       // Category of the command.
       if (entry.category) {
         var span = document.createElement("span");
-        span.setAttribute("class", "category");
+        span.className = "category";
         span.appendChild(
           document.createTextNode(" "+entry.category));
         div.appendChild(span);
@@ -434,7 +436,7 @@ var ComboBox = LaunchUp.ComboBox = function(self) {
       // Description of the command.
       if (entry.description !== entry.name && entry.enabled !== false) {
         var span = document.createElement("span");
-        span.setAttribute("class", "description");
+        span.className = "description";
         span.appendChild(
           document.createTextNode(" "+entry.description||""));
         div.appendChild(span);
@@ -709,14 +711,14 @@ var History = LaunchUp.History = function(self) {
     };
     // Name of the command.
     var span = document.createElement("span");
-    span.setAttribute("class", "name");
+    span.className = "name";
     span.appendChild(
       document.createTextNode(entry.name||""));
     div.appendChild(span);
     // Category of the command.
     if (entry.category) {
       var span = document.createElement("span");
-      span.setAttribute("class", "category");
+      span.className = "category";
       span.appendChild(
         document.createTextNode(" "+entry.category));
       div.appendChild(span);
@@ -724,7 +726,7 @@ var History = LaunchUp.History = function(self) {
     // Description of the command.
     if (entry.description !== entry.name) {
       var span = document.createElement("span");
-      span.setAttribute("class", "description");
+      span.className = "description";
       span.appendChild(
         document.createTextNode(" "+entry.description||""));
       div.appendChild(span);
