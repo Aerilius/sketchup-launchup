@@ -141,8 +141,6 @@ class Translate
     }
     value.gsub!(/\%\%/,"%")
     return value.chomp
-  #rescue
-    #return key.to_s
   end
   alias_method(:[], :get)
 
