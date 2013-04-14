@@ -115,7 +115,17 @@ LaunchUp.initialize = function(opt) {
   // On Windows it requires a little delay to complete resizing because it triggers
   // onresize twice (for height & width). Otherwise we would use incorrect
   // dimensions and the dialog flickers.
-  window.onresize = function(){ window.setTimeout(AE.Dialog.adjustSize, 0) };
+  window.onresize = function() { window.setTimeout(AE.Dialog.adjustSize, 0) };
+
+  // Set up shortcuts inside the dialog.
+  // [Esc] closes the dialog.
+  document.onkeyup = function(event) {
+    if (window.event) { var keycode = window.event.keyCode }
+    else if (event) { var keycode = event.which };
+    if ( keycode == 27 ) {
+      AE.Dialog.close();
+    }
+  };
 
   // Load the index from ruby.
   // @deprecated
@@ -125,16 +135,19 @@ LaunchUp.initialize = function(opt) {
 
 
 LaunchUp.update = function(opt) {
-  if (Object.prototype.toString.call(opt) !== '[object Object]') { return; }
   // Merge new options into Options hash.
-  for (var i in opt) { AE.LaunchUp.Options[i] = opt[i] };
+  if (Object.prototype.toString.call(opt) === '[object Object]') {
+    for (var i in opt) { AE.LaunchUp.Options[i] = opt[i] };
+  }
   // Button for pinned mode
   $("#button_pin").set(Options.pinned);
   // Button for History
   $("#button_history").set(Options.show_history);
   // Colors
   var color = (Options.color !== "custom") ? Options.color : Options.color_custom;
-  if (color) { document.getElementsByTagName('body')[0].style.backgroundColor = color; }
+  try {
+    if (color) { document.getElementsByTagName('body')[0].style.backgroundColor = color; }
+  } catch(e) {}
   // Set the text color.
   var text_color = {
     "ButtonFace": "ButtonText",
@@ -144,7 +157,9 @@ LaunchUp.update = function(opt) {
     "InactiveCaption": "InactiveCaptionText",
     "custom": Options.color_custom_text
   }[Options.color]
-  if (text_color) document.getElementsByTagName('body')[0].style.color = text_color;
+  try {
+    if (text_color) document.getElementsByTagName('body')[0].style.color = text_color;
+  } catch(e) {}
   // ComboBox
   ComboBox.update();
   // History
@@ -232,10 +247,6 @@ var ComboBox = LaunchUp.ComboBox = function(self) {
       else if ( keycode == 13 && LIST.getElementsByTagName("li").length > 0 ) {
         if (SELECTED == -1) { select(0) };
         submit();
-      }
-      // escape key: Close the dialog.
-      else if ( keycode == 27 ) {
-        AE.Dialog.close();
       }
       // other keys
       else {
