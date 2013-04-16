@@ -50,12 +50,12 @@ def initialize(*args)
 
   # Get initial data.
   self.add_action_callback("initialize") {|dlg, param|
-    next if @dialog_initialized
+    # next if @dialog_initialized # TODO: by disabling this we prevent damage when reloading with F5.
     # Trigger all event handlers for when the dialog is shown.
     @procs_show.each{|block| block.call(dlg) }
   }
   @procs_callback["initialize"] = Proc.new{|dlg, param|
-    next if @dialog_initialized
+    # next if @dialog_initialized
     # Trigger all event handlers for when the dialog is shown.
     @procs_show.each{|block| block.call(dlg) }
   }
