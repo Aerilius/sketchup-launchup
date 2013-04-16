@@ -172,7 +172,10 @@ class Index
     # relative to the file where it has been assigned command.large_icon=() and
     # converts it into an absolute path. So the getter method command.large_icon
     # gets always an absolute path.
-    hash[:icon] ||= command.respond_to?(:large_icon) ? command.large_icon || command.small_icon : nil
+    if !hash[:icon] || hash[:icon].empty?
+      hash[:icon] = command.large_icon if command.respond_to?(:large_icon) && !command.large_icon.empty?
+      hash[:icon] = command.small_icon if command.respond_to?(:small_icon) && !command.small_icon.empty?
+    end
 
     # Category
     # A category defines more clearly the context of a command (if the name is unspecific).
@@ -401,7 +404,7 @@ class Index
           s += 2 * AE::LaunchUp::Scorer.score(search_word, entry[:category]) if entry[:category].is_a?(String)
           s += exact_matches(search_word, entry[:keywords].join(" "))/(entry[:keywords].length|1).to_f if entry[:keywords].is_a?(Array) && !entry[:keywords].empty?
           s += 2 * AE::LaunchUp::Scorer.score(search_word, entry[:keywords].join(" ")) if entry[:keywords].is_a?(Array)
-          s += AE::LaunchUp::Scorer.score( search_word.gsub(/\/\\/, ""), entry[:file].gsub(/\/\\/, "") ) if entry[:file].is_a?(String) # && search_word[/\w[\.\/\\]\w/]
+          s += exact_matches( search_word.gsub(/\/|\\/, ""), entry[:file].gsub(/\/|\\/, "") ) if entry[:file].is_a?(String) && search_word.length > 4
 
           # Skip if no match has been found.
           break score = 0.0 if s == 0.0
@@ -433,10 +436,11 @@ class Index
         end
 
         # Skip if no match has been found.
-        next if score <= 1.0
+        next if score < 1.0
 
         # Consider tracking data, how often this entry has been selected over others:
-        score += [10 * entry[:track] / (@total_track|1).to_f, 2.0].min if entry[:track]
+        # Divide track by half of average track (total_track/data.length).
+        score += [entry[:track] / (@total_track|1).to_f * 0.5 * @data.length, 5].min if entry[:track]
         entry[:score] = score
 
         # Add it to results.
