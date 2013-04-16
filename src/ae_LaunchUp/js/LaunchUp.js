@@ -118,11 +118,14 @@ LaunchUp.initialize = function(opt) {
   window.onresize = function() { window.setTimeout(AE.Dialog.adjustSize, 0) };
 
   // Set up shortcuts inside the dialog.
-  // [Esc] closes the dialog.
-  document.onkeyup = function(event) {
-    if (window.event) { var keycode = window.event.keyCode }
+  document.onkeydown = function(event) {
+    if (window.event) {
+      var event = window.event;
+      var keycode = window.event.keyCode
+    }
     else if (event) { var keycode = event.which };
-    if ( keycode == 27 ) {
+    // Esc: Close the dialog.
+    if ( keycode === 27 ) {
       AE.Dialog.close();
     }
   };
@@ -225,7 +228,7 @@ var ComboBox = LaunchUp.ComboBox = function(self) {
         DEFAULT_OVERLAY_CONTENT.innerHTML = text;
       };
       INPUT.onmouseover = function() { AE.Style.hide(DEFAULT_OVERLAY) };
-      INPUT.onmouseout = function() { AE.Style.show(DEFAULT_OVERLAY) };
+      INPUT.onmouseout = function() { if (INPUT.value.length === 0) { AE.Style.show(DEFAULT_OVERLAY) } };
     }
 
     // Attach event handlers.
@@ -254,7 +257,7 @@ var ComboBox = LaunchUp.ComboBox = function(self) {
         SCHEDULER.replace(function() {
           SELECTED = -1;
           INPUT_TEXT = INPUT.value;
-          if (INPUT_TEXT == "") {
+          if (INPUT_TEXT.length === 0) {
             emptyList();
             AE.Style.show(DEFAULT_OVERLAY);
           } else if (INPUT_TEXT.replace(/^\s+|\s+$/g, "").length > MIN_LENGTH) {
