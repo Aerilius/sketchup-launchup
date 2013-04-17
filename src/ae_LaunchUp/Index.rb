@@ -488,7 +488,7 @@ class Index
   # @param [String] search_word
   # @param [String] string
   def exact_matches(search_word, string)
-    regexp = Regexp.new(search_word, "i")
+    regexp = Regexp.new(Regexp.escape(search_word), "i")
     return (string.scan(regexp) || []).length
   end
 
