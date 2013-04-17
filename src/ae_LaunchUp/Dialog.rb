@@ -63,7 +63,11 @@ def initialize(*args)
   # Messaging system with queue, multiple arguments of any JSON type
   self.add_action_callback("AE.Dialog.receive_message") { |dlg, param|
     message_id = param[/\#\d+$/][/\d+/]
-    arguments = eval(param) rescue []
+    begin
+      arguments = eval(param)
+    rescue SyntaxError
+      []
+    end
     name = arguments.shift
     raise("Callback '#{name}' for #{dlg} not found.") if name.nil? || !@procs_callback.include?(name)
 
@@ -315,7 +319,7 @@ def to_json(obj)
   # Split at every even number of unescaped quotes. This gives either strings
   # or what is between strings.
   # If it's not a string then turn Symbols into String and replace => and nil.
-  json_string = o.inspect.split(/(\"(?:.*?[^\\])*?\")/).
+  json_string = o.inspect.split(/(\"(?:.*?(?:[\\][\\]*?|[^\\]))*?\")/).
     collect{|s|
       (s[0..0] != '"')?                        # If we are not inside a string
       s.gsub(/\:(\S+?(?=\=>|\s))/, "\"\\1\""). # Symbols to String
