@@ -36,7 +36,7 @@ module Scorer
     score_total = 0
 
     # Jump to first match.
-    index_in_string = self.next_match(abbreviation[index_in_abbrev], index_in_string, string)
+    index_in_string = next_match(abbreviation[index_in_abbrev], index_in_string, string)
 
     while index_in_abbrev < abbreviation_length do
 
@@ -75,13 +75,13 @@ module Scorer
         else
           fuzzies += 2.0
           # Jump to the next match.
-          index_in_string = self.next_match(abbreviation[index_in_abbrev], index_in_string, string) if index_in_string < string.length
+          index_in_string = next_match(abbreviation[index_in_abbrev], index_in_string, string) if index_in_string < string.length
         end
 
       else # if no fuzziness
         score_total -= 1
         # Jump to the next match.
-        index_in_string = self.next_match(abbreviation[index_in_abbrev], index_in_string, string) if index_in_string < string.length
+        index_in_string = next_match(abbreviation[index_in_abbrev], index_in_string, string) if index_in_string < string.length
       end
 
       # Next character.
@@ -119,7 +119,7 @@ module Scorer
     index_in_rest = indices.min
     return (index_in_rest.nil?) ? index_in_string : index_in_string + index_in_rest
   end
-
+  private_class_method(:next_match)
 
 
   def self.score_char(string, index_in_string, char)
