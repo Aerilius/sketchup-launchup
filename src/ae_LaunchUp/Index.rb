@@ -211,7 +211,7 @@ class Index
     file = nil if hash[:file] == "(eval)"
     # Making the file path relative to a load path is 400× too slow:
     # file = $:.map{|p| file.sub(p, "") }.min{|s| s.length } unless file.nil?
-    hash[:file] = file
+    hash[:file] = file.sub(/^.*?Plugins/, "")
 
     # Create a short id to distinguish it from other commands.
     id = hash_code(hash[:name].to_s + hash[:description].to_s)
