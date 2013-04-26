@@ -91,10 +91,6 @@ require(File.join(PATH_ROOT, 'Translate.rb'))
 TRANSLATE = Translate.new("LaunchUp", File.join(PATH_ROOT, "lang")) unless defined?(self::TRANSLATE)
 # WebDialog Helper.
 require(File.join(PATH_ROOT, 'Dialog.rb'))
-# Since the API does not expose the procs in UI::Command and the
-# menu name and proc in Sketchup::Menu, we try to get those via aliasing and
-# intercepting the API methods that create them.
-require(File.join(PATH_ROOT, 'Interception.rb'))
 # Add SketchUp's native (non-Ruby) commands to ObjectSpace so we can access them by the same means as plugins:
 # If it contains errors, we can skip this file.
 require(File.join(PATH_ROOT, 'commands', 'Commands.rb')) rescue puts("AE::LaunchUp couldn't load #{File.join(PATH_ROOT, 'commands', 'Commands.rb')}.")

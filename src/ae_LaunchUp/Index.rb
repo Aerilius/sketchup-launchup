@@ -6,6 +6,10 @@ module LaunchUp
 
 
 
+# Since the API does not expose the procs in UI::Command and the
+# menu name and proc in Sketchup::Menu, we try to get those via aliasing and
+# intercepting the API methods that create them.
+require(File.join(PATH_ROOT, 'Interception.rb'))
 # Translation library.
 require(File.join(PATH_ROOT, 'Translate.rb'))
 # Load translation strings.
