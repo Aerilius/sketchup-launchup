@@ -414,6 +414,7 @@ var ComboBox = LaunchUp.ComboBox = function(self) {
       // Icon for the command.
       if (typeof(entry.icon) !== "undefined" && entry.icon !== null && entry.icon !== "") {
         var img = document.createElement("img");
+        img.className = "icon";
         img.setAttribute("src", entry.icon);
         div.appendChild(img);
       };
@@ -720,6 +721,7 @@ var History = LaunchUp.History = function(self) {
     // Icon for the command.
     if (typeof(entry.icon) !== "undefined" && entry.icon !== null && entry.icon !== "") {
       var img = document.createElement("img");
+      img.className = "icon";
       img.setAttribute("src", entry.icon);
       div.appendChild(img);
     };

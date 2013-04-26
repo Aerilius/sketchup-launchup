@@ -117,12 +117,13 @@ fieldset div > :first-child {
   padding: 0;
   text-indent: 0.375em;
   margin-right: -1em;
-  vertical-align: baseline;
-  *vertical-align: middle; /* IE7 */
+  /*vertical-align: baseline; TODO: remove if not needed, test on Windows */
+  vertical-align: middle; /* IE7 */
   outline: none; /* Disables Safari's border highlighting. */
 }
 
 /* OS X has rounded search input that comes already with a huge text indent. */
+/* TODO: this does not work in Safari 4 */
 @media screen (-webkit-min-device-pixel-ratio:0) {
   #combo_input, .combo_input {
     text-indent: 0;
@@ -271,7 +272,7 @@ fieldset div > :first-child {
   white-space: nowrap;
 }
 
-.list.slim li img {
+.list.slim li .icon {
   float: left;
   width: 16px;
   height: 16px;
@@ -319,7 +320,7 @@ fieldset div > :first-child {
   line-height: 1em;
 }
 
-.list.wide li img {
+.list.wide li .icon {
   float: left;
   margin: 0 0.5em 0 0;
   margin-bottom: 0;
@@ -395,13 +396,14 @@ fieldset div > :first-child {
   display: inline-block;
   padding: 0;
   width: 3em;
-  /* without max-height it can exceed background image height; just with height vertical alignment is incorrect */
+  /* without max-height it can exceed background image height;
+   * just with only height vertical alignment would be incorrect */
   max-height: 3em;
   overflow: hidden;
   text-align: center;
 }
 
-.list.toolbar li img {
+.list.toolbar li .icon {
   margin: 0em;
   vertical-align: middle;
   /*width: 1.85em;
