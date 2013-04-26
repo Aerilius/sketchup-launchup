@@ -534,7 +534,7 @@ class Index
   # @param [String] search_word
   # @param [String] string
   def exact_beginning_length(search_word, string)
-    regexp = Regexp.new("(?:\\b" + search_word.gsub(/(?!^)./, "#{Regexp.escape(\\0)}?") + ")", "i")
+    regexp = Regexp.new("(?:\\b" + search_word.gsub(/(?!^)./){|e| "#{Regexp.escape(e)}?"}, "i")
     return ((string.scan(regexp) || [""]).max{|a, b| a.length <=> b.length} || 0) / search_word.length
   end
 
