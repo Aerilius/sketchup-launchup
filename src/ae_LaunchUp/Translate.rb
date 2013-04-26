@@ -22,8 +22,8 @@ Usage:        Have translation files of the scheme
               Create an instance:        translate = Translate.new(toolname, translation_directory)
               Translate a single string: translate[String]
               Translate a webdialog:     translate.webdialog(UI::WebDialog)
-Version:      1.6
-Date:         07.03.2013
+Version:      1.7
+Date:         26.04.2013
 
 =end
 
@@ -193,11 +193,12 @@ class Translate
           var blocked = new RegExp("^(script|style)$", "i");
           var emptyString = new RegExp("^(\\n|\\s|&nbsp;)+$", "i");
           var textNodes = [];
-          var nodesWithTitle = [];
+          var nodesWithAttr = {};
           //# Get all text nodes that are not empty. Get also all title attributes.
           var getNodes = function(node){
             if (node && node.nodeType === 1 && !blocked.test(node.nodeName)) {
-              if (node.title !== null && node.title!=="") { nodesWithTitle.push(node); }
+              if (node.title !== null && node.title!=="") { nodesWithAttr[node] = "title"; }
+              if (node.placeholder !== null && node.placeholder!=="") { nodesWithAttr[node] = "placeholder"; }
               for (var i=0; i<node.childNodes.length; i++) {
                 var childNode = node.childNodes[i];
                 if ( childNode && childNode.nodeType === 3 && !emptyString.test(childNode.nodeValue) ) {
@@ -213,8 +214,11 @@ class Translate
           for (var i=0; i<textNodes.length; i++) {
             textNodes[i].nodeValue = self.get( textNodes[i].nodeValue );
           }
-          for (var i=0; i<nodesWithTitle.length; i++) {
-            nodesWithTitle[i].title = self.get( nodesWithTitle[i].title );
+          for (var node in nodesWithAttr) {
+            var attr = nodesWithAttr[node];
+            try {
+              node.setAttribute(attr, self.get( node.getAttribute(attr) ) );
+            } catch(e) {}
           }
         };
         return self;
