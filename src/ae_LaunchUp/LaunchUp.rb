@@ -91,11 +91,11 @@ require(File.join(PATH_ROOT, 'Translate.rb'))
 TRANSLATE = Translate.new("LaunchUp", File.join(PATH_ROOT, "lang")) unless defined?(self::TRANSLATE)
 # WebDialog Helper.
 require(File.join(PATH_ROOT, 'Dialog.rb'))
+# Index that performs searches.
+require(File.join(PATH_ROOT, 'Index.rb'))
 # Add SketchUp's native (non-Ruby) commands to ObjectSpace so we can access them by the same means as plugins:
 # If it contains errors, we can skip this file.
 require(File.join(PATH_ROOT, 'commands', 'Commands.rb')) rescue puts("AE::LaunchUp couldn't load #{File.join(PATH_ROOT, 'commands', 'Commands.rb')}.")
-# Index that performs searches.
-require(File.join(PATH_ROOT, 'Index.rb'))
 # Options.
 require(File.join(PATH_ROOT, 'Options.rb'))
 @options ||= Options.new("LaunchUp", {
