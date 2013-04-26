@@ -47,6 +47,14 @@ def initialize(*args)
   @dialog_initialized = false
   @message_id = nil
 
+  if args.length >= 5
+    @window_width = args[3]
+    @window_height = args[4]
+  elsif args[0].is_a?(Hash)
+    @window_width = [:width]
+    @window_height = [:height]
+  end
+
   super(*args)
 
   # Get initial data.
