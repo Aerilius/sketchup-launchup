@@ -229,7 +229,7 @@ class Index
     hash[:file] = file.sub(/^.*?Plugins/, "")
 
     # Create a short id to distinguish it from other commands.
-    id = hash_code(hash[:name].to_s + hash[:description].to_s)
+    id = hash_code(hash[:name].to_s + hash[:description].to_s + hash[:icon].to_s)
     hash[:id] = id
 
     # Track usage statistics for better ranking
