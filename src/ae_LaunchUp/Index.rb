@@ -291,6 +291,15 @@ class Index
 
 
 
+  # Get all commands.
+  # @param [Proc] block optional conditional (true/false) of which commands should be returned.
+  # @returns [Array] entries
+  def get_all(&block)
+    return (block_given?)? @data.find_all(&block) : @data.clone
+  end
+
+
+
   # Execute a command from the index.
   # @param [Fixnum] id
   # @returns [Boolean] success whether the entry was found and executed.
