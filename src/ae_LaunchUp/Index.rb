@@ -503,7 +503,7 @@ class Index
   # @param [String] search_word
   # @param [String] string
   def exact_match_length(search_word, string)
-    regexp = Regexp.new(search_word, "i")
+    regexp = Regexp.new(Regexp.escape(search_word), "i")
     return ((string.scan(regexp) || [""]).map{|s| s.length}.first || 0) / search_word.length
   end
 
@@ -514,7 +514,7 @@ class Index
   # @param [String] search_word
   # @param [String] string
   def exact_beginning_length(search_word, string)
-    regexp = Regexp.new("(?:\\b" + search_word.gsub(/(?!^)./, "\\0?") + ")", "i")
+    regexp = Regexp.new("(?:\\b" + search_word.gsub(/(?!^)./, "#{Regexp.escape(\\0)}?") + ")", "i")
     return ((string.scan(regexp) || [""]).max{|a, b| a.length <=> b.length} || 0) / search_word.length
   end
 
