@@ -424,7 +424,7 @@ class Index
           next if search_word.empty?
 
           s = 2 * AE::LaunchUp::Scorer.score(search_word, entry[:name]) if entry[:name].is_a?(String)
-          s += AE::LaunchUp::Scorer.score(search_word, entry[:description]) if entry[:description].is_a?(String)
+          s += 2 * AE::LaunchUp::Scorer.score(search_word, entry[:description]) if entry[:description].is_a?(String)
           s += 2 * AE::LaunchUp::Scorer.score(search_word, entry[:category]) if entry[:category].is_a?(String)
           s += exact_matches(search_word, entry[:keywords].join(" "))/(entry[:keywords].length|1).to_f if entry[:keywords].is_a?(Array) && !entry[:keywords].empty?
           s += 2 * AE::LaunchUp::Scorer.score(search_word, entry[:keywords].join(" ")) if entry[:keywords].is_a?(Array)

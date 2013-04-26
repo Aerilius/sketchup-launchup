@@ -8,7 +8,7 @@ ext = SketchupExtension.new('LaunchUp', 'ae_LaunchUp/LaunchUp.rb')
 
 # Attach some nice info.
 ext.creator     = 'Aerilius'
-ext.version     = '1.0.7'
+ext.version     = '1.0.8'
 ext.copyright   = '2011-2013, Andreas Eisenbarth'
 ext.description = 'A searchable quick launcher for SketchUp tools.'
 
