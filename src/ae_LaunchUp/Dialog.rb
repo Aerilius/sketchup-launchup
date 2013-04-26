@@ -45,6 +45,7 @@ def initialize(*args)
   @screen_width = 1200
   @screen_height = 800
   @dialog_initialized = false
+  @message_id = nil
 
   super(*args)
 
@@ -62,7 +63,7 @@ def initialize(*args)
 
   # Messaging system with queue, multiple arguments of any JSON type
   self.add_action_callback("AE.Dialog.receive_message") { |dlg, param|
-    message_id = param[/\#\d+$/][/\d+/]
+    @message_id = param[/\#\d+$/][/\d+/]
     begin
       arguments = eval(param)
     rescue SyntaxError
@@ -72,15 +73,22 @@ def initialize(*args)
     raise("Callback '#{name}' for #{dlg} not found.") if name.nil? || !@procs_callback.include?(name)
 
     begin
-      result = @procs_callback[name].call(dlg, *arguments)
+      @procs_callback[name].call(dlg, *arguments)
     rescue Exception => e
       # TODO: It could tell JavaScript that there was an error
       # At least, unlock to send next message.
       puts("Error in callback AE.Dialog.receive_message(#{name}): "+e.message) if $VERBOSE
-      next dlg.execute_script("AE.Bridge.callbackJS(#{message_id||'null'})")
+      next dlg.execute_script("AE.Bridge.nextMessage()")
     else
-      result_string = self.to_json(result)
-      next dlg.execute_script("AE.Bridge.callbackJS(#{message_id}, #{result_string})")
+      # Tell JavaScript it can send the next message. TODO: should we call the nextMessage before executing a synchronous callback?
+      dlg.execute_script("AE.Bridge.nextMessage()")
+      # Optionally the Ruby callback can return data to a JavaScript callback.
+      if @return_data
+        data_string = self.to_json(@return_data)
+        execute_script("AE.Bridge.callbackJS(#{@message_id}, #{data_string})")
+        @return_data = nil
+      end
+      next
     end
   }
 
@@ -138,6 +146,25 @@ end
 
 
 # Messaging related methods.
+
+
+
+# Returns data back to a JavaScript function.
+# For a synchronous callback, it just marks the return data end lets the Ruby proc
+# finish (and then it returns the data).
+# For an asynchronous callback, the proc has already ended, so this method calls
+# JavaScript with a message identifier
+# @param [Object] data
+# @param [Fixnum] id to identify the JavaScript callback,
+#   if not given, it is assumed that it is the current message.
+def return(data, id=nil)
+  if id && id != @message_id
+    data_string = self.to_json(data)
+    execute_script("AE.Bridge.callbackJS(#{id}, #{data_string})")
+  else
+    @return_data = data
+  end
+end
 
 
 

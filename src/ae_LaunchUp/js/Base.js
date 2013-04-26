@@ -228,11 +228,12 @@ AE.Bridge = (function(self) {
   var messageQueue = [];
   var ready = true; // Whether the queue is ready to send another messge.
 
-  var nextMessage = function() {
+  self.nextMessage = function() {
     var message = messageQueue.shift();
-    if (!message) { ready=true; return; }
+    if (!message) { ready = true; return; }
     // Lock the status variable before sending the message.
-    // (because window.location is synchronous in IE)
+    // (because window.location is synchronous in IE and finishes before this
+    // function finishes.)
     ready = false;
     window.setTimeout(function(){ window.location.href = message; }, 0);
   };
@@ -250,7 +251,7 @@ AE.Bridge = (function(self) {
     var url = "skp:AE.Dialog.receive_message@" + encodeURIComponent(data) + "#" + messageID;
     messageQueue.push(url);
     // If the queue is not running, start it. If the message queue contains many urls, then
-    if (ready) { nextMessage(); }
+    if (ready) { self.nextMessage(); }
     // Increase the id for the next message.
     messageID++;
     // Return the id of this message.
@@ -259,16 +260,12 @@ AE.Bridge = (function(self) {
 
   /* Call a SketchUp Ruby action_callback. */
   self.callbackJS = function(id, data) {
-    // Ruby has returned that it's finished.
     // If there is a callback, execute it.
     if (id && callbacks[id]) {
       try { callbacks[id](data) }
       catch (e) { if (AE.debug) { AE.Bridge.puts("AE.Dialog.callbackJS: Error when executing callback #"+id); } }
       delete callbacks[id];
     }
-    // Ready for next message.
-    ready = true;
-    nextMessage();
   };
 
   /* For debugging. */
@@ -326,7 +323,7 @@ AE.Bridge = (function(self) {
    * implementation on the Ruby side.
    */
   self.updateOptions = function(hash) {
-    self.callRuby('updateOptions', hash);
+    self.callRuby('update_options', hash);
   };
 
   return self;

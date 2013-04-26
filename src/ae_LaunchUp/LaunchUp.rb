@@ -185,7 +185,7 @@ def self.show_dialog
 
     # Send entries from the Index to the WebDialog.
     @launchdlg.on("get_entries") { |dlg, ids|
-      entries = ids.map{|id| Index.instance.get_by_id(id)}
+      dlg.return ids.map{|id| Index.instance.get_by_id(id)}
     }
 
     # Search the index.
@@ -194,7 +194,7 @@ def self.show_dialog
       search_string = dlg.get_element_value("combo_input")
       length = (@options[:max_length].is_a?(Fixnum)) ? @options[:max_length] : nil
       # In case of failure, nil gives the method's default value.
-      results = Index.instance.look_up(search_string, length)
+      dlg.return Index.instance.look_up(search_string, length)
     }
 
     # Execute an action.
@@ -202,7 +202,7 @@ def self.show_dialog
       success = Index.instance.execute(id)
       @options[:tracking][id] = Index.instance.get_by_id(id)[:track] if success
       dlg.close if @options[:pinned] == false
-      success
+      dlg.return success
     }
 
     # Close
