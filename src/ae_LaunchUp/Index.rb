@@ -107,13 +107,13 @@ class Index
         :validation_proc => extension.loaded? ? Proc.new{ MF_GRAYED } : Proc.new{ (extension.loaded?) ? MF_GRAYED : MF_ENABLED },
         # :no_history => true, # TODO: If it is not added to the history, we need other feedback that it has been loaded.
       }
-      add(nil, hash)
+      add(hash)
     }
   end
 
 
 
-  # This adds a new entry to the index.
+  # This adds a new entry to the index. It requires one or both of these arguments in any order:
   # @param [UI::Command] command
   # @param [Hash] hash  with metadata
   #
@@ -149,65 +149,76 @@ class Index
   # data from AE::Interception. However better would be if the UI::Command exposes
   # proc and validation_proc (and more).
   #
-  def add(command=nil, hash={})
+  def add(*args)
+    hash = args.grep(Hash).first || {}
+    command = args.grep(UI::Command).first || hash[:command]
     raise(ArgumentError, "Argument 'command' must be a UI::Command.") unless command.is_a?(UI::Command) || command.nil?
     raise(ArgumentError, "Argument 'hash' must be a Hash.") unless hash.is_a?(Hash)
-    hash[:command] = command
 
-    # Proc
-    hash[:proc] ||= command.respond_to?(:proc) ? command.proc : AE::Interception::Command.proc[command]
+    if command.nil?
+      return @@missing << hash unless hash[:proc] && hash[:name]
+    # Add meta data from command to hash.
+    else # if command.is_a?(UI::Command)
 
-    # Validation Proc
-    hash[:validation_proc] ||= command.respond_to?(:validation_proc) ? command.validation_proc : AE::Interception::Command.validation_proc[command]
+      # Proc
+      hash[:proc] ||= command.respond_to?(:proc) ? command.proc : AE::Interception::Command.proc[command]
 
-    # Name
-    hash[:name] ||= command.respond_to?(:menu_text) ? command.menu_text : AE::Interception::Command.text[command]
+      # Validation Proc
+      hash[:validation_proc] ||= command.respond_to?(:validation_proc) ? command.validation_proc : AE::Interception::Command.validation_proc[command]
 
-    # If we don't get a proc and name, it's useless.
-    return @@missing << command unless hash[:proc] && hash[:name]
+      # Name
+      hash[:name] ||= command.respond_to?(:menu_text) ? command.menu_text : AE::Interception::Command.text[command]
 
-    # Description
-    hash[:description] ||= command.respond_to?(:status_bar_text) ?
-      command.status_bar_text || command.tooltip :
-      TRANSLATE["LaunchUp requires SketchUp > 8M1 to display more descriptive info."]
+      # If we don't get a proc and name, it's useless.
+      return @@missing << command unless hash[:proc] && hash[:name]
 
-    # Icon
-    # Note: If developer assigns a relative file path, SketchUp interprets it
-    # relative to the file where it has been assigned command.large_icon=() and
-    # converts it into an absolute path. So the getter method command.large_icon
-    # gets always an absolute path.
-    if !hash[:icon] || hash[:icon].empty?
-      hash[:icon] = command.large_icon if command.respond_to?(:large_icon) && !command.large_icon.empty?
-      hash[:icon] = command.small_icon if command.respond_to?(:small_icon) && !command.small_icon.empty?
-    end
+      # Description
+      hash[:description] ||= command.respond_to?(:status_bar_text) ?
+        command.status_bar_text || command.tooltip :
+        TRANSLATE["LaunchUp requires SketchUp >= 8M1 to display more descriptive info."] # TODO: remove this?
 
-    # Category
-    # A category defines more clearly the context of a command (if the name is unspecific).
-    if !hash[:category] && command.respond_to?(:category)
-      hash[:category] ||= command.category
-    elsif !hash[:category]
-      # If not given, we use the menu path or toolbar name.
-      # TODO: A nice separator would be Unicode › or 〉 or → , or fallback to ASCII >
-      menu_path = AE::Interception::Menu.get_menu_path(command)[0..-2]
-      if menu_path.length > 0
-        if menu_path.first.nil? || menu_path.first.empty?
-          menu_path[0] = TRANSLATE["Context menu"]
-        else
-          # Ruby scripts have only access to the top-level native menus. Those are
-          # given in English (upper/lowercase and optionally ending with s) and need translation.
-          menu_path[0] = TRANSLATE[menu_path[0]]
+      # Icon
+      # Note: If developer assigns a relative file path, SketchUp interprets it
+      # relative to the file where it has been assigned command.large_icon=() and
+      # converts it into an absolute path. So the getter method command.large_icon
+      # gets always an absolute path.
+      if !hash[:icon] || hash[:icon].empty?
+        hash[:icon] = File.expand_path(command.large_icon) if command.respond_to?(:large_icon) && !command.large_icon.empty?
+        hash[:icon] ||= File.expand_path(command.small_icon) if command.respond_to?(:small_icon) && !command.small_icon.empty?
+      end
+
+      # Category
+      # A category defines more clearly the context of a command (if the name is unspecific).
+      if !hash[:category] && command.respond_to?(:category)
+        hash[:category] ||= command.category
+      elsif !hash[:category]
+        # If not given, we use the menu path or toolbar name.
+        # TODO: A nice separator would be Unicode › or 〉 or → , or fallback to ASCII >
+        menu_path = AE::Interception::Menu.get_menu_path(command)[0..-2]
+        if menu_path.length > 0
+          if menu_path.first.nil? || menu_path.first.empty?
+            menu_path[0] = TRANSLATE["Context menu"]
+          else
+            # Ruby scripts have only access to the top-level native menus. Those are
+            # given in English (upper/lowercase and optionally ending with s) and need translation.
+            menu_path[0] = TRANSLATE[menu_path[0]]
+          end
+        end
+        if !menu_path.nil? && !menu_path.empty?
+          hash[:category] ||= menu_path.join(" › ")
+        elsif @toolbars[command]
+          hash[:category] ||= TRANSLATE[@toolbars[command]]
         end
       end
-      if !menu_path.nil? && !menu_path.empty?
-        hash[:category] ||= menu_path.join(" › ")
-      elsif @toolbars[command]
-        hash[:category] ||= TRANSLATE[@toolbars[command]]
-      end
-    end
 
-    # Keywords
-    # TODO: We could add here synonyms, translations, synonyms, maybe from a dictionary.
-    hash[:keywords] = command.respond_to?(:keywords) ? command.keywords : nil
+      # Keywords
+      # TODO: We could add here synonyms, translations, synonyms, maybe from a dictionary.
+      hash[:keywords] = command.respond_to?(:keywords) ? command.keywords : nil
+
+      # Keep a reference to the original command.
+      hash[:command] = command
+
+    end # if command.is_a?(UI::Command)
 
     # File path
     # Get the file path of where the UI::Command was created. It might be useful info.
