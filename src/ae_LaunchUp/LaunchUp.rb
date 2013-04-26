@@ -27,9 +27,9 @@ Description:  This Plugin adds a quick launcher to search and execute commands.
 
 Recommended:  SketchUp 8 M2 or higher (it works in a limited way in lower versions)
 
-Version:      1.0.7
+Version:      1.0.8
 
-Date:         11.04.2013
+Date:         17.04.2013
 
 Note:
   This plugin has only been possible by modifying (intercepting) SketchUp API
@@ -121,7 +121,7 @@ require(File.join(PATH_ROOT, 'Options.rb'))
 
 # Platform detection.
 OSX = ( Object::RUBY_PLATFORM =~ /darwin/i ) unless defined?(self::OSX)
-WIN = ( RUBY_PLATFORM =~ /mswin/i ) unless defined?(self::WIN)
+WIN = ( Object::RUBY_PLATFORM =~ /mswin/i || Object::RUBY_PLATFORM =~ /mingw/i ) unless defined?(self::WIN)
 
 
 
@@ -153,7 +153,7 @@ def self.show_dialog
   if @launchdlg && @launchdlg.visible?
     @launchdlg.bring_to_front
   else
-    @launchdlg = AE::LaunchUp::Dialog.new(TRANSLATE["LaunchUp"], false, false, 800, 200, @options[:width], 60, true)
+    @launchdlg = AE::LaunchUp::Dialog.new(TRANSLATE["LaunchUp"], false, "LaunchUp", @options[:width], 60, 800, 200, true)
     @launchdlg.min_width = 150
     @launchdlg.max_width = 500
     @launchdlg.min_height = 40
@@ -169,9 +169,8 @@ def self.show_dialog
     }
 
     # Update the @options object in Ruby.
-    @launchdlg.on("updateOptions") { |dlg, hash|
+    @launchdlg.on("update_options") { |dlg, hash|
       @options.update(hash)
-      nil
     }
 
     # Load the index.
@@ -227,13 +226,14 @@ def self.show_options
     @optionsdlg.bring_to_front
   else
     # Create the WebDialog.
-    @optionsdlg = AE::LaunchUp::Dialog.new(TRANSLATE["LaunchUp Options"], false, false, 600, 200, 500, 300, true)
+    @optionsdlg = AE::LaunchUp::Dialog.new(TRANSLATE["LaunchUp Options"], false, false, 500, 300, 600, 200, true)
     @optionsdlg.min_width = 300
     @optionsdlg.max_width = 600
     @optionsdlg.min_height = 300
     window_width = 500 # outer width
     window_height = 300 # outer height
     @optionsdlg.set_size(window_width, window_height)
+    @optionsdlg.set_position_center
     html_path = File.join(PATH_ROOT, "html", "LaunchUpOptions.html")
     @optionsdlg.set_file(html_path)
 
