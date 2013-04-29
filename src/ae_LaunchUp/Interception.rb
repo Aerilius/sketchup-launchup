@@ -15,16 +15,17 @@ module Interception
 # uses a Sketchup::Menu or a menu item's id [Fixnum] as key. If you don't know
 # the key, do a reverse lookup using Hash.index (Ruby 1.8.6) or Hash.key (Ruby 1.9).
 module Menu
-  @listeners = {}  # An array of Procs
-  @menu_items = [] # menu_item_id
-  @menu_text = {}  # menu/menu_item_id => menu_text # equals UI::command.menu_text
-  @children = {}   # menu              => [menu, menu_item_id, ...]
-  @validation_proc = {} # menu_item_id => proc
-  @command = {}    # menu_item_id      => ui_command
-  @parent = {}     # menu/menu_item_id => menu
+  @listeners ||= {}  # An array of Procs
+  @menu_items ||= [] # menu_item_id
+  @menu_text ||= {}  # menu/menu_item_id => menu_text # equals UI::command.menu_text
+  @children ||= {}   # menu              => [menu, menu_item_id, ...]
+  @validation_proc ||= {} # menu_item_id => proc
+  @proc ||= {}       # menu/menu_item_id => proc
+  @command ||= {}    # menu_item_id      => ui_command
+  @parent ||= {}     # menu/menu_item_id => menu
 
   class << self
-    attr_reader :menu_items, :menu_text, :children, :validation_proc, :command, :parent
+    attr_reader :menu_items, :menu_text, :children, :validation_proc, :proc, :command, :parent
   end
 
   # You can pass a Proc through this method to be notified when an intercepted method is called.
@@ -40,11 +41,13 @@ module Menu
 
   # @private
   def self.listen(*args, &block)
-    method_name = args.shift
+    method_name = args.shift.to_sym
     return unless @listeners.include?(method_name) && @listeners[method_name].is_a?(Array)
     @listeners[method_name].each{|proc| proc.call(*(args << block)) rescue nil }
-  rescue
-    puts("Error in AE::Interception::Menu.listen") if $VERBOSE
+  rescue Exception => e
+    puts("Error in ae_LaunchUp/Interception.rb for AE::Interception::Menu.listen")
+    puts(e.message)
+    puts(e.backtrace)
   end
 
   # Get the full menu path of a menu item.
@@ -75,11 +78,11 @@ end # module Menu
 # :proc, :validation_proc (or :validate)
 #
 module Command
-  @listeners = {}  # An array of Procs
-  @commands = [] # UI::Command
-  @text = {}  # command => text
-  @proc = {}  # command => proc
-  @validation_proc = {} # command => proc
+  @listeners ||= {}  # An array of Procs
+  @commands ||= [] # UI::Command
+  @text ||= {}  # command => text
+  @proc ||= {}  # command => proc
+  @validation_proc ||= {} # command => proc
 
   class << self
     attr_reader :commands, :text, :proc, :validation_proc
@@ -98,11 +101,13 @@ module Command
 
   # @private
   def self.listen(*args, &block)
-    method_name = args.shift
+    method_name = args.shift.to_sym
     return unless @listeners.include?(method_name) && @listeners[method_name].is_a?(Array)
     @listeners[method_name].each{|proc| proc.call(*(args << block)) rescue nil }
-  rescue
-    puts("Error in AE::Interception::Command.listen") if $VERBOSE
+  rescue Exception => e
+    puts("Error in ae_LaunchUp/Interception.rb for AE::Interception::Command.listen")
+    puts(e.message)
+    puts(e.backtrace)
   end
 
 end # module Command
@@ -139,19 +144,22 @@ class Sketchup::Menu
     private :add_item_orig_2d3b68a6
 
     def add_item(*args, &block)
-      # Replace menu_text by a command if menu_text was used.
-      args[0] = UI::Command.new(args[0], &block) if args[0].is_a?(String)
       id = add_item_orig_2d3b68a6(*args)
-      return id if id.nil? # On wrong arguments, SketchUp returns nil.
+      # On wrong arguments, SketchUp returns nil.
+      return id if id.nil?
+      # Register data.
       AE::Interception::Menu.menu_items << id
-      AE::Interception::Menu.menu_text[id] = args[0].menu_text
-      AE::Interception::Menu.command[id] = args[0]
+      AE::Interception::Menu.menu_text[id] = args[0].is_a?(UI::Command) ? args[0].menu_text : args[0]
+      AE::Interception::Menu.command[id] = args[0] if args[0].is_a?(UI::Command)
       AE::Interception::Menu.children[self] ||= []
       AE::Interception::Menu.children[self] << id
       AE::Interception::Menu.parent[id] = self
+      # Trigger event.
       AE::Interception::Menu.listen(:add_item, self, *args, &block)
-    rescue
-      puts("Error in Interception.rb Sketchup::Menu.add_item") if $VERBOSE
+    rescue Exception => e
+      puts("Error in ae_LaunchUp/Interception.rb for Sketchup::Menu.add_item")
+      puts(e.message)
+      puts(e.backtrace)
     ensure
       return id
     end
@@ -163,14 +171,19 @@ class Sketchup::Menu
 
     def add_submenu(*args)
       submenu = add_submenu_orig_2d3b68a6(*args)
-      return submenu if submenu.nil? # On wrong arguments, SketchUp returns nil.
+      # On wrong arguments, SketchUp returns nil.
+      return submenu if submenu.nil?
+      # Register data.
       AE::Interception::Menu.menu_text[submenu] = args[0]
       AE::Interception::Menu.children[self] ||= []
       AE::Interception::Menu.children[self] << submenu
       AE::Interception::Menu.parent[submenu] = self
+      # Trigger event.
       AE::Interception::Menu.listen(:add_submenu, self, *args)
-    rescue
-      puts("Error in Interception.rb Sketchup::Menu.add_submenu") if $VERBOSE
+    rescue Exception => e
+      puts("Error in ae_LaunchUp/Interception.rb for Sketchup::Menu.add_submenu")
+      puts(e.message)
+      puts(e.backtrace)
     ensure
       return submenu
     end
@@ -183,9 +196,15 @@ class Sketchup::Menu
     def set_validation_proc(*args, &block)
       success = set_validation_proc_orig_2d3b68a6(*args, &block)
       if success
+        # Register data.
         AE::Interception::Menu.set_validation_proc[args[0]] = block
+        # Trigger event.
         AE::Interception::Menu.listen(:set_validation_proc, self, *args, &block)
       end
+    rescue Exception => e
+      puts("Error in ae_LaunchUp/Interception.rb for Sketchup::Menu.set_validation_proc")
+      puts(e.message)
+      puts(e.backtrace)
     ensure
       return success || false
     end
@@ -205,8 +224,13 @@ module UI
       def menu(*args)
         menu = menu_orig_2d3b68a6(*args)
         return menu if menu.nil? # On wrong arguments, SketchUp returns nil.
+        # Register data.
         AE::Interception::Menu.menu_items << menu
         AE::Interception::Menu.menu_text[menu] = args[0]
+      rescue Exception => e
+        puts("Error in ae_LaunchUp/Interception.rb for UI.menu")
+        puts(e.message)
+        puts(e.backtrace)
       ensure
         return menu
       end
@@ -227,10 +251,16 @@ class UI::Command
       def new(*args, &block)
         command = new_orig_2d3b68a6(*args, &block)
         return command unless command.is_a?(UI::Command) # On wrong arguments, SketchUp returns nil.
+        # Register data.
         AE::Interception::Command.commands << command
         AE::Interception::Command.text[command] = args[0]
         AE::Interception::Command.proc[command] = block
+        # Trigger event.
         AE::Interception::Command.listen(:new, command, *args, &block)
+      rescue Exception => e
+        puts("Error in ae_LaunchUp/Interception.rb for UI::Command.new")
+        puts(e.message)
+        puts(e.backtrace)
       ensure
         return command
       end
@@ -244,8 +274,14 @@ class UI::Command
     def set_validation_proc(&block)
       command = set_validation_proc_orig_2d3b68a6(&block)
       return command unless command.is_a?(UI::Command) # On wrong arguments, SketchUp returns nil.
+      # Register data.
       AE::Interception::Command.validation_proc[command] = block
+      # Trigger event.
       AE::Interception::Command.listen(:set_validation_proc, command, &block)
+    rescue Exception => e
+      puts("Error in ae_LaunchUp/Interception.rb for UI::Command.set_validation_proc")
+      puts(e.message)
+      puts(e.backtrace)
     ensure
       return command
     end

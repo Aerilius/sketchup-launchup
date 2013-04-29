@@ -74,6 +74,18 @@ class Index
       add(command)
     }
 
+    # Load all intercepted menu items.
+    # This would require Sketchup::Menu to have the methods (name), proc, validation_proc.
+    AE::Interception::Menu.menu_items.each{|menu_item|
+      if AE::Interception::Menu.command[menu_item]
+        add(AE::Interception::Menu.command[menu_item])
+      elsif AE::Interception::Menu.proc[menu_item]
+        add({:name => AE::Interception::Menu.menu_text[menu_item],
+             :validation_proc => AE::Interception::Menu.validation_proc[menu_item],
+             :proc => AE::Interception::Menu.proc[menu_item] })
+      end
+    }
+
     # If new commands are added at run time, we want to get notified so we can
     # add them to this Index.
     @scheduler = Scheduler.new(1)
@@ -86,6 +98,21 @@ class Index
       # one timer, calling too many timers in a short time would crash SketchUp.
       @scheduler.add{
         add(command)
+      }
+    }
+    # If new menu items are added at run time, we want to get notified so we can
+    # add them to this Index.
+    AE::Interception::Menu.add_listener(:add_item){|*args|
+      menu_text = args[1]
+      block = args.last
+      break unless menu_text.is_a?(String) && block.is_a?(Proc)
+      # Wait until all properties may have been added to the command.
+      # TODO: We could also just have intercepted small_icon, tooltip … as well.
+      # The scheduler.add is also important because it combines several Procs into
+      # one timer, calling too many timers in a short time would crash SketchUp.
+      @scheduler.add{
+        add({:name => menu_text,
+             :proc => block})
       }
     }
 
@@ -685,7 +712,6 @@ class Scheduler
     else
       @scheduled.last << block
     end
-    @scheduled << block
     check
   end
 
