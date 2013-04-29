@@ -453,7 +453,7 @@ var ComboBox = LaunchUp.ComboBox = function(self) {
         var span = document.createElement("span");
         span.className = "description";
         span.appendChild(
-          document.createTextNode(" "+entry.description||""));
+          document.createTextNode(" "+(entry.description||"")));
         div.appendChild(span);
       }
       // Attach the entry into the DOM.
@@ -744,7 +744,7 @@ var History = LaunchUp.History = function(self) {
       var span = document.createElement("span");
       span.className = "description";
       span.appendChild(
-        document.createTextNode(" "+entry.description||""));
+        document.createTextNode(" "+(entry.description||"")));
       div.appendChild(span);
     }
     // Attach the entry into the DOM.
