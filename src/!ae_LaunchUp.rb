@@ -2,9 +2,8 @@
 require 'sketchup.rb'
 require 'extensions.rb'
 
-
 # Create the extension.
-ext = SketchupExtension.new('LaunchUp', 'ae_LaunchUp/LaunchUp.rb')
+ext = SketchupExtension.new('LaunchUp', '!ae_LaunchUp/LaunchUp.rb')
 
 # Attach some nice info.
 ext.creator     = 'Aerilius'
