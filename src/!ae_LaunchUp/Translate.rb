@@ -193,12 +193,12 @@ class Translate
           var blocked = new RegExp("^(script|style)$", "i");
           var emptyString = new RegExp("^(\\n|\\s|&nbsp;)+$", "i");
           var textNodes = [];
-          var nodesWithAttr = {};
+          var nodesWithAttr = {"title":[],"placeholder":[]};
           //# Get all text nodes that are not empty. Get also all title attributes.
           var getNodes = function(node){
             if (node && node.nodeType === 1 && !blocked.test(node.nodeName)) {
-              if (node.title !== null && node.title!=="") { nodesWithAttr[node] = "title"; }
-              if (node.placeholder !== null && node.placeholder!=="") { nodesWithAttr[node] = "placeholder"; }
+              if (node.title !== null && node.title!=="") { nodesWithAttr["title"].push(node); }
+              if (node.placeholder !== null && node.placeholder!=="") { nodesWithAttr["placeholder"].push(node); }
               for (var i=0; i<node.childNodes.length; i++) {
                 var childNode = node.childNodes[i];
                 if ( childNode && childNode.nodeType === 3 && !emptyString.test(childNode.nodeValue) ) {
@@ -214,11 +214,13 @@ class Translate
           for (var i=0; i<textNodes.length; i++) {
             textNodes[i].nodeValue = self.get( textNodes[i].nodeValue );
           }
-          for (var node in nodesWithAttr) {
-            var attr = nodesWithAttr[node];
-            try {
-              node.setAttribute(attr, self.get( node.getAttribute(attr) ) );
-            } catch(e) {}
+          for (var attr in nodesWithAttr) {
+            for(var i=0; i<nodesWithAttr[attr].length; i++) {
+              try {
+                var node = nodesWithAttr[attr][i];
+                node.setAttribute(attr, self.get( node.getAttribute(attr) ) );
+              } catch(e) {}
+            }
           }
         };
         return self;
@@ -260,7 +262,7 @@ end # class Translate
 
 
 
-end # class LaunchUp
+end # module LaunchUp
 
 
 
