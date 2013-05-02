@@ -49,7 +49,7 @@ LaunchUpOptions.initialize = function(opt) {
   $("form")[0].onsubmit = function() { return false };
 
   // Adjust the size (height) when the dialog has been manually resized.
-  // On Windows it requires a little delay to complete resizing because it triggers
+  // Internet Explorer it requires a little delay to complete resizing because it triggers
   // onresize twice (for height & width). Otherwise we would use incorrect
   // dimensions and the dialog flickers.
   window.onresize = function(){ window.setTimeout(AE.Dialog.adjustSize, 0) };

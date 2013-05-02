@@ -26,6 +26,7 @@ module AE
       .on                               // Turns the History on (and changes the option).
       .off                              // Turns the History off (and changes the option).
  */
+var AE = window.AE || {};
 
 
 
@@ -43,9 +44,9 @@ var Options = LaunchUp.Options = {};
 
 LaunchUp.initialize = function(opt) {
   // Load the options.
-  if (!opt) { opt = {} }
-  for (var i in opt) { Options[i] = opt[i] }
-  if (Options.debug) { AE.debug = Options.debug }
+  if (!opt) { opt = {}; }
+  for (var i in opt) { Options[i] = opt[i]; }
+  if (Options.debug) { AE.debug = Options.debug; }
 
   // Initialize the Dialog module.
   AE.Dialog.initialize();

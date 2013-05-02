@@ -230,9 +230,7 @@ def self.show_options
     @optionsdlg.min_width = 300
     @optionsdlg.max_width = 600
     @optionsdlg.min_height = 300
-    window_width = 500 # outer width
-    window_height = 300 # outer height
-    @optionsdlg.set_size(window_width, window_height)
+    @optionsdlg.set_size(500, 300)
     @optionsdlg.set_position_center
     html_path = File.join(PATH_ROOT, "html", "LaunchUpOptions.html")
     @optionsdlg.set_file(html_path)
