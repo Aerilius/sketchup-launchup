@@ -66,17 +66,17 @@ class Index
     # Optimization: cache toolbar names in a hash to speed up Index.add()
     # Note: Iterating over toolbars can give a UI::Command or String (separator "|").
     @toolbars = {}
-    ObjectSpace.each_object(UI::Toolbar){|toolbar| toolbar.each{|command| @toolbars[command] = toolbar.name} if toolbar.respond_to?(:each)}
+    ObjectSpace.each_object(UI::Toolbar){ |toolbar| toolbar.each{ |command| @toolbars[command] = toolbar.name} if toolbar.respond_to?(:each)}
 
     # Load all existing UI::Commands into the index.
     # This would require UI::Command to have the methods (name), proc, validation_proc.
-    ObjectSpace.each_object(UI::Command){|command|
+    ObjectSpace.each_object(UI::Command){ |command|
       add(command)
     }
 
     # Load all intercepted menu items.
     # This would require Sketchup::Menu to have the methods (name), proc, validation_proc.
-    AE::Interception::Menu.menu_items.each{|menu_item|
+    AE::Interception::Menu.menu_items.each{ |menu_item|
       if AE::Interception::Menu.command[menu_item]
         add(AE::Interception::Menu.command[menu_item])
       elsif AE::Interception::Menu.proc[menu_item]
@@ -89,7 +89,7 @@ class Index
     # If new commands are added at run time, we want to get notified so we can
     # add them to this Index.
     @scheduler = Scheduler.new(1)
-    AE::Interception::Command.add_listener(:new){|*args|
+    AE::Interception::Command.add_listener(:new){ |*args|
       command = args[0]
       break unless command.is_a?(UI::Command)
       # Wait until all properties may have been added to the command.
@@ -102,7 +102,7 @@ class Index
     }
     # If new menu items are added at run time, we want to get notified so we can
     # add them to this Index.
-    AE::Interception::Menu.add_listener(:add_item){|*args|
+    AE::Interception::Menu.add_listener(:add_item){ |*args|
       menu_text = args[1]
       block = args.last
       break unless menu_text.is_a?(String) && block.is_a?(Proc)
@@ -119,7 +119,7 @@ class Index
     # TODO: Allow here to plug-in smart searches. Import all files from ./smart-searches.
 
     # This example allows to load extensions on demand:
-    Sketchup.extensions.each{|extension|
+    Sketchup.extensions.each{ |extension|
       # Maybe we should only add those that are not yet loaded? But then the user can't find them if not knowing that.
       # We need here feature testing, because :loaded?, :load have been added with SU8M2, where as :name, :description, :creator exist since SU6.
       # Another reason is that other plugins could have a custom extension class that is neither subclassed from SketchupExtension nor fully compatible with the installed SketchUp's extension (ie. 3Dconnexion).
@@ -129,7 +129,7 @@ class Index
         :description => extension.description,
         :category => TRANSLATE["Extensions"],
         :keywords => [TRANSLATE["extension"], TRANSLATE["plugin"], TRANSLATE["addon"], extension.creator],
-        :proc => Proc.new{|extension| extension.check },
+        :proc => Proc.new{ |extension| extension.check },
         # The command is enabled as long as the extension is not loaded.
         :validation_proc => extension.loaded? ? Proc.new{ MF_GRAYED } : Proc.new{ (extension.loaded?) ? MF_GRAYED : MF_ENABLED },
         # :no_history => true, # TODO: If it is not added to the history, we need other feedback that it has been loaded.
@@ -252,7 +252,7 @@ class Index
     file = hash[:proc].inspect[/[^@]+(?=\:\d+\>)/]
     file = nil if hash[:file] == "(eval)"
     # Making the file path relative to a load path is 400× too slow:
-    # file = $:.map{|p| file.sub(p, "") }.min{|s| s.length } unless file.nil?
+    # file = $:.map{ |p| file.sub(p, "") }.min{ |s| s.length } unless file.nil?
     hash[:file] = file.sub(/^.*?Plugins/, "")
 
     # Create a short id to distinguish it from other commands.
@@ -286,7 +286,7 @@ class Index
   def update(hash)
     # Try to find an existing entry in @data.
     ind = nil
-    @data.each_with_index{|v, i| ind = i if(v[:id] == hash[:id] || v[:command] == hash[:command]) }
+    @data.each_with_index{ |v, i| ind = i if(v[:id] == hash[:id] || v[:command] == hash[:command]) }
     return false unless ind
     @data[ind].merge!(hash)
     return true
@@ -312,7 +312,7 @@ class Index
   # @returns [Hash] entry
   def get_by_id(id)
     raise(ArgumentError, "Argument 'id' must be a Fixnum") unless id.is_a?(Fixnum)
-    @data.find{|entry| entry[:id] == id }
+    @data.find{ |entry| entry[:id] == id }
   end
   alias_method(:[], :get_by_id)
 
@@ -366,14 +366,18 @@ class Index
     json_classes = [String, Symbol, Fixnum, Float, Array, Hash, TrueClass, FalseClass, NilClass]
     # Remove non-JSON objects.
     sanitize = nil
-    sanitize = Proc.new{|v|
+    sanitize = Proc.new{ |v|
       if v.is_a?(Array)
         new_v = []
-        v.each{|a| new_v << sanitize.call(a) if json_classes.include?(a.class)}
+        v.each{ |a| new_v << sanitize.call(a) if json_classes.include?(a.class)}
         new_v
       elsif v.is_a?(Hash)
         new_v = {}
-        v.each{|c, w| new_v[c] = sanitize.call(w) if (c.is_a?(String) || c.is_a?(Symbol)) && json_classes.include?(w.class) }
+        v.each{ |c, w|
+          if (c.is_a?(String) || c.is_a?(Symbol)) && json_classes.include?(w.class)
+            new_v[c] = sanitize.call(w)
+          end
+        }
         new_v
       else
         v
@@ -388,8 +392,8 @@ class Index
     # or what is between strings.
     # If it's not a string then turn Symbols into String and replace => and nil.
     json_string = o.inspect.split(/(\"(?:.*?[^\\])*?\")/).
-      collect{|s|
-        (s[0..0] != '"')?                        # If we are not inside a string
+      collect{ |s|
+        (s[0..0] != '"') ?                        # If we are not inside a string
         s.gsub(/\:(\S+?(?=\=>|\s))/, "\"\\1\""). # Symbols to String
           gsub(/\=\>/, ":").                       # Arrow to colon
           gsub(/\bnil\b/, "null") :              # nil to null
@@ -403,7 +407,7 @@ class Index
   # This allows to load tracking data into the index (optional, the index works also without).
   # @params [Hash] tracking a hash of   id => amount of clicks   pairs.
   def load_tracking(tracking)
-    @data.each{|hash|
+    @data.each{ |hash|
       id = hash[:id]
       track = tracking[id]
       next unless track
@@ -428,7 +432,7 @@ class Index
     s = s.inspect unless s.is_a?(String)
     h = 0
     m = 99999
-    s.unpack("c*").each{|c| h = (128 * h + c).modulo(m)}
+    s.unpack("c*").each{ |c| h = (128 * h + c).modulo(m)}
     return h
   end
   alias_method :hash_code, :adler32
@@ -443,11 +447,11 @@ class Index
     search_words = search_string.split(/\s+/)
 
     # Loop over all entries in the index.
-    @data.each{|entry|
+    @data.each{ |entry|
       begin
         # Check whether this entry matches the search words.
         score = 0
-        search_words.each{|search_word|
+        search_words.each{ |search_word|
           next if search_word.empty?
 
           s = 2 * AE::LaunchUp::Scorer.score(search_word, entry[:name]) if entry[:name].is_a?(String)
@@ -515,7 +519,7 @@ class Index
   # @returns [Array] sorted array
   def rank(result_array)
     # Highest first.
-    return result_array.sort_by{|hash| - hash[:score] + (hash[:enabled]==false ? 10 : 0) }
+    return result_array.sort_by{ |hash| - hash[:score] + (hash[:enabled]==false ? 10 : 0) }
   end
 
 
@@ -551,7 +555,7 @@ class Index
   # @param [String] string
   def exact_match_length(search_word, string)
     regexp = Regexp.new(Regexp.escape(search_word), "i")
-    return ((string.scan(regexp) || [""]).map{|s| s.length}.first || 0) / search_word.length
+    return ((string.scan(regexp) || [""]).map{ |s| s.length}.first || 0) / search_word.length
   end
 
 
@@ -561,8 +565,8 @@ class Index
   # @param [String] search_word
   # @param [String] string
   def exact_beginning_length(search_word, string)
-    regexp = Regexp.new("(?:\\b" + search_word.gsub(/(?!^)./){|e| "#{Regexp.escape(e)}?"}, "i")
-    return ((string.scan(regexp) || [""]).max{|a, b| a.length <=> b.length} || 0) / search_word.length
+    regexp = Regexp.new("(?:\\b" + search_word.gsub(/(?!^)./){ |e| "#{Regexp.escape(e)}?"}, "i")
+    return ((string.scan(regexp) || [""]).max{ |a, b| a.length <=> b.length} || 0) / search_word.length
   end
 
 
@@ -578,8 +582,8 @@ class Index
     return m if n == 0
     return n if m == 0
     d = Array.new(m+1) {Array.new(n+1)}
-    (0..m).each {|i| d[i][0] = i}
-    (0..n).each {|j| d[0][j] = j}
+    (0..m).each { |i| d[i][0] = i}
+    (0..n).each { |j| d[0][j] = j}
     (1..n).each do |j|
       (1..m).each do |i|
         d[i][j] = if str1[i-1] == str2[j-1] # adjust index into string
@@ -616,7 +620,7 @@ class Index
   def get_bigrams(string)
     s = string.downcase
     v = []
-    (s.length-1).times{|i|
+    (s.length-1).times{ |i|
       v[i] = s[i...i+2]
     }
     return v
@@ -634,8 +638,8 @@ class Index
     pairs2 = get_bigrams(str2)
     union = pairs1.length + pairs2.length;
     hit_count = 0
-    pairs1.each{|pair1|
-      pairs2.each{|pair2|
+    pairs1.each{ |pair1|
+      pairs2.each{ |pair2|
         hit_count += 1 if pair1 == pair2
       }
     }
@@ -655,8 +659,8 @@ class Index
     return "" if (str1 == "" || str2 == "")
     m = Array.new(str1.length){ [0] * str2.length }
     longest_length, longest_end_pos = 0,0
-    (0 .. str1.length - 1).each{|x|
-      (0 .. str2.length - 1).each{|y|
+    (0 .. str1.length - 1).each{ |x|
+      (0 .. str2.length - 1).each{ |y|
         if str1[x] == str2[y]
           m[x][y] = 1
           if (x > 0 && y > 0)
@@ -727,19 +731,19 @@ class Scheduler
     to_run = @scheduled.shift
     if to_run.is_a?(Proc)
       to_run.call
-    else # Array
-      to_run.each{|block| block.call }
+    elsif to_run.is_a?(Array)
+      to_run.each{ |block| block.call }
     end
   end
 
   def check
     c = Time.now.to_f
-    if @t.nil? || c > @t
+    if (@t.nil? || c > @t) && @scheduled.length > 0
       # Last function call is long enough ago (or first time), execute given function immediately.
       run
       # Set timer for next possible function call.
       @t = c + @dt
-      UI.start_timer(@dt){ run }
+      UI.start_timer(@dt){ check }
     end
   end
 
