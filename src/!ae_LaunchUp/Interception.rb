@@ -151,6 +151,7 @@ class Sketchup::Menu
       AE::Interception::Menu.menu_items << id
       AE::Interception::Menu.menu_text[id] = args[0].is_a?(UI::Command) ? args[0].menu_text : args[0]
       AE::Interception::Menu.command[id] = args[0] if args[0].is_a?(UI::Command)
+      AE::Interception::Menu.proc[id] = block if block.is_a?(Proc)
       AE::Interception::Menu.children[self] ||= []
       AE::Interception::Menu.children[self] << id
       AE::Interception::Menu.parent[id] = self
