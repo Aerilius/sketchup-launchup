@@ -96,6 +96,7 @@ def update(hash)
   raise(ArgumentError, "Argument 'hash' must be a Hash.") unless hash.is_a?(Hash)
   normalize_keys(hash)
   @options.merge!(hash){|key, oldval, newval|
+    newval = newval.to_sym if oldval.class == Symbol && newval.class == String
     # Accept all new values
     (!@options.include?(key) ||
     # Accept updated values only if they have the same type as the old value.
@@ -187,16 +188,17 @@ def to_json
   obj.reject!{|k,v|
     !k.is_a?(String) && !k.is_a?(Symbol) || !@@valid_types.include?(v.class)
   }
-  # Split at every even number of unescaped quotes.
+  # Split at every even number of unescaped quotes. This gives either strings
+  # or what is between strings.
   # If it's not a string then turn Symbols into String and replace => and nil.
   json_string = obj.inspect.split(/(\"(?:.*?[^\\])*?\")/).
     collect{|s|
-      (s[0..0] != '"')?                        # If we are not inside a string
-      s.gsub(/\:(\S+?(?=\=>|\s))/, "\"\\1\""). # Symbols to String
-        gsub(/=>/, ":").                       # Arrow to colon
+      (s[0..0] != '"') ?                       # If we are not inside a string
+      s.gsub(/\:(\S+?(?=\=>|\s|,|\}))/, "\"\\1\""). # Symbols to String
+        gsub(/\=\>/, ":").                     # Arrow to colon
         gsub(/\bnil\b/, "null") :              # nil to null
-      s
-    }.join()
+      s                                        # If it's a string don't touch it.
+    }.join
   return json_string
 end
 
