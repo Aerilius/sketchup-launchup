@@ -126,8 +126,13 @@ AE.Scheduler = function(dt) {
   };
   this.add = function(fn) {
     last = scheduled[scheduled.length-1];
-    if (scheduled.length === 0 || last && typeof last === "function") { scheduled.push([fn]); }
-    else { last.push(fn); } // Add to Array.
+    if (scheduled.length === 0) {
+      scheduled.push([fn]);
+    } else if (last && typeof last === "function") {
+      scheduled.push([scheduled.pop(), fn]);
+    } else {
+      last.push(fn);
+    }
     check();
   };
   this.replace = function(fn) {
@@ -198,7 +203,7 @@ AE.Style = (function(self) {
   /* Show an element. (using display) */
   self.show = function(element) {
     if (!element) { return; }
-    if (element.style.display === "none") { element.style.display = element.original_display || "block" }
+    if (element.style.display === "none") { element.style.display = element.original_display || "block"; }
   };
 
   /* Hide an element. (using display) */
@@ -536,12 +541,13 @@ AE.Form = (function(self) {
   self.read = function(form) {
     if (!form) { form = document.getElementsByTagName("form")[0] || document.body }
     var inputs = AE.$("input", form).concat(AE.$("select", form));
-    var hash = {};
+    var hash = {}, val = null;
     for (var i=0; i < inputs.length; i++) {
       var input = inputs[i];
       // Continue only if the input is enabled and has a name.
       if (input.disabled || !input.name || input.name === "") { continue; }
-      hash[input.name] = get_value(input);
+      val = get_value(input)
+      if (val !== null) { hash[input.name] = get_value(input); }
     }
     return hash;
   };
