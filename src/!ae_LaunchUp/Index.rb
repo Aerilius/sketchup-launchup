@@ -272,8 +272,9 @@ class Index
     return true
   rescue ArgumentError
     raise
-  rescue StandardError
+  rescue StandardError => e
     puts("LaunchUp: Command #{command} could not be added to index.")
+    puts(e.message)
     return false
   end
 

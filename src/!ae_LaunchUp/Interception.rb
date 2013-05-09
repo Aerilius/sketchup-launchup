@@ -1,5 +1,4 @@
 module AE
-# TODO: REMOVE DEBUG HELPERS. DON'T RELEASE THIS VERSION!
 
 
 module Interception

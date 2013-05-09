@@ -27,9 +27,9 @@ Description:  This Plugin adds a quick launcher to search and execute commands.
 
 Recommended:  SketchUp 8 M2 or higher (it works in a limited way in lower versions)
 
-Version:      1.0.10
+Version:      1.0.12
 
-Date:         29.04.2013
+Date:         09.05.2013
 
 Note:
   This plugin has only been possible by modifying (intercepting) SketchUp API
@@ -95,7 +95,11 @@ require(File.join(PATH_ROOT, 'Dialog.rb'))
 require(File.join(PATH_ROOT, 'Index.rb'))
 # Add SketchUp's native (non-Ruby) commands to ObjectSpace so we can access them by the same means as plugins:
 # If it contains errors, we can skip this file.
-require(File.join(PATH_ROOT, 'commands', 'Commands.rb')) rescue puts("AE::LaunchUp couldn't load #{File.join(PATH_ROOT, 'commands', 'Commands.rb')}.")
+begin
+  require(File.join(PATH_ROOT, 'commands', 'Commands.rb'))
+rescue LoadError
+  puts("AE::LaunchUp couldn't load #{File.join(PATH_ROOT, 'commands', 'Commands.rb')}.")
+end
 # Options.
 require(File.join(PATH_ROOT, 'Options.rb'))
 @options ||= Options.new("LaunchUp", {
@@ -185,8 +189,6 @@ def self.show_dialog
 
     # Search the index.
     @launchdlg.on("look_up") { |dlg, search_string|
-      # We better get the string directly from the input instead of encoding/unencoding. This preserves Unicode characters.
-      search_string = dlg.get_element_value("combo_input")
       length = (@options[:max_length].is_a?(Fixnum)) ? @options[:max_length] : nil
       # In case of failure, nil gives the method's default value.
       dlg.return Index.instance.look_up(search_string, length)
