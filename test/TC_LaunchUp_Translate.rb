@@ -90,20 +90,20 @@ def test_parse_strings
   #  It should tolerate inline comments /* */ over several lines and end-of-line comments //.
   assert(translate.get("single line comment") != "false", "It should tolerate single line comments with //.")
   assert(translate.get("multiple line comment") != "false", "It should tolerate multiple line comments with /* */.")
-  assert(translate.get("before single line comment") == "true", "It should parse before single line comment starts in the same line.") # TODO
   assert(translate.get("single line end comment") != "false", "It should not parse after single line comment starts in the same line.")
   assert(translate.get("before multiple line comment") != "false", "It should parse before multiple line comment starts in the same line.")
   assert(translate.get("single 'quotes'") == "true", "It should parse single quotes.")
   assert(translate.get("double \"quotes\"") == "true", "It should parse double quotes.")
   assert(translate.get("entity reference for &quote;quotes&quote;") == "true", "It should parse entity references for double quotes.")
   assert(translate.get("escape \\") == "true", "It should parse escape characters.")
-  assert(translate.get("forward slash //") == "true", "It should parse double forward slashes quotes.") # TODO
-  assert(translate.get("forward slash asterisk /* */") == "true", "It should parse slash asterisk combination.") # TODO
   assert(translate.get("equal with spaces") == "true", "It tolerate equal sign with whitespace.")
   assert(translate.get("semicolon with spaces") == "true", "It should tolerate whitespace before semicolon.")
-  puts translate.get_all.inspect
   assert(translate.get("semicolon missing") != "false", "It does not need to parse if semicolon missing at the end.")
   assert(translate.get("after semicolon missing") != "false", "It does not need to parse after semicolon missing.")
+  # TODO:
+  assert(translate.get("before single line comment") == "true", "It should parse before single line comment starts in the same line.") # TODO
+  assert(translate.get("forward slash //") == "true", "It should parse double forward slashes.") # TODO
+  assert(translate.get("forward slash asterisk /* */") == "true", "It should parse slash asterisk combination.") # TODO
   # TODO: What about line breaks?
   # It should merge the parsed key/value pairs into @strings (overriding existing keys).
   # It should return false if no strings were parsed or an error occured, otherwise true.
@@ -117,7 +117,7 @@ def test_get
   # It should be aliased as [].
   assert(translate.method(:[]) == translate.method(:get), "It should be aliased as [].")
   # It should accept a string or array of strings and optionally any amount of strings. It should tolerate nil.
-  assert_nothing_raised("Translate.get: argument should accept a string.")
+  assert_nothing_raised("Translate.get: argument should accept a string.") { translate.get("something") }
   assert_nothing_raised("Translate.get: argument should tolerate nil.") { translate.get(nil) }
   assert_nothing_raised("Translate.get: argument should accept an array of strings.") { translate.get(["something", "something more"]) }
   assert_raise(ArgumentError, "Translate.get: argument should only accept a string or array.") { translate.get(42) }

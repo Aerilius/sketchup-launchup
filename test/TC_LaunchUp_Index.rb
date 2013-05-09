@@ -41,15 +41,11 @@ def test_index_add
   index = AE::LaunchUp::Index.instance
   index.clear
   # It should accept UI::Command and optionally hash with additional/overriding data.
-  assert_nothing_raised("It should accept UI::Command as first argument.") { index.add(UI::Command.new("something"){}) }
-  assert_raise(ArgumentError, "It should accept only UI::Command as first argument.") { index.add("string") }
-  assert_raise(ArgumentError, "It should accept only UI::Command as first argument.") { index.add(42) }
-  assert_raise(ArgumentError, "It should accept only UI::Command as first argument.") { index.add(Object.new) }
-  assert_nothing_raised("It should a Hash as second argument.") { index.add(UI::Command.new("string"){}, {}) }
-  assert_nothing_raised("It should a Hash as second argument.") { index.add(nil, {}) }
-  assert_raise(ArgumentError, "It should accept only a Hash as second argument.") { index.add(nil, "string") }
-  assert_raise(ArgumentError, "It should accept only a Hash as second argument.") { index.add(nil, 42) }
-  assert_raise(ArgumentError, "It should accept only a Hash as second argument.") { index.add(nil, Object.new) }
+  assert_nothing_raised("It should accept UI::Command as argument.") { index.add(UI::Command.new("something"){}) }
+  assert_nothing_raised("It should accept Hash as argument.") { index.add({}) }
+  assert_nothing_raised("It should accept a UI::Command and a Hash as argument.") { index.add(UI::Command.new("something"){}, {}) }
+  assert_nothing_raised("It should accept a Hash and a UI::Command as argument.") { index.add({}, UI::Command.new("something"){}) }
+
   # It should not add an entry if it lacks substantial data, namely
   # for a UI::Command: AE::Interception::Command.procs must include a proc for this command
   # for a Hash: it must contain a key :proc with a value that is a Proc, and :name
