@@ -1,5 +1,5 @@
 module AE
-
+# TODO: REMOVE DEBUG HELPERS. DON'T RELEASE THIS VERSION!
 
 
 module Interception
@@ -191,14 +191,14 @@ class Sketchup::Menu
   end # unless
 
   unless method_defined?(:set_validation_proc_orig_2d3b68a6)
-    alias_method :set_validation_proc_orig_2d3b68a6, :add_submenu
+    alias_method :set_validation_proc_orig_2d3b68a6, :set_validation_proc
     private :set_validation_proc_orig_2d3b68a6
 
     def set_validation_proc(*args, &block)
       success = set_validation_proc_orig_2d3b68a6(*args, &block)
       if success
         # Register data.
-        AE::Interception::Menu.set_validation_proc[args[0]] = block
+        AE::Interception::Menu.validation_proc[args[0]] = block
         # Trigger event.
         AE::Interception::Menu.listen(:set_validation_proc, self, *args, &block)
       end
@@ -236,9 +236,14 @@ module UI
         return menu
       end
     end # unless
+
   end # class << self
 
 end
+
+
+
+unless UI::Command.instance_methods.include?(:proc) || UI::Command.instance_methods.include?("proc")
 
 
 
@@ -272,7 +277,7 @@ class UI::Command
     alias_method :set_validation_proc_orig_2d3b68a6, :set_validation_proc
     private :set_validation_proc_orig_2d3b68a6
 
-    def set_validation_proc(&block)
+    def set_validation_proc(*args, &block)
       command = set_validation_proc_orig_2d3b68a6(&block)
       return command unless command.is_a?(UI::Command) # On wrong arguments, SketchUp returns nil.
       # Register data.
@@ -286,9 +291,15 @@ class UI::Command
     ensure
       return command
     end
+
   end # unless
 
 end # class UI::Command
+
+
+
+end
+
 
 
 end # unless file_loaded?
