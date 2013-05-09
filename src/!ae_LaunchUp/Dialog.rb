@@ -28,7 +28,7 @@ end
 
 
 
-@@reserved_callbacks = ["AE.Dialog.receive_message", "AE.Dialog.initialize", "initialize", "AE.Dialog.adjustSize"]
+@@reserved_callbacks = ["AE.Bridge.receive_message", "AE.Dialog.initialize", "initialize", "AE.Dialog.adjustSize"]
 def initialize(*args)
   # messaging variables
   @procs_callback = {} # Hash of callback_name => Proc
@@ -74,7 +74,7 @@ def initialize(*args)
   }
 
   # Messaging system with queue, for multiple arguments of any JSON type.
-  self.add_action_callback("AE.Dialog.receive_message") { |dlg, param|
+  self.add_action_callback("AE.Bridge.receive_message") { |dlg, param|
     # Get message id.
     @message_id = param[/\#\d+$/][/\d+/]
 
@@ -84,6 +84,12 @@ def initialize(*args)
     rescue SyntaxError
       raise(ArgumentError, "Dialog received invalid data '#{param}'.")
     end
+
+    # If no other data were received via url, look in hidden input element.
+    if arguments.nil?
+      arguments = eval(dlg.get_element_value("AE.Bridge.message##{@message_id}"))
+    end
+    raise(ArgumentError, "Dialog received wrong type of data '#{arguments}'") unless arguments.is_a?(Array)
 
     # Get callback name.
     name = arguments.shift
@@ -95,10 +101,10 @@ def initialize(*args)
     rescue Exception => e
       # TODO: It could tell JavaScript that there was an error
       # At least, unlock to send next message.
-      puts("Error in callback AE.Dialog.receive_message(#{name}): "+e.message) if $VERBOSE
+      puts("Error in callback AE.Bridge.receive_message(#{name}): "+e.message) if $VERBOSE
       next dlg.execute_script("AE.Bridge.nextMessage()")
     else
-      # Tell JavaScript it can send the next message. TODO: should we call the nextMessage before executing a synchronous callback?
+      # Tell JavaScript it can send the next message. TODO: Should we call the nextMessage before executing a synchronous callback?
       dlg.execute_script("AE.Bridge.nextMessage()")
       # Optionally the Ruby callback can return data to a JavaScript callback.
       if @return_data

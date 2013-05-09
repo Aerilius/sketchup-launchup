@@ -231,7 +231,21 @@ AE.Bridge = (function(self) {
   // We pass all skp urls through a scheduler that makes sure that between each
   // url request is a minimum time span.
   var messageQueue = [];
+  var messageField = null;
   var ready = true; // Whether the queue is ready to send another messge.
+
+  var fillMessageField = function(id, value) {
+    // initialize message field on first call.
+    messageField = document.createElement('input');
+    messageField.setAttribute('type', 'hidden');
+    messageField.setAttribute('style', 'display: none');
+    document.body.appendChild(messageField);
+    fillMessageField = function(id, value) {
+      messageField.setAttribute('id', 'AE.Bridge.message#' + id);
+      messageField.value = value;
+    };
+    fillMessageField(id, value);
+  };
 
   self.nextMessage = function() {
     var message = messageQueue.shift();
@@ -240,27 +254,33 @@ AE.Bridge = (function(self) {
     // (because window.location is synchronous in IE and finishes before this
     // function finishes.)
     ready = false;
-    window.setTimeout(function(){ window.location.href = message; }, 0);
+    var id = message[0],
+        url = message[1],
+        data = message[2];
+    fillMessageField(id, data);
+    // Time to refresh the DOM.
+    window.setTimeout(function(){ window.location.href = url; }, 0);
   };
 
   /* Function to call a SketchUp Ruby action_callback. */
-  self.callRuby = function(name, data, callbackFunction) {
-    // if (!/SketchUp/i.test(navigator.userAgent)) { return console.log(JSON.stringify([name, data, callbackFunction])) } // DEBUG: Only SU8Win has "SketchUp" in the user agent!
-    data = rubify([name, data]);
+  self.callRuby = function(name, argument, callbackFunction) {
+    var data = Array.prototype.slice.call(arguments).slice(0),
+        callbackFunction = (typeof(data[data.length-1]) === 'function') ? data.pop() : null;
+    data = rubify(data);
     // We assign an id to this message so we can identify a callback (if there is one).
     if (callbackFunction) { callbacks[messageID] = callbackFunction }
     // Trick: Since we Ruby-hash-encode the data we can pass an ID as a comment
     // at the end. This does not have an impact when using eval, to_i, to_f on
     // the Ruby side. In Ruby we can optionally extract the id and call:
     // // AE.Bridge.callbackJS(id, data)
-    var url = "skp:AE.Dialog.receive_message@" + encodeURIComponent(data) + "#" + messageID;
-    messageQueue.push(url);
+    var url = "skp:AE.Bridge.receive_message@#" + messageID;
+    messageQueue.push([messageID, url, data]);
     // If the queue is not running, start it. If the message queue contains many urls, then
     if (ready) { self.nextMessage(); }
     // Increase the id for the next message.
     messageID++;
     // Return the id of this message.
-    return messageID - 1
+    return messageID - 1;
   };
 
   /* Call a SketchUp Ruby action_callback. */
@@ -268,7 +288,7 @@ AE.Bridge = (function(self) {
     // If there is a callback, execute it.
     if (id && callbacks[id]) {
       try { callbacks[id](data) }
-      catch (e) { if (AE.debug) { AE.Bridge.puts("AE.Dialog.callbackJS: Error when executing callback #"+id); } }
+      catch (e) { if (AE.debug) { AE.Bridge.puts("AE.Bridge.callbackJS: Error when executing callback #"+id); } }
       delete callbacks[id];
     }
   };
