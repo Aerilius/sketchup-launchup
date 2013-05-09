@@ -48,38 +48,48 @@ def initialize(*args)
   @message_id = nil
 
   if args.length >= 5
+    @window_title = args[0]
     @window_width = args[3]
     @window_height = args[4]
   elsif args[0].is_a?(Hash)
-    @window_width = [:width]
-    @window_height = [:height]
+    @window_title = [:dialog_title]
+    @window_width = args[:width]
+    @window_height = args[:height]
   end
 
   super(*args)
 
-  # Get initial data.
-  self.add_action_callback("initialize") {|dlg, param|
-    # next if @dialog_initialized # TODO: by disabling this we prevent damage when reloading with F5.
+  # Get initial data. This can be invoked in two ways, traditional
+  #   window.location="skp:initialize"
+  # or
+  #   AE.Bridge.callRuby("initialize")
+  #
+  self.add_action_callback("initialize") { |dlg, param|
     # Trigger all event handlers for when the dialog is shown.
-    @procs_show.each{|block| block.call(dlg) }
+    @procs_show.each{ |block| block.call(dlg) }
   }
-  @procs_callback["initialize"] = Proc.new{|dlg, param|
-    # next if @dialog_initialized
+  @procs_callback["initialize"] = Proc.new{ |dlg, param|
     # Trigger all event handlers for when the dialog is shown.
-    @procs_show.each{|block| block.call(dlg) }
+    @procs_show.each{ |block| block.call(dlg) }
   }
 
-  # Messaging system with queue, multiple arguments of any JSON type
+  # Messaging system with queue, for multiple arguments of any JSON type.
   self.add_action_callback("AE.Dialog.receive_message") { |dlg, param|
+    # Get message id.
     @message_id = param[/\#\d+$/][/\d+/]
+
+    # Eval message data.
     begin
       arguments = eval(param)
     rescue SyntaxError
-      []
+      raise(ArgumentError, "Dialog received invalid data '#{param}'.")
     end
-    name = arguments.shift
-    raise("Callback '#{name}' for #{dlg} not found.") if name.nil? || !@procs_callback.include?(name)
 
+    # Get callback name.
+    name = arguments.shift
+    raise(ArgumentError, "Callback '#{name}' for #{dlg} not found.") if name.nil? || !@procs_callback.include?(name)
+
+    # Call Callback.
     begin
       @procs_callback[name].call(dlg, *arguments)
     rescue Exception => e
@@ -143,10 +153,10 @@ def initialize(*args)
   }
 
   # Puts (for debugging)
-  @procs_callback["puts"] = Proc.new{|dlg, param| puts(param.inspect) }
+  @procs_callback["puts"] = Proc.new{ |dlg, param| puts(param.inspect) }
 
   # Close the Dialog.
-  @procs_callback["AE.Dialog.close"] = Proc.new{|dlg, param|
+  @procs_callback["AE.Dialog.close"] = Proc.new{ |dlg, param|
     dlg.close
   }
 end
@@ -333,14 +343,14 @@ def to_json(obj)
   json_classes = [String, Symbol, Fixnum, Float, Array, Hash, TrueClass, FalseClass, NilClass]
   # Remove non-JSON objects.
   sanitize = nil
-  sanitize = Proc.new{|v|
+  sanitize = Proc.new{ |v|
     if v.is_a?(Array)
       new_v = []
-      v.each{|a| new_v << sanitize.call(a) if json_classes.include?(a.class)}
+      v.each{ |a| new_v << sanitize.call(a) if json_classes.include?(a.class)}
       new_v
     elsif v.is_a?(Hash)
       new_v = {}
-      v.each{|c, w| new_v[c] = sanitize.call(w) if (c.is_a?(String) || c.is_a?(Symbol)) && json_classes.include?(w.class) }
+      v.each{ |c, w| new_v[c] = sanitize.call(w) if (c.is_a?(String) || c.is_a?(Symbol)) && json_classes.include?(w.class) }
       new_v
     else
       v
@@ -355,7 +365,7 @@ def to_json(obj)
   # or what is between strings.
   # If it's not a string then turn Symbols into String and replace => and nil.
   json_string = o.inspect.split(/(\"(?:.*?(?:[\\][\\]*?|[^\\]))*?\")/).
-    collect{|s|
+    collect{ |s|
       (s[0..0] != '"')?                        # If we are not inside a string
       s.gsub(/\:(\S+?(?=\=>|\s))/, "\"\\1\""). # Symbols to String
         gsub(/\=\>/, ":").                       # Arrow to colon
