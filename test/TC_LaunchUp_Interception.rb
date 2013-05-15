@@ -12,7 +12,6 @@ class TC_LaunchUp_Interception < Test::Unit::TestCase
 
 
 def setup
-  require "!ae_LaunchUp/Interception.rb"
 end
 
 
