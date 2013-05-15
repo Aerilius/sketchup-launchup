@@ -198,7 +198,7 @@ var ComboBox = LaunchUp.ComboBox = function(self) {
     // Create default text.
     DEFAULT_SEARCH_TEXT = AE.Translate.get("Search…");
     ERROR_TEXT = AE.Translate.get("Error: Command was not executed.");
-    if ('placeholder' in INPUT) { // HTML5
+    if ('placeholder' in document.createElement('input')) { // HTML5
       INPUT.placeholder = DEFAULT_SEARCH_TEXT;
       setDefaultText = function(text) {
         INPUT.placeholder = text;
