@@ -38,7 +38,7 @@ LaunchUpOptions.initialize = function(opt) {
   $("#color").onchange();
 
   // OK button.
-  $("#ok_button").onclick = function() {
+  $("#button_ok").onclick = function() {
     // Now all inputs have sent changes back to Ruby so we don't need to send all
     // input back.
     // AE.Bridge.updateOptions(AE.Form.read());
