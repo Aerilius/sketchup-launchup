@@ -238,7 +238,8 @@ def self.show_options
     # Callbacks
     # initialize: Pass the default options to the form.
     @optionsdlg.on_show {|dlg|
-      dlg.execute_script("document.getElementsByTagName('body')[0].style.background='#{dlg.get_default_dialog_color}'")
+      color = dlg.get_default_dialog_color # If it's white, then it is likely not correct.
+      dlg.execute_script("AE.$('body')[0].style.background='#{color}'") unless color == "#ffffff"
       TRANSLATE.webdialog(dlg)
       dlg.execute_script("AE.LaunchUpOptions.initialize(#{@options.get_json})")
       dlg.set_position_center
