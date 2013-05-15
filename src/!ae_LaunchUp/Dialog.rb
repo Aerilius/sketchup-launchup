@@ -59,20 +59,6 @@ def initialize(*args)
 
   super(*args)
 
-  # Get initial data. This can be invoked in two ways, traditional
-  #   window.location="skp:initialize"
-  # or
-  #   AE.Bridge.callRuby("initialize")
-  #
-  self.add_action_callback("initialize") { |dlg, param|
-    # Trigger all event handlers for when the dialog is shown.
-    @procs_show.each{ |block| block.call(dlg) }
-  }
-  @procs_callback["initialize"] = Proc.new{ |dlg, param|
-    # Trigger all event handlers for when the dialog is shown.
-    @procs_show.each{ |block| block.call(dlg) }
-  }
-
   # Messaging system with queue, for multiple arguments of any JSON type.
   self.add_action_callback("AE.Bridge.receive_message") { |dlg, param|
     # Get message id.
@@ -117,6 +103,8 @@ def initialize(*args)
   }
 
   # Get some initial data.
+  # This needs to be invoked by doing in JavaScript:
+  # AE.Dialog.initialize();
   @procs_callback["AE.Dialog.initialize"] = Proc.new{|dlg, params|
     next if @dialog_initialized
     w, h, wl, wt, sw, sh = params
@@ -127,6 +115,8 @@ def initialize(*args)
     @screen_width = sw if sw.is_a?(Numeric) && sw > 0
     @screen_height = sh if sh.is_a?(Numeric) && sh > 0
     @dialog_initialized = true
+    # Trigger all event handlers for when the dialog is shown.
+    @procs_show.each{ |block| block.call(dlg) }
   }
 
   # We have to make sure the dialog has a size that we know.

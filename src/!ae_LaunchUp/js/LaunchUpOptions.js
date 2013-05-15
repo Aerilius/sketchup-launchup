@@ -54,8 +54,8 @@ LaunchUpOptions.initialize = function(opt) {
   // dimensions and the dialog flickers.
   window.onresize = function(){ window.setTimeout(AE.Dialog.adjustSize, 0) };
 
-  // Initialize the Dialog module.
-  AE.Dialog.initialize();
+  // Adjust the size of the dialog.
+  AE.Dialog.adjustSize();
 };
 
 

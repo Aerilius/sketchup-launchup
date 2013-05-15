@@ -48,9 +48,6 @@ LaunchUp.initialize = function(opt) {
   for (var i in opt) { Options[i] = opt[i]; }
   if (Options.debug) { AE.debug = Options.debug; }
 
-  // Initialize the Dialog module.
-  AE.Dialog.initialize();
-
   // Initialize the combobox.
   ComboBox.initialize($("#combo_input"), $("#combo_list"));
 
