@@ -133,16 +133,31 @@ def initialize(*args)
     @window_width = [@window_width, @screen_width - l + @window_border_width - 1].min if l.is_a?(Numeric)
     @window_height = [@window_height, @screen_height - t + @window_titlebar_height - 1].min if t.is_a?(Numeric)
     # Set the new size
-    dlg.set_size(@window_width, @window_height)
-    # If we are on OSX, SketchUp resizes towards the top, changing the dialog's top position.
-    # We need to compensate that by enforcing the original position again.
-    # In WebKit, window.screenX/Y and window.screenLeft/Top return the outer position
-    # of the window, not the client area. So there is no need to subtract the width
-    # of the window border or the height of the titlebar.
     if OSX && l.is_a?(Numeric) && t.is_a?(Numeric)
+=begin
+      dlg.set_size(@window_width, @window_height)
+      # If we are on OSX, SketchUp resizes towards the top, changing the dialog's top position.
+      # We need to compensate that by enforcing the original position again.
+      # In WebKit, window.screenX/Y and window.screenLeft/Top return the outer position
+      # of the window, not the client area. So there is no need to subtract the width
+      # of the window border or the height of the titlebar.
       left = l
       top = t
       dlg.set_position(left, top)
+=end
+      t1 = Thread.new{
+        `osascript <<EOF
+        tell application "SketchUp" to activate
+        tell application "System Events"
+        set wd to "#{@window_width}"
+        set ht to "#{@window_height}"
+           set the (size) of window ("#{@window_title}") of application process "SketchUp" of application "System Events" to {wd, ht}
+        end tell
+        EOF`
+      }
+      t1.kill
+    elsif l.is_a?(Numeric) && t.is_a?(Numeric)
+      dlg.set_size(@window_width, @window_height)
     end
   }
 
