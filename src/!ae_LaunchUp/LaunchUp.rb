@@ -202,7 +202,7 @@ def self.show_dialog
     }
 
     # Close
-    @launchdlg.set_on_close {
+    @launchdlg.on_close{
       @options[:width] = @launchdlg.width
       @options.save
       puts("Dialog closed and options saved") if @options[:debug]

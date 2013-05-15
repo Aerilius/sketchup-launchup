@@ -32,7 +32,7 @@ end
 def initialize(*args)
   # messaging variables
   @procs_callback = {} # Hash of callback_name => Proc
-  @procs_show = []     # Array of Procs
+  @procs_show =  []    # Array of Procs
   @procs_close = []    # Array of Procs
 
   # window management variables
@@ -128,11 +128,9 @@ def initialize(*args)
     @screen_height = sh if sh.is_a?(Numeric) && sh > 0
     @dialog_initialized = true
   }
+
   # We have to make sure the dialog has a size that we know.
   self.set_size(@window_width, @window_height)
-  self.on_show{|dlg|
-    dlg.execute_script("AE.Dialog.initialize();")
-  }
 
   # Adjust the dialog size to the inner size
   @procs_callback["AE.Dialog.adjustSize"] = Proc.new{|dlg, param|
@@ -164,6 +162,8 @@ def initialize(*args)
   # Close the Dialog.
   @procs_callback["AE.Dialog.close"] = Proc.new{ |dlg, param|
     dlg.close
+    # Trigger all event handlers for when the dialog is closed.
+    @procs_close.each{ |block| block.call(dlg) }
   }
 end
 
@@ -220,6 +220,16 @@ end
 def on_show(&block)
   raise(ArgumentError, "Must have a Proc.") unless block_given?
   @procs_show << block
+  return self
+end
+
+
+
+# Add event handlers for when the dialog is closed.
+# @param [Proc] block to execute when the dialog is closed
+def on_close(&block)
+  raise(ArgumentError, "Must have a Proc.") unless block_given?
+  @procs_close << block
   return self
 end
 
