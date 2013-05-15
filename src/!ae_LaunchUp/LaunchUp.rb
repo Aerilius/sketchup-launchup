@@ -157,11 +157,10 @@ def self.show_dialog
   if @launchdlg && @launchdlg.visible?
     @launchdlg.bring_to_front
   else
-    @launchdlg = AE::LaunchUp::Dialog.new(TRANSLATE["LaunchUp"], false, "LaunchUp", @options[:width], 60, 800, 200, true)
+    @launchdlg = AE::LaunchUp::Dialog.new(TRANSLATE["LaunchUp"], false, "AE_LaunchUp", @options[:width], 60, 800, 200, true)
     @launchdlg.min_width = 150
-    @launchdlg.max_width = 500
     @launchdlg.min_height = 40
-    window_width = (@options[:width].is_a?(Numeric)) ? @options[:width] : 250 # outer width
+    window_width = (@options[:width].is_a?(Numeric)) ? @options[:width] : 270 # outer width
     window_height = 40 # outer height
     @launchdlg.set_size(window_width, window_height)
     html_path = File.join(PATH_ROOT, "html", "LaunchUp.html")
@@ -204,8 +203,10 @@ def self.show_dialog
 
     # Close
     @launchdlg.set_on_close {
+      @options[:width] = @launchdlg.width
       @options.save
       puts("Dialog closed and options saved") if @options[:debug]
+      @launchdlg = nil if @options[:debug]
     }
 
     # Show the webdialog.
@@ -228,12 +229,9 @@ def self.show_options
     @optionsdlg.bring_to_front
   else
     # Create the WebDialog.
-    @optionsdlg = AE::LaunchUp::Dialog.new(TRANSLATE["LaunchUp – Options"], false, false, 500, 300, 600, 200, true)
+    @optionsdlg = AE::LaunchUp::Dialog.new(TRANSLATE["LaunchUp – Options"], false, "AE_LaunchUp_Options", 400, 300, 600, 200, true)
     @optionsdlg.min_width = 300
-    @optionsdlg.max_width = 600
     @optionsdlg.min_height = 300
-    @optionsdlg.set_size(500, 300)
-    @optionsdlg.set_position_center
     html_path = File.join(PATH_ROOT, "html", "LaunchUpOptions.html")
     @optionsdlg.set_file(html_path)
 
@@ -243,6 +241,7 @@ def self.show_options
       dlg.execute_script("document.getElementsByTagName('body')[0].style.background='#{dlg.get_default_dialog_color}'")
       TRANSLATE.webdialog(dlg)
       dlg.execute_script("AE.LaunchUpOptions.initialize(#{@options.get_json})")
+      dlg.set_position_center
     }
 
     # Update the options.

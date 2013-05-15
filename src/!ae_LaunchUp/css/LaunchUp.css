@@ -15,7 +15,8 @@ body {
   overflow: hidden;
   background-color: Window;
   color: WindowText;
-  font: message-box;
+  font: message-box; /* use system font */
+  font-size: 80% !important; /* This overrides the font-size contained in the system font if it does not follow dpi settings. */
   cursor: default;
   user-select: none;
 }
@@ -24,11 +25,13 @@ body {
   user-select: none;
 }
 
-input, select, label {
+input, label, select {
   cursor: pointer;
   min-height: 1.2em;
   vertical-align: middle;
   padding: 0.25em;
+  font: message-box; /* use system font */
+  font-size: 100% !important; /* This overrides the font-size contained in the system font if it does not follow dpi settings. */
 }
 
 input[type=button] {
@@ -50,12 +53,13 @@ input[type=text][disabled], input[type=number][disabled] {
 input[type=text].num, input[type=number] {
   text-align: right;
   width: 2.5em;
-  padding-right: .5em;
+  padding-right: 0.75em;
 }
 
 button {
   min-width: 6em;
-  font: message-box;
+  font: message-box; /* use system font */
+  font-size: 100% !important; /* This overrides the font-size contained in the system font if it does not follow dpi settings. */
   color: ButtonText;
   padding: 0.25em 0.5em;
 }
@@ -109,15 +113,13 @@ fieldset div > :first-child {
 
 #combo_input, .combo_input {
   width: 100%;
-  height: 2em;
-  line-height: 2em;
-  font: message-box;
-  font-size: medium;
+  height: 1.75em;
+  line-height: 1.75em;
+  font-size: medium !important;
   font-style: normal;
   padding: 0;
   text-indent: 0.375em;
-  margin-right: -1em;
-  /*vertical-align: baseline; TODO: remove if not needed, test on Windows */
+  margin-right: -0.75em;
   vertical-align: middle; /* IE7 */
   outline: none; /* Disables Safari's border highlighting. */
 }
@@ -130,8 +132,7 @@ fieldset div > :first-child {
   }
 }
 
-.default-text {
-  font: message-box;
+.default-text { /* TODO: This does not show anymore. Was it intentionally removed? */
   font-style: italic !important;
   color: GrayText !important;
 }
@@ -205,7 +206,6 @@ fieldset div > :first-child {
 #suggestions, #history {
   /*This would remove the element out of the body's layout and Webkit doesn't
    * consider it for the document height ().*/
-  /*position: absolute;*/
   width: 100%;
 }
 
@@ -274,8 +274,8 @@ fieldset div > :first-child {
 
 .list.slim li .icon {
   float: left;
-  width: 16px;
-  height: 16px;
+  width: 1.23em; /* for dpi: force a relative size instead of using 16px; */
+  height: 1.23em;
   margin-top: -8px;
   margin-right: 0.25em;
   padding-top: 0.75em;
@@ -324,8 +324,8 @@ fieldset div > :first-child {
   float: left;
   margin: 0 0.5em 0 0;
   margin-bottom: 0;
-  /*width: 1.85em;
-  height: 1.85em;*/
+  width: 1.85em; /* for dpi: force a relative size instead of using native size 24px */
+  height: 1.85em;
   max-width: 2em;
   max-height: 2em;
   vertical-align: middle;
@@ -339,19 +339,20 @@ fieldset div > :first-child {
   text-overflow: ellipsis;
   text-shadow: 0 1px 1px rgba(255,255,255,0.5);
   /*white-space: nowrap;*/
+  vertical-align: middle;
 }
 
 .list.wide li .category {
   display: inline-block;
   margin-right: 0.5em;
   overflow: hidden;
-  /*vertical-align: middle;*/
   color: GrayText;
   font-weight: normal;
   font-size: 0.9em;
   font-style: italic;
   text-overflow: ellipsis;
   white-space: nowrap;
+  vertical-align: middle;
 }
 
 .list.wide li .description {
@@ -366,6 +367,7 @@ fieldset div > :first-child {
   /*-ms-word-break: break-all;*/
   hyphens: auto;
   zoom: 1;
+  vertical-align: middle;
 }
 
 
@@ -406,8 +408,8 @@ fieldset div > :first-child {
 .list.toolbar li .icon {
   margin: 0em;
   vertical-align: middle;
-  /*width: 1.85em;
-  height: 1.85em;*/
+  width: 1.85em; /* for dpi: force a relative size instead of using native size 24px */
+  height: 1.85em;
   margin: 0.5em;
   max-width: 2em;
   max-height: 2em;

@@ -120,8 +120,8 @@ def initialize(*args)
   @procs_callback["AE.Dialog.initialize"] = Proc.new{|dlg, params|
     next if @dialog_initialized
     w, h, wl, wt, sw, sh = params
-    @window_border_width = (@window_width - w.to_f) / 2
-    @window_titlebar_height = @window_height - h.to_f
+    @window_border_width = ((@window_width - w) / 2.0).to_i
+    @window_titlebar_height = (@window_height - h).to_i
     @window_left = wl if wl.is_a?(Numeric) && wl > 0
     @window_top = wt if wt.is_a?(Numeric) && wt > 0
     @screen_width = sw if sw.is_a?(Numeric) && sw > 0
@@ -139,8 +139,8 @@ def initialize(*args)
     next unless @dialog_initialized
     w, h, l, t = *param rescue raise("Callback 'AE.Dialg.adjustSize' received invalid data: #{param.inspect}")
     # Calculate the outer window size from the given document size:
-    @window_width = w.to_f + 2 * @window_border_width
-    @window_height = h.to_f + @window_titlebar_height
+    @window_width = (w.to_f + 2 * @window_border_width).to_i
+    @window_height = (h.to_f + @window_titlebar_height).to_i
     # Allow the dialog not to exceed the screen size:
     @window_width = [@window_width, @screen_width - l + @window_border_width - 1].min if l.is_a?(Numeric)
     @window_height = [@window_height, @screen_height - t + @window_titlebar_height - 1].min if t.is_a?(Numeric)
@@ -243,6 +243,20 @@ end
 
 
 # Window management related methods.
+
+
+
+# Returns the current dialog outer width.
+def width
+  return @window_width # outer width
+end
+
+
+
+# Returns the current dialog outer height.
+def height
+  return @window_height # outer height
+end
 
 
 
