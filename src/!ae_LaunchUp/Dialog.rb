@@ -1,8 +1,52 @@
 =begin
-Subclass of UI::WebDialog
-requires:
-JavaScript modules AE.Bridge, AE.Dialog
-HTML file that calls skp:initialize or AE.Bridge.callRuby("initialize")
+Permission to use, copy, modify, and distribute this software for
+any purpose and without fee is hereby granted, provided that the above
+copyright notice appear in all copies.
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+Name:         Dialog.rb
+Author:       Andreas Eisenbarth
+Description:  Subclass for UI::WebDialog.
+              This subclass implements a communication system between Ruby and
+              WebDialogs and adds some useful window management functions.
+Usage:        Create an instance (with the same arguments as UI::WebDialog):
+                  @dlg = Dialog.new(*args)
+              Add an event handler when the dialog is shown: (show{} was unreliable in some SketchUp versions)
+                  @dlg.on_show{ }
+              Add an event handler/callback, that receives any amount of JSON arguments:
+                  @dlg.on(String){ |*args| }
+              Remove an event handler/callback:
+                  @dlg.off(String)
+              Call a JavaScript callback from a Ruby callback (synchronously):
+                  @dlg.return(data)
+              Call a JavaScript callback from outside a Ruby callback (asynchronously):
+                  # TODO: There is currently no proper way to get the message id.
+                  id = @dlg.instance_variable_get(:@message_id) # in the Ruby callback
+                  @dlg.return(data, id)                         # at any time later
+              Execute a script or as soon as the dialog becomes visible:
+                  @dlg.execute_script(String)
+
+              Window management methods:
+              If an argument is nil, that property won't be changed:
+                  @dlg.set_size(width, height)
+                  @dlg.set_position(left, top)
+              Set the dialog's size to fit the HTML content:
+                  @dlg.set_client_size
+              Set the dialog's position to be centered on the screen:
+                  @dlg.set_position_center
+              Get the current outer width:
+                  @dlg.width
+              Get the current outer height:
+                  @dlg.height
+
+Requires:     JavaScript modules AE.Bridge and AE.Dialog
+              Call AE.Dialog.initialize() at the end of your HTML document.
+Version:      1.0.3
+Date:         13.05.2013
+
 =end
 
 module AE
@@ -48,13 +92,13 @@ def initialize(*args)
   @message_id = nil
 
   if args.length >= 5
-    @window_title = args[0]
-    @window_width = args[3]
-    @window_height = args[4]
+    @window_title = args[0].to_s
+    @window_width = args[3].to_i if args[3].is_a?(Numeric)
+    @window_height = args[4].to_i if args[3].is_a?(Numeric)
   elsif args[0].is_a?(Hash)
-    @window_title = [:dialog_title]
-    @window_width = args[:width]
-    @window_height = args[:height]
+    @window_title = args.first[:dialog_title]
+    @window_width = args.first[:width].to_i if args.first[:width].is_a?(Numeric)
+    @window_height = args.first[:height].to_i if args.first[:height].is_a?(Numeric)
   end
 
   super(*args)
@@ -98,6 +142,7 @@ def initialize(*args)
         execute_script("AE.Bridge.callbackJS(#{@message_id}, #{data_string})")
         @return_data = nil
       end
+      @message_id = nil
       next
     end
   }
