@@ -1,31 +1,35 @@
 /*
-Library summary:
+AE JavaScript Library for SketchUp WebDialogs
+Version:      1.0.0
+Date:         13.05.2013
+Summary:
 module AE
-  .$(pattern, scope)                 // Selector function
-  class Scheduler(dt)                // Execute functions no more frequent than limit.
-    .queue(function)                 // Adds a function to functions that will be executed one by one.
-    .add(function)                   // Adds to functions that will all be executed at next time.
-    .replace(function)               // Sets given function in place of previously scheduled functions.
+  .$(pattern, scope)               // Selector function
+  class Scheduler(dt)              // Execute functions no more frequent than limit.
+    .queue(function)               // Adds a function to functions that will be executed one by one.
+    .add(function)                 // Adds a function to the functions that will all be executed at next time.
+    .replace(function)             // Sets given function in place of previously scheduled functions.
   module Style
     .hasClass(element, className)
     .addClass(element, className)
     .removeClass(element, className)
     .show(element)
     .hide(element)
-  module Bridge                     // Communication with Ruby
-    .callRuby(name, data, callbackFunction) // Executes a Ruby action_callback. The Ruby action_callback receives a string with the message id attached as a comment (#42).
-    .callbackJS(id, data)          // To be called from Ruby action_callback, with message id and optional argument.
+  module Bridge                    // Communication with Ruby. Requires AE::Dialog
+    .callRuby(name, *arguments [,callbackFunction]) // Executes a Ruby action_callback with any amount of arguments. The Ruby action_callback receives a string with the message id attached as a comment (#42).
+    .nextMessage()                 // Called from Ruby to send the next message from the queue.
+    .callbackJS(id [,data])        // Called from a Ruby action_callback to run another JavaScript callback.
     .puts(object)                  // Outputs to Ruby console, the same for console.log().
-    .updateOptions(hash)
-  module Dialog                    // Dialog-related functions
-    .initialize
-    .adjustSize(width, height)
-    .close
+    .updateOptions(hash)           // Requires a Ruby callback "update_options"
+  module Dialog                    // Dialog-related functions.
+    .initialize                    // Requires AE::Dialog
+    .adjustSize(width, height)     // Adjusts the WebDialog to the HTML content. Use null if only one dimension should be adjusted. Requires AE.Scheduler, AE::Dialog
+    .close                         // Requires AE::Dialog
     .addOnFocus(function)          // Adds event handler for onfocus (taking care of WebDialog issues)
     .addOnBlur(function)           // Adds event handler for onblur (taking care of WebDialog issues)
   module Form
-    .fill(hash, form, autoupdate)  // Automatically fills forms with values.
-    .read(form)                    // Reads values from form.
+    .fill(hash, form, autoupdate)  // Automatically fills forms with values. Requires AE.$, AE::Dialog and Ruby callback "update_options"
+    .read(form)                    // Reads values from form. Requires AE.$
 */
 
 /*
@@ -115,10 +119,17 @@ AE.$ = function(pattern, scope) {
  * .replace(function)
  *     Adds a new function to be executed instead of the last function. This pattern
  *     allows to update actions, ie. with more up-to-date data or redrawing something etc.
+ * .wait(function, function)
+ *     Lets the scheduler wait until the condition of function 1 is true, optionally adds function 2 to the queue.
+ * .continue()
+ *     Stops the criterium of wait() and executes the next function from the queue.
+ *
  */
 AE.Scheduler = function(dt) {
+  var that = this;
   var scheduled = []; // Array of scheduled functions.
   var t = 0; // Tracks the time of the last function call.
+  var interval = null;
   dt = (dt) ? Number(dt) : 250; // Minimum time interval in milliseconds between subsequent function calls.
   this.queue = function(fn) {
     scheduled.push(fn);
@@ -151,6 +162,27 @@ AE.Scheduler = function(dt) {
       }
     }
   };
+  this.wait = function(criterium, fn) {
+    if (criterium === "number") {
+      t += criterium;
+      check();
+    } else if (typeof criterium == "function") {
+      t = Infinity;
+      interval = window.setInterval( function(){
+        if ( criterium() ) {
+          window.clearInterval(interval);
+          t = Number(new Date().getTime());
+          check();
+        }
+      }, dt);
+    }
+    if (typeof fn === "function") { that.add(fn); }
+  };
+  this.continue = function() {
+    window.clearInterval(interval);
+    t = Number(new Date().getTime());
+    check();
+  };
   var check = function() {
     var c = Number(new Date().getTime());
     // Last function call is long enough ago (or first time), execute given function immediately.
@@ -168,7 +200,7 @@ AE.Scheduler = function(dt) {
 /* module Translate (dummy):
  * In case no translation has been loaded.
  */
-if (!AE.Translate) { AE.Translate = { get: function(s) {return s} } }
+if (!AE.Translate) { AE.Translate = { get: function(s) { return s; } }; }
 
 
 
@@ -540,7 +572,7 @@ AE.Form = (function(self) {
             input.original_value = newValue;
             var hash = {};
             hash[name] = newValue;
-            AE.Bridge.callRuby('updateOptions', hash);
+            AE.Bridge.callRuby('update_options', hash);
           };
         }(name,input);
         if (input.addEventListener) {
