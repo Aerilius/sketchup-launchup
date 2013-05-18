@@ -1,7 +1,7 @@
 /*
 AE JavaScript Library for SketchUp WebDialogs
-Version:      1.0.0
-Date:         13.05.2013
+Version:      1.0.1
+Date:         15.05.2013
 Summary:
 module AE
   .$(pattern, scope)               // Selector function
@@ -121,7 +121,7 @@ AE.$ = function(pattern, scope) {
  *     allows to update actions, ie. with more up-to-date data or redrawing something etc.
  * .wait(function, function)
  *     Lets the scheduler wait until the condition of function 1 is true, optionally adds function 2 to the queue.
- * .continue()
+ * .continu()
  *     Stops the criterium of wait() and executes the next function from the queue.
  *
  */
@@ -178,7 +178,7 @@ AE.Scheduler = function(dt) {
     }
     if (typeof fn === "function") { that.add(fn); }
   };
-  this.continue = function() {
+  this.continu = function() {
     window.clearInterval(interval);
     t = Number(new Date().getTime());
     check();
