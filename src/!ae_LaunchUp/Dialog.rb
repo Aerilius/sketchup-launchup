@@ -26,8 +26,10 @@ Usage:        Create an instance (with the same arguments as UI::WebDialog):
                   # TODO: There is currently no proper way to get the message id.
                   id = @dlg.instance_variable_get(:@message_id) # in the Ruby callback
                   @dlg.return(data, id)                         # at any time later
-              Execute a script or as soon as the dialog becomes visible:
+              Execute a script now or as soon as the dialog becomes visible:
                   @dlg.execute_script(String)
+              Call a public function with JSON arguments:
+                  @dlg.call_function(String, *args)
 
               Window management methods:
               If an argument is nil, that property won't be changed:
@@ -44,8 +46,8 @@ Usage:        Create an instance (with the same arguments as UI::WebDialog):
 
 Requires:     JavaScript modules AE.Bridge and AE.Dialog
               Call AE.Dialog.initialize() at the end of your HTML document.
-Version:      1.0.3
-Date:         13.05.2013
+Version:      1.0.4
+Date:         18.05.2013
 
 =end
 
@@ -189,6 +191,7 @@ def initialize(*args)
       left = l
       top = t
       dlg.set_position(left, top)
+      # Problem: This causes flickering because the position is set after the dialog resized.
 =end
       t1 = Thread.new{
         `osascript <<EOF
@@ -298,6 +301,16 @@ def execute_script(code_string)
     }
     false # TODO: should the method return a boolean at all? It would execute the script anyways.
   end
+end
+
+
+
+# Call a JavaScript function with JSON arguments in the webdialog.
+# @param [String] name of a public JavaScript function
+# @params [Object] arguments array of JSON-compatible objects
+def call_function(name, *arguments)
+  arguments.map!{ |arg| to_json(arg) }
+  execute_script("#{name}(#{arguments.join(", ")});")
 end
 
 
