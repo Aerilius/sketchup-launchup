@@ -27,9 +27,9 @@ Description:  This Plugin adds a quick launcher to search and execute commands.
 
 Recommended:  SketchUp 8 M2 or higher (it works in a limited way in lower versions)
 
-Version:      1.0.15
+Version:      1.0.16
 
-Date:         16.05.2013
+Date:         27.05.2013
 
 Note:
   This plugin has only been possible by modifying (intercepting) SketchUp API
@@ -98,7 +98,7 @@ require(File.join(PATH_ROOT, 'Index.rb'))
 begin
   require(File.join(PATH_ROOT, 'commands', 'Commands.rb'))
 rescue LoadError
-  puts("AE::LaunchUp couldn't load #{File.join(PATH_ROOT, 'commands', 'Commands.rb')}.")
+  $stderr.write("AE::LaunchUp couldn't load #{File.join(PATH_ROOT, 'commands', 'Commands.rb')}." << $/)
 end
 # Options.
 require(File.join(PATH_ROOT, 'Options.rb'))
@@ -158,17 +158,17 @@ def self.show_dialog
     @launchdlg.bring_to_front
   else
     @launchdlg = AE::LaunchUp::Dialog.new(TRANSLATE["LaunchUp"], false, "AE_LaunchUp", @options[:width], 60, 800, 200, true)
-    @launchdlg.min_width = 150
-    @launchdlg.min_height = 40
+    @launchdlg.min_width = 150 if @launchdlg.respond_to?(:min_width)
+    @launchdlg.min_height = 40 if @launchdlg.respond_to?(:min_height)
     window_width = (@options[:width].is_a?(Numeric)) ? @options[:width] : 270 # outer width
     window_height = 40 # outer height
     @launchdlg.set_size(window_width, window_height)
     html_path = File.join(PATH_ROOT, "html", "LaunchUp.html")
     @launchdlg.set_file(html_path)
 
-    @launchdlg.on_show {|dlg|
+    @launchdlg.on_show { |dlg|
       TRANSLATE.webdialog(dlg)
-      dlg.execute_script("AE.LaunchUp.initialize(#{@options.get_json})")
+      dlg.call_function("AE.LaunchUp.initialize", @options.get_all) # TODO ##############################################
     }
 
     # Update the @options object in Ruby.
@@ -178,7 +178,7 @@ def self.show_dialog
 
     # Load the index.
     @launchdlg.on("load_index") { |dlg, param|
-      dlg.execute_script("AE.LaunchUp.Index.load(#{Index.instance.to_json})") if @options[:local_index]
+      dlg.call_function("AE.LaunchUp.Index.load", Index.instance.get_all) if @options[:local_index]
     }
 
     # Send entries from the Index to the WebDialog.
@@ -230,29 +230,26 @@ def self.show_options
   else
     # Create the WebDialog.
     @optionsdlg = AE::LaunchUp::Dialog.new(TRANSLATE["LaunchUp – Options"], false, "AE_LaunchUp_Options", 400, 300, 600, 200, true)
-    @optionsdlg.min_width = 300
-    @optionsdlg.min_height = 300
+    @optionsdlg.min_width = 300 if @launchdlg.respond_to?(:min_width)
+    @optionsdlg.min_height = 300 if @launchdlg.respond_to?(:min_height)
     html_path = File.join(PATH_ROOT, "html", "LaunchUpOptions.html")
     @optionsdlg.set_file(html_path)
 
     # Callbacks
     # initialize: Pass the default options to the form.
     @optionsdlg.on_show {|dlg|
-      color = dlg.get_default_dialog_color # If it's white, then it is likely not correct.
-      dlg.execute_script("AE.$('body')[0].style.background='#{color}'") unless color == "#ffffff"
       TRANSLATE.webdialog(dlg)
-      dlg.execute_script("AE.LaunchUpOptions.initialize(#{@options.get_json})")
+      dlg.call_function("AE.LaunchUpOptions.initialize", @options.get_all) ###############################
       dlg.set_position_center
     }
 
     # Update the options.
-    @optionsdlg.on("updateOptions") { |dlg, hash|
+    @optionsdlg.on("update_options") { |dlg, hash|
       @options.update(hash)
       @options.save
       # Try to update options in LaunchUp dialog.
       if @launchdlg && @launchdlg.visible?
-        json = @options.get_json
-        @launchdlg.execute_script("AE.LaunchUp.update(#{json});")
+        @launchdlg.call_function("AE.LaunchUp.update", @options.get_all)
       end
     }
 

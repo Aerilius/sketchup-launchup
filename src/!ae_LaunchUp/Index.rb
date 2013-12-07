@@ -119,23 +119,25 @@ class Index
     # TODO: Allow here to plug-in smart searches. Import all files from ./smart-searches.
 
     # This example allows to load extensions on demand:
-    Sketchup.extensions.each{ |extension|
-      # Maybe we should only add those that are not yet loaded? But then the user can't find them if not knowing that.
-      # We need here feature testing, because :loaded?, :load have been added with SU8M2, where as :name, :description, :creator exist since SU6.
-      # Another reason is that other plugins could have a custom extension class that is neither subclassed from SketchupExtension nor fully compatible with the installed SketchUp's extension (ie. 3Dconnexion).
-      next unless extension.is_a?(SketchupExtension) && extension.respond_to?(:loaded?) && (extension.respond_to?(:loaded?) or extension.respond_to?(:load))
-      hash = {
-        :name => (extension.loaded?) ? TRANSLATE["Extension %0 already loaded", extension.name] : TRANSLATE["Load extension %0", extension.name],
-        :description => extension.description,
-        :category => TRANSLATE["Extensions"],
-        :keywords => [TRANSLATE["extension"], TRANSLATE["plugin"], TRANSLATE["addon"], extension.creator],
-        :proc => Proc.new{ |extension| extension.check },
-        # The command is enabled as long as the extension is not loaded.
-        :validation_proc => extension.loaded? ? Proc.new{ MF_GRAYED } : Proc.new{ (extension.loaded?) ? MF_GRAYED : MF_ENABLED },
-        # :no_history => true, # TODO: If it is not added to the history, we need other feedback that it has been loaded.
+    if Sketchup.respond_to?(:extensions)
+      Sketchup.extensions.each{ |extension|
+        # Maybe we should only add those that are not yet loaded? But then the user can't find them if not knowing that.
+        # We need here feature testing, because :loaded?, :load have been added with SU8M2, where as :name, :description, :creator exist since SU6.
+        # Another reason is that other plugins could have a custom extension class that is neither subclassed from SketchupExtension nor fully compatible with the installed SketchUp's extension (ie. 3Dconnexion).
+        next unless extension.is_a?(SketchupExtension) && extension.respond_to?(:loaded?) && (extension.respond_to?(:loaded?) or extension.respond_to?(:load))
+        hash = {
+          :name => (extension.loaded?) ? TRANSLATE["Extension %0 already loaded", extension.name] : TRANSLATE["Load extension %0", extension.name],
+          :description => extension.description,
+          :category => TRANSLATE["Extensions"],
+          :keywords => [TRANSLATE["extension"], TRANSLATE["plugin"], TRANSLATE["addon"], extension.creator],
+          :proc => Proc.new{ |extension| extension.check },
+          # The command is enabled as long as the extension is not loaded.
+          :validation_proc => extension.loaded? ? Proc.new{ MF_GRAYED } : Proc.new{ (extension.loaded?) ? MF_GRAYED : MF_ENABLED },
+          # :no_history => true, # TODO: If it is not added to the history, we need other feedback that it has been loaded.
+        }
+        add(hash)
       }
-      add(hash)
-    }
+    end
   end
 
 
@@ -200,9 +202,10 @@ class Index
       return @@missing << command unless hash[:proc] && hash[:name]
 
       # Description
-      hash[:description] ||= command.respond_to?(:status_bar_text) ?
-        command.status_bar_text || command.tooltip :
-        TRANSLATE["LaunchUp requires SketchUp >= 8M1 to display more descriptive info."] # TODO: remove this?
+      hash[:description] ||= command.tooltip || command.status_bar_text if command.respond_to?(:tooltip)
+
+      # Instruction
+      hash[:instruction] ||= command.status_bar_text if command.respond_to?(:status_bar_text)
 
       # Icon
       # Note: If developer assigns a relative file path, SketchUp interprets it
@@ -221,8 +224,9 @@ class Index
       elsif !hash[:category]
         # If not given, we use the menu path or toolbar name.
         # TODO: A nice separator would be Unicode › or 〉 or → , or fallback to ASCII >
-        menu_path = AE::Interception::Menu.get_menu_path(command)[0..-2]
-        if menu_path.length > 0
+        menu_path = AE::Interception::Menu.get_menu_path(command)
+        if menu_path.is_a?(Array) && menu_path.length > 1
+          menu_path.pop
           if menu_path.first.nil? || menu_path.first.empty?
             menu_path[0] = TRANSLATE["Context menu"]
           else
@@ -273,8 +277,8 @@ class Index
   rescue ArgumentError
     raise
   rescue StandardError => e
-    puts("LaunchUp: Command #{command} could not be added to index.")
-    puts(e.message)
+    $stderr.write("LaunchUp: Command #{command} could not be added to index." << $/)
+    $stderr.write(e.message.join($/) << $/)
     return false
   end
 
@@ -323,7 +327,7 @@ class Index
   # @param [Proc] block optional conditional (true/false) of which commands should be returned.
   # @returns [Array] entries
   def get_all(&block)
-    return (block_given?)? @data.find_all(&block) : @data.clone
+    return (block_given?) ? @data.find_all(&block) : @data.clone
   end
 
 
@@ -345,15 +349,15 @@ class Index
     end
   rescue ArgumentError => e
     # Proc contains other bug.
-    puts("Command with id '#{id}' does not exist\n#{e.message.to_s}\n#{e.backtrace.join("\n")}")
+    $stderr.write("Command with id '#{id}' does not exist\n#{e.message.to_s}\n#{e.backtrace.join("\n")}" << $/)
     return false
   rescue LocalJumpError => e
     # Proc contains a "return"?
-    puts("Proc of '#{entry[:name]}' (#{entry[:id]}) contains 'return'\n#{e.message.to_s}\n#{e.backtrace.join("\n")}")
+    $stderr.write("Proc of '#{entry[:name]}' (#{entry[:id]}) contains 'return'\n#{e.message.to_s}\n#{e.backtrace.join("\n")}" << $/)
     return false
   rescue Exception => e
     # Proc contains other bug.
-    puts("Error in proc of '#{entry[:name]}' (#{entry[:id]})\n#{e.message.to_s}\n#{e.backtrace.join("\n")}")
+    $stderr.write("Error in proc of '#{entry[:name]}' (#{entry[:id]})\n#{e.message.to_s}\n#{e.backtrace.join("\n")}" << $/)
     return false
   end
 
@@ -482,10 +486,10 @@ class Index
             status = entry[:validation_proc].call == MF_ENABLED
           rescue LocalJumpError => e
             # Validation proc contains a "return"?
-            puts("Validation proc of '#{entry[:name]}' (#{entry[:id]}) contains 'return'\n#{e.message.to_s}\n#{e.backtrace.join("\n")}")
+            $stderr.write("Validation proc of '#{entry[:name]}' (#{entry[:id]}) contains 'return'\n#{e.message.to_s}\n#{e.backtrace.join("\n")}" << $/)
           rescue Exception => e
             # Validation proc contains other bug.
-            puts("Error in validation proc of '#{entry[:name]}' (#{entry[:id]})\n#{e.message.to_s}\n#{e.backtrace.join("\n")}") if $VERBOSE
+            $stderr.write("Error in validation proc of '#{entry[:name]}' (#{entry[:id]})\n#{e.message.to_s}\n#{e.backtrace.join("\n")}" << $/) if $VERBOSE
           end
           entry[:enabled] = status
           score *= 0.5 if status == false
@@ -502,14 +506,14 @@ class Index
         # Add it to results.
         result_array << entry
       rescue Exception => e
-        puts("AE::LaunchUp::Index: Error in 'find' when searching '#{entry[:name]}' (#{entry[:id]})\n#{e.message.to_s}\n#{e.backtrace.join("\n")}")
+        $stderr.write("AE::LaunchUp::Index: Error in 'find' when searching '#{entry[:name]}' (#{entry[:id]})\n#{e.message.to_s}\n#{e.backtrace.join("\n")}" << $/)
         break
       end
     }
 
     return result_array
   rescue Exception => e
-    puts("AE::LaunchUp::Index: Error in 'find' when searching '#{search_string}'\n#{e.message.to_s}\n#{e.backtrace.join("\n")}")
+    $stderr.write("AE::LaunchUp::Index: Error in 'find' when searching '#{search_string}'\n#{e.message.to_s}\n#{e.backtrace.join("\n")}" << $/)
     return []
   end
 

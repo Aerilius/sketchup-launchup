@@ -363,7 +363,7 @@ cmd.keywords = ["show"]
 
 
 cmd = UI::Command.new(TRANSLATE["Make Component"]) {
-  if not (Sketchup.send_action(21083) rescue false)
+  unless (Sketchup.send_action(21083) rescue false)
     # Fallback if send_action code returns false.
     # BUG: SketchUp on OSX returns always true, but it returns error for Fixnum
     # argument. We rescue it and do the fallback.
@@ -1461,7 +1461,7 @@ cmd.category = "Tools > Solid Tools"
 cmd.keywords = ["solid", "shell"]
 
 
-if Sketchup.is_pro?
+if Sketchup.respond_to?(:is_pro?) && Sketchup.is_pro?
 
 
 cmd = UI::Command.new(TRANSLATE["Intersect"]) {
@@ -1672,7 +1672,7 @@ cmd = UI::Command.new(TRANSLATE["Explode"]) {
   ss = Sketchup.active_model.selection
   Sketchup.active_model.start_operation("ungroup")
   ss.each do |s|
-    if s.respond_to?("explode")
+    if s.respond_to?(:explode)
       ents = s.explode
       ents = ents.select{|e| e.is_a?(Sketchup::Drawingelement)}
       ss.add ents
@@ -1687,7 +1687,7 @@ cmd.large_icon = "./UngroupLarge.png"
 cmd.set_validation_proc{
   ss = Sketchup.active_model.selection
   MF_GRAYED unless ss.length > 0
-  ss = ss.select {|s| s.respond_to? "explode"}
+  ss = ss.select {|s| s.respond_to? :explode}
   if ss.length > 0
     MF_ENABLED
   else

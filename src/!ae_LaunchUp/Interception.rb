@@ -44,9 +44,9 @@ module Menu
     return unless @listeners.include?(method_name) && @listeners[method_name].is_a?(Array)
     @listeners[method_name].each{|proc| proc.call(*(args << block)) rescue nil }
   rescue Exception => e
-    puts("Error in ae_LaunchUp/Interception.rb for AE::Interception::Menu.listen")
-    puts(e.message)
-    puts(e.backtrace)
+    $stderr.write("Error in ae_LaunchUp/Interception.rb for AE::Interception::Menu.listen" << $/)
+    $stderr.write(e.message << $/)
+    $stderr.write(e.backtrace.join($/) << $/)
   end
 
   # Get the full menu path of a menu item.
@@ -104,9 +104,9 @@ module Command
     return unless @listeners.include?(method_name) && @listeners[method_name].is_a?(Array)
     @listeners[method_name].each{|proc| proc.call(*(args << block)) rescue nil }
   rescue Exception => e
-    puts("Error in ae_LaunchUp/Interception.rb for AE::Interception::Command.listen")
-    puts(e.message)
-    puts(e.backtrace)
+    $stderr.write("Error in ae_LaunchUp/Interception.rb for AE::Interception::Command.listen" << $/)
+    $stderr.write(e.message << $/)
+    $stderr.write(e.backtrace.join($/) << $/)
   end
 
 end # module Command
@@ -148,7 +148,7 @@ class Sketchup::Menu
       return id if id.nil?
       # Register data.
       AE::Interception::Menu.menu_items << id
-      AE::Interception::Menu.menu_text[id] = args[0].is_a?(UI::Command) ? args[0].menu_text : args[0]
+      AE::Interception::Menu.menu_text[id] = args[0].is_a?(UI::Command) ? AE::Interception::Command.text[args[0]] : args[0] # menu_text is not supported by SU < 8M1
       AE::Interception::Menu.command[id] = args[0] if args[0].is_a?(UI::Command)
       AE::Interception::Menu.proc[id] = block if block.is_a?(Proc)
       AE::Interception::Menu.children[self] ||= []
@@ -157,9 +157,9 @@ class Sketchup::Menu
       # Trigger event.
       AE::Interception::Menu.listen(:add_item, self, *args, &block)
     rescue Exception => e
-      puts("Error in ae_LaunchUp/Interception.rb for Sketchup::Menu.add_item")
-      puts(e.message)
-      puts(e.backtrace)
+      $stderr.write("Error in ae_LaunchUp/Interception.rb for Sketchup::Menu.add_item" << $/)
+      $stderr.write(e.message << $/)
+      $stderr.write(e.backtrace.join($/) << $/)
     ensure
       return id
     end
@@ -181,9 +181,9 @@ class Sketchup::Menu
       # Trigger event.
       AE::Interception::Menu.listen(:add_submenu, self, *args)
     rescue Exception => e
-      puts("Error in ae_LaunchUp/Interception.rb for Sketchup::Menu.add_submenu")
-      puts(e.message)
-      puts(e.backtrace)
+      $stderr.write("Error in ae_LaunchUp/Interception.rb for Sketchup::Menu.add_submenu" << $/)
+      $stderr.write(e.message << $/)
+      $stderr.write(e.backtrace.join($/) << $/)
     ensure
       return submenu
     end
@@ -202,9 +202,9 @@ class Sketchup::Menu
         AE::Interception::Menu.listen(:set_validation_proc, self, *args, &block)
       end
     rescue Exception => e
-      puts("Error in ae_LaunchUp/Interception.rb for Sketchup::Menu.set_validation_proc")
-      puts(e.message)
-      puts(e.backtrace)
+      $stderr.write("Error in ae_LaunchUp/Interception.rb for Sketchup::Menu.set_validation_proc" << $/)
+      $stderr.write(e.message << $/)
+      $stderr.write(e.backtrace.join($/) << $/)
     ensure
       return success || false
     end
@@ -228,9 +228,9 @@ module UI
         AE::Interception::Menu.menu_items << menu
         AE::Interception::Menu.menu_text[menu] = args[0]
       rescue Exception => e
-        puts("Error in ae_LaunchUp/Interception.rb for UI.menu")
-        puts(e.message)
-        puts(e.backtrace)
+        $stderr.write("Error in ae_LaunchUp/Interception.rb for UI.menu" << $/)
+        $stderr.write(e.message << $/)
+        $stderr.write(e.backtrace.join($/) << $/)
       ensure
         return menu
       end
@@ -263,9 +263,9 @@ class UI::Command
         # Trigger event.
         AE::Interception::Command.listen(:new, command, *args, &block)
       rescue Exception => e
-        puts("Error in ae_LaunchUp/Interception.rb for UI::Command.new")
-        puts(e.message)
-        puts(e.backtrace)
+        $stderr.write("Error in ae_LaunchUp/Interception.rb for UI::Command.new" << $/)
+        $stderr.write(e.message << $/)
+        $stderr.write(e.backtrace.join($/) << $/)
       ensure
         return command
       end
@@ -284,9 +284,9 @@ class UI::Command
       # Trigger event.
       AE::Interception::Command.listen(:set_validation_proc, command, &block)
     rescue Exception => e
-      puts("Error in ae_LaunchUp/Interception.rb for UI::Command.set_validation_proc")
-      puts(e.message)
-      puts(e.backtrace)
+      $stderr.write("Error in ae_LaunchUp/Interception.rb for UI::Command.set_validation_proc" << $/)
+      $stderr.write(e.message << $/)
+      $stderr.write(e.backtrace.join($/) << $/)
     ensure
       return command
     end
