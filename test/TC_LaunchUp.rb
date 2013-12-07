@@ -23,7 +23,6 @@ end
 
 
 
-# This test checks the option :selection_mode to modify only materials on the selected faces.
 def test_debug
   value = (AE::LaunchUp.debug = true)
   result = AE::LaunchUp.instance_variable_get(:@options)[:debug] # TODO: check instance/class variable
