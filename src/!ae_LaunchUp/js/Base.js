@@ -411,12 +411,15 @@ AE.Dialog = (function(self) {
 
   var documentWidth = function() {
 // AE.Bridge.puts(["documentWidth", document.body.clientWidth, document.body.offsetWidth, document.body.scrollWidth, document.documentElement.clientWidth, document.documentElement.offsetWidth, document.documentElement.scrollWidth]); // DEBUG
-    return document.body.offsetWidth;
+    var w = document.body.offsetWidth;
+    var tolerance = 4;
+    if (w >= windowWidth() - tolerance && w <= windowWidth() + tolerance || w == 0) { w = document.documentElement.offsetWidth };
+    return w;
   };
 
   var documentHeight = function() {
 // AE.Bridge.puts(["documentHeight", document.body.clientHeight, document.body.offsetHeight, document.body.scrollHeight, document.documentElement.clientHeight, document.documentElement.offsetHeight, document.documentElement.scrollHeight]); // DEBUG
-    h = document.documentElement.offsetHeight;
+    var h = document.documentElement.offsetHeight;
     if (h == windowHeight() || h == 0) { h = document.body.offsetHeight };
     return h;
   };

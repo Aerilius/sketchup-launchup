@@ -218,7 +218,7 @@ def from_json(json_string)
     join()
   result = eval(ruby_string)
   return result
-rescue Exception => e
+rescue Exception
   {}
 end
 private :from_json

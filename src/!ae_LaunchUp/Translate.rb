@@ -22,8 +22,8 @@ Usage:        Have translation files of the scheme
               Create an instance:        translate = Translate.new(toolname, translation_directory)
               Translate a single string: translate[String]
               Translate a webdialog:     translate.webdialog(UI::WebDialog)
-Version:      1.7
-Date:         26.04.2013
+Version:      1.8
+Date:         22.06.2013
 
 =end
 
@@ -74,7 +74,7 @@ class Translate
     language = locale[/^[^\-]+/]
     extensions = ["strings", "lingvo", "rb"]
 
-    available_files = Dir.entries(dir).find_all{|f|
+    available_files = Dir.entries(dir).find_all{ |f|
       File.basename(f)[/(^|#{toolname}[^a-zA-Z]?)#{locale}\.(#{extensions.join('|')})/i]
     }.concat(Dir.entries(dir).find_all{|f|
       File.basename(f)[/(^|#{toolname}[^a-zA-Z]?)#{language}(-\w{2,3})?\.(#{extensions.join('|')})/i]
@@ -83,7 +83,7 @@ class Translate
     path = File.join(dir, available_files.first)
     format = File.extname(path)[/[^\.]+/]
     strings = {}
-    File.open(path, "r"){|file|
+    File.open(path, "r"){ |file|
       # load .rb format
       if format == "rb"
         strings = eval(file.read)
@@ -91,7 +91,7 @@ class Translate
       else
         entry = ""
         inComment = false
-        file.each{|line|
+        file.each{ |line|
           if !line.include?("//")
             if line.include?("/*")
               inComment = true
@@ -106,11 +106,11 @@ class Translate
           end
           if format == "strings" && entry.include?(";") || format == "lingvo" && !entry.empty?
             keyvalue = entry.strip.gsub(/^\s*\"|\"\s*;$/, "").split(/\"\s*=\s*\"|\s*<==>\s*/)
+            entry = ""
             next unless keyvalue.length == 2
             key = keyvalue[0].gsub(/\\\"/,'"').gsub(/\\\\/, "\\")
             value = keyvalue[1].gsub(/\\\"/,'"').gsub(/\\\\/, "\\")
             strings[key] = value
-            entry = ""
           end
         }
       end # if format
@@ -133,10 +133,10 @@ class Translate
   #
   def get(key, *si)
     raise(ArgumentError, "Argument 'key' must be a String or an Array of Strings.") unless key.is_a?(String) || key.nil? || key.is_a?(Array) && key.grep(String).length == key.length
-    return key.map{|k| self.[](k, *si)} if key.is_a?(Array) # Allow batch translation of strings
+    return key.map{ |k| self.[](k, *si) } if key.is_a?(Array) # Allow batch translation of strings
     value = (@strings[key] || key).to_s.clone
     # Substitution of additional strings.
-    si.compact.each_with_index{|s, i|
+    si.compact.each_with_index{ |s, i|
       value.gsub!(/\%#{i}/, s.to_s)
     }
     value.gsub!(/\%\%/,"%")
@@ -193,7 +193,7 @@ class Translate
           var blocked = new RegExp("^(script|style)$", "i");
           var emptyString = new RegExp("^(\\n|\\s|&nbsp;)+$", "i");
           var textNodes = [];
-          var nodesWithAttr = {"title":[],"placeholder":[]};
+          var nodesWithAttr = {"title": [], "placeholder": [], "alt": []};
           //# Get all text nodes that are not empty. Get also all title attributes.
           var getNodes = function(node){
             if (node && node.nodeType === 1 && !blocked.test(node.nodeName)) {
@@ -240,16 +240,15 @@ class Translate
   def to_json(obj)
     return unless obj.is_a?(Hash)
     # remove non-JSON objects
-    o = obj.reject{|k,v|
+    o = obj.reject{ |k, v|
       !k.is_a?(String) && !k.is_a?(Symbol) || !v.is_a?(String) && !v.is_a?(Symbol)
     }
     # Split at every even number of unescaped quotes.
     # If it's not a string then turn Symbols into String and replace => and nil.
     json_string = obj.inspect.split(/(\"(?:.*?[^\\])*?\")/).
-      collect{|s|
+      collect{ |s|
         (s[0..0] != '"')?                        # If we are not inside a string
-        s.gsub(/\:(\S+?(?=\=>|\s))/, "\"\\1\""). # Symbols to String
-          gsub(/=>/, ":").                       # Arrow to colon
+        s.gsub(/=>/, ":").                       # Arrow to colon
           gsub(/\bnil\b/, "null") :              # nil to null
         s
       }.join()

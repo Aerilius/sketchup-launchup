@@ -46,7 +46,7 @@ Usage:        Create an instance (with the same arguments as UI::WebDialog):
 
 Requires:     JavaScript modules AE.Bridge and AE.Dialog
               Call AE.Dialog.initialize() at the end of your HTML document.
-Version:      1.0.4
+Version:      1.0.5
 Date:         18.05.2013
 
 =end
@@ -90,8 +90,9 @@ def initialize(*args)
   @window_top = 0
   @screen_width = 1200
   @screen_height = 800
-  @dialog_initialized = false
+  @dialog_visible = false
   @message_id = nil
+  @return_data = nil
 
   if args.length >= 5
     @window_title = args[0].to_s
@@ -107,53 +108,56 @@ def initialize(*args)
 
   # Messaging system with queue, for multiple arguments of any JSON type.
   self.add_action_callback("AE.Bridge.receive_message") { |dlg, param|
-    # Get message id.
-    @message_id = param[/\#\d+$/][/\d+/]
-
-    # Eval message data.
     begin
-      arguments = eval(param)
-    rescue SyntaxError
-      raise(ArgumentError, "Dialog received invalid data '#{param}'.")
-    end
+      # Get message id.
+      @message_id = param[/\#\d+$/][/\d+/]
 
-    # If no other data were received via url, look in hidden input element.
-    if arguments.nil?
-      arguments = eval(dlg.get_element_value("AE.Bridge.message##{@message_id}"))
-    end
-    raise(ArgumentError, "Dialog received wrong type of data '#{arguments}'") unless arguments.is_a?(Array)
-
-    # Get callback name.
-    name = arguments.shift
-    raise(ArgumentError, "Callback '#{name}' for #{dlg} not found.") if name.nil? || !@procs_callback.include?(name)
-
-    # Call Callback.
-    begin
-      @procs_callback[name].call(dlg, *arguments)
-    rescue Exception => e
-      # TODO: It could tell JavaScript that there was an error
-      # At least, unlock to send next message.
-      puts("Error in callback AE.Bridge.receive_message(#{name}): "+e.message) if $VERBOSE
-      next dlg.execute_script("AE.Bridge.nextMessage()")
-    else
-      # Tell JavaScript it can send the next message. TODO: Should we call the nextMessage before executing a synchronous callback?
-      dlg.execute_script("AE.Bridge.nextMessage()")
-      # Optionally the Ruby callback can return data to a JavaScript callback.
-      if @return_data
-        data_string = self.to_json(@return_data)
-        execute_script("AE.Bridge.callbackJS(#{@message_id}, #{data_string})")
-        @return_data = nil
+      # Eval message data.
+      begin
+        arguments = eval(param)
+      rescue SyntaxError
+        raise(ArgumentError, "Dialog received invalid data '#{param}'.")
       end
+
+      # If no other data were received via url, look in hidden input element.
+      if arguments.nil?
+        arguments = eval(dlg.get_element_value("AE.Bridge.message##{@message_id}"))
+      end
+      raise(ArgumentError, "Dialog received wrong type of data '#{arguments}'") unless arguments.is_a?(Array)
+
+      # Get callback name.
+      name = arguments.shift
+      raise(ArgumentError, "Callback '#{name}' for #{dlg} not found.") if name.nil? || !@procs_callback.include?(name)
+
+      # Call the callback.
+      begin
+        @procs_callback[name].call(dlg, *arguments)
+      rescue Exception => e
+        # TODO: It could tell JavaScript that there was an error
+        raise(e.class, "#{self.class.to_s.gsub(/\:/,'')} Error for callback '#{name}': #{e.message}", e.backtrace)
+      else
+        # Optionally the Ruby callback can return data to a JavaScript callback.
+        if @return_data
+          data_string = to_json(@return_data)
+          execute_script("AE.Bridge.callbackJS(#{@message_id}, #{data_string})")
+          @return_data = nil
+        end
+      end
+
+    rescue Exception => e
+      $stderr.write(e.message << $/)
+      $stderr.write(e.backtrace.join($/) << $/)
+    ensure
+      # Unlock JavaScript to send the next message.
+      dlg.execute_script("AE.Bridge.nextMessage()")
       @message_id = nil
-      next
     end
   }
 
   # Get some initial data.
   # This needs to be invoked by doing in JavaScript:
   # AE.Dialog.initialize();
-  @procs_callback["AE.Dialog.initialize"] = Proc.new{|dlg, params|
-    next if @dialog_initialized
+  @procs_callback["AE.Dialog.initialize"] = Proc.new{ |dlg, params|
     w, h, wl, wt, sw, sh = params
     @window_border_width = ((@window_width - w) / 2.0).to_i
     @window_titlebar_height = (@window_height - h).to_i
@@ -161,18 +165,35 @@ def initialize(*args)
     @window_top = wt if wt.is_a?(Numeric) && wt > 0
     @screen_width = sw if sw.is_a?(Numeric) && sw > 0
     @screen_height = sh if sh.is_a?(Numeric) && sh > 0
-    @dialog_initialized = true
+    @dialog_visible = true
     # Trigger all event handlers for when the dialog is shown.
-    @procs_show.each{ |block| block.call(dlg) }
+    # Output errors because SketchUp's native callback would not output errors.
+    @procs_show.each{ |block|
+      begin
+        block.call(dlg)
+      rescue Exception => e
+        $stderr.write(e.message << $/)
+        $stderr.write(e.backtrace.join($/) << $/)
+      end
+    }
+  }
+
+  # Try to set the default dialog color as background. # TODO Test on Windows 7 and OS X if this is still necessary.
+  # This is a workaround because on some systems/browsers the CSS system color is
+  # wrong (white), and on some systems SketchUp returns white (also mostly wrong).
+  @procs_show << Proc.new{
+    color = get_default_dialog_color
+    # If it's white, then it is likely not correct and we try the CSS system color instead.
+    execute_script("if (!document.body.style.background && !document.body.style.backgroundColor) { document.body.style.backgroundColor = '#{color}'; }") unless color == "#ffffff"
   }
 
   # We have to make sure the dialog has a size that we know.
   self.set_size(@window_width, @window_height)
 
   # Adjust the dialog size to the inner size
-  @procs_callback["AE.Dialog.adjustSize"] = Proc.new{|dlg, param|
-    next unless @dialog_initialized
-    w, h, l, t = *param rescue raise("Callback 'AE.Dialg.adjustSize' received invalid data: #{param.inspect}")
+  @procs_callback["AE.Dialog.adjustSize"] = Proc.new{ |dlg, params|
+    next unless @dialog_visible
+    w, h, l, t = *params rescue raise("Callback 'AE.Dialg.adjustSize' received invalid data: #{params.inspect}")
     # Calculate the outer window size from the given document size:
     @window_width = (w.to_f + 2 * @window_border_width).to_i
     @window_height = (h.to_f + @window_titlebar_height).to_i
@@ -180,7 +201,7 @@ def initialize(*args)
     @window_width = [@window_width, @screen_width - l + @window_border_width - 1].min if l.is_a?(Numeric)
     @window_height = [@window_height, @screen_height - t + @window_titlebar_height - 1].min if t.is_a?(Numeric)
     # Set the new size
-    if OSX && l.is_a?(Numeric) && t.is_a?(Numeric)
+    if ( Object::RUBY_PLATFORM =~ /darwin/i ) && l.is_a?(Numeric) && t.is_a?(Numeric)
 =begin
       dlg.set_size(@window_width, @window_height)
       # If we are on OSX, SketchUp resizes towards the top, changing the dialog's top position.
@@ -210,13 +231,41 @@ def initialize(*args)
   }
 
   # Puts (for debugging)
-  @procs_callback["puts"] = Proc.new{ |dlg, param| puts(param.inspect) }
+  @procs_callback["puts"] = Proc.new{ |dlg, param|
+    puts(param.inspect)
+  }
 
   # Close the Dialog.
   @procs_callback["AE.Dialog.close"] = Proc.new{ |dlg, param|
     dlg.close
     # Trigger all event handlers for when the dialog is closed.
-    @procs_close.each{ |block| block.call(dlg) }
+    # Output errors because SketchUp's native callback would not output errors.
+    if @dialog_visible
+      @procs_close.each{ |block|
+        begin
+          block.call(dlg)
+        rescue Exception => e
+          $stderr.write(e.message << $/)
+          $stderr.write(e.backtrace.join($/) << $/)
+        end
+      }
+      @dialog_visible = false
+    end
+  }
+  set_on_close{
+    # Trigger all event handlers for when the dialog is closed.
+    # Output errors because SketchUp's native callback would not output errors.
+    if @dialog_visible
+      @procs_close.each{ |block|
+        begin
+          block.call(self)
+        rescue Exception => e
+          $stderr.write(e.message << $/)
+          $stderr.write(e.backtrace.join($/) << $/)
+        end
+      }
+      @dialog_visible = false
+    end
   }
 end
 
@@ -338,9 +387,9 @@ end
 # @param [Numeric,NilClass] w outer width
 # @param [Numeric,NilClass] h outer height
 def set_size(w=nil, h=nil)
-  @window_width = w ||= @window_width
-  @window_height = h ||= @window_height
-  super(w, h)
+  @window_width = w if w.is_a?(Numeric) && w > 0 # TODO: > min_width
+  @window_height = h if h.is_a?(Numeric) && h > 0 # TODO: > min_height
+  super(@window_width, @window_height)
 end
 
 
@@ -443,8 +492,10 @@ def to_json(obj)
       new_v
     elsif v.is_a?(Hash)
       new_v = {}
-      v.each{ |c, w| new_v[c] = sanitize.call(w) if (c.is_a?(String) || c.is_a?(Symbol)) && json_classes.include?(w.class) }
+      v.each{ |k, w| new_v[k.to_s] = sanitize.call(w) if (k.is_a?(String) || k.is_a?(Symbol)) && json_classes.include?(w.class) }
       new_v
+    elsif v.is_a?(Symbol)
+      v.to_s
     else
       v
     end
@@ -456,12 +507,11 @@ def to_json(obj)
   end
   # Split at every even number of unescaped quotes. This gives either strings
   # or what is between strings.
-  # If it's not a string then turn Symbols into String and replace => and nil.
+  # Replace => and nil.
   json_string = o.inspect.split(/(\"(?:.*?(?:[\\][\\]*?|[^\\]))*?\")/).
     collect{ |s|
       (s[0..0] != '"')?                        # If we are not inside a string
-      s.gsub(/\:(\S+?(?=\=>|\s))/, "\"\\1\""). # Symbols to String
-        gsub(/\=\>/, ":").                       # Arrow to colon
+      s.gsub(/\=\>/, ":").                     # Arrow to colon
         gsub(/\bnil\b/, "null") :              # nil to null
       s
     }.join
