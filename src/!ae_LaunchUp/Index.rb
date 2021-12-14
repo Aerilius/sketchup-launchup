@@ -193,7 +193,7 @@ class Index
       hash[:proc] ||= command.respond_to?(:proc) ? command.proc : AE::Interception::Command.proc[command]
 
       # Validation Proc
-      hash[:validation_proc] ||= command.respond_to?(:validation_proc) ? command.validation_proc : AE::Interception::Command.validation_proc[command]
+      hash[:validation_proc] ||= command.respond_to?(:get_validation_proc) ? command.get_validation_proc : AE::Interception::Command.validation_proc[command]
 
       # Name
       hash[:name] ||= command.respond_to?(:menu_text) ? command.menu_text : AE::Interception::Command.text[command]
