@@ -483,7 +483,8 @@ class Index
         if entry[:validation_proc]
           status = nil
           begin
-            status = entry[:validation_proc].call == MF_ENABLED
+            state = entry[:validation_proc].call
+            status = (state & MF_DISABLED != MF_DISABLED) && (state & MF_GRAYED != MF_GRAYED)
           rescue LocalJumpError => e
             # Validation proc contains a "return"?
             $stderr.write("Validation proc of '#{entry[:name]}' (#{entry[:id]}) contains 'return'\n#{e.message.to_s}\n#{e.backtrace.join("\n")}" << $/)
