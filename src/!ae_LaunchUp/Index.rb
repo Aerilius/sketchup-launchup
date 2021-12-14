@@ -193,7 +193,7 @@ class Index
       hash[:proc] ||= command.respond_to?(:proc) ? command.proc : AE::Interception::Command.proc[command]
 
       # Validation Proc
-      hash[:validation_proc] ||= command.respond_to?(:validation_proc) ? command.validation_proc : AE::Interception::Command.validation_proc[command]
+      hash[:validation_proc] ||= command.respond_to?(:get_validation_proc) ? command.get_validation_proc : AE::Interception::Command.validation_proc[command]
 
       # Name
       hash[:name] ||= command.respond_to?(:menu_text) ? command.menu_text : AE::Interception::Command.text[command]
@@ -483,7 +483,8 @@ class Index
         if entry[:validation_proc]
           status = nil
           begin
-            status = entry[:validation_proc].call == MF_ENABLED
+            state = entry[:validation_proc].call
+            status = (state & MF_DISABLED != MF_DISABLED) && (state & MF_GRAYED != MF_GRAYED)
           rescue LocalJumpError => e
             # Validation proc contains a "return"?
             $stderr.write("Validation proc of '#{entry[:name]}' (#{entry[:id]}) contains 'return'\n#{e.message.to_s}\n#{e.backtrace.join("\n")}" << $/)

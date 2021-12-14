@@ -61,7 +61,7 @@ Public methods:
   You can use these methods to use LaunchUp in Ruby code:
 
 AE::LaunchUp.look_up(search_string=[String], length=[Fixnum])
-  Queries the index for seach terms and returns an Array of hashes as results.
+  Queries the index for search terms and returns an Array of hashes as results.
   You can specify the amount of results. The resulting contains keys like:
   :name, :description, :icon, :category, :keywords, :proc, :validation_proc, :id
 
